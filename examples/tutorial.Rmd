@@ -1,0 +1,48 @@
+---
+title: "Tutorial for the genotypeQC R library"
+output: html_notebook
+---
+
+This is a [R Markdown](http://rmarkdown.rstudio.com) Notebook for utilzing functions of the genotypeQC R library. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file).
+
+### Install required libraries
+```{r}
+install.packages('devtools')
+install_github('xiaolicbs/genotypeqc')
+
+library(devtools)
+library(genotypeqc)
+```
+
+### Load input files
+```{r}
+setwd('~/genotypeqc/examples')
+bamQcMetr = read.csv('bamQcMetr.tsv', sep = '\t')
+vcfQcMetr = read.csv('vcfQcMetr.tsv', sep = '\t')
+attributes = read.csv('sampleAttributes.tsv', sep = '\t')
+stratify = c('ANCESTRY', 'SeqTech')
+```
+
+### Construct an Sample Dataset object
+```{r}
+sds = sampleDataset()
+```
+### Perform a stratified QC metrics analysis
+```{r}
+sds = calZscore(sds, strat = 'seqPcrEth', qcMetrics = sds$qcMetrics)
+```
+
+### Filter samples with hard cutoffs and z-scores
+```{r}
+sds = flagSamples(sds, cutoffs = cutoffs, zscore = 4)
+```
+### Add genotype PCs to the sample dataset object 
+```{r}
+
+```
