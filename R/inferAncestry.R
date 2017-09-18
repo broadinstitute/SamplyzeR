@@ -1,48 +1,56 @@
-#' Predict ancestry of samples from genotype Principle Components
+#' Predict sample Ancestry from genotype principle components
 #'
-#' @description Principle Components of genotypes
-#'
-#' @param object Sample Dataset object for ancestry predition
-#' @param trainSet optional, a data frame with sample Id and ethnicity
-#' @param nPC Number of genotype PCs used
-#'
-#' @return updated sample Dataset object with inferredancestry tag
+#' @description Principle Components of genotypes with k nearest neighbours.
+#' @return Updated sample Dataset object with inferredAncestry tag
 #' @export
 
-inferAncestry <- function(object, ...) UseMethod('ancestryPred', object)
+inferAncestry <- function(...) UseMethod('inferAncestry')
 
+
+#' @param object matrix for testPCs
+#' @param trainSet matrix for training PCs
+#' @param ancestry ancestries correspond to the training PCs
+#' @param k Number of nearest neighbour to use in this classfication
+#' @export
+inferAncestry.default <- function(
+  object, trainSet, ancestry, k = 5
+) {
+  inferredAncestry = knn(train = trainSet, test = object, cl = ancestry, k = k)
+  return(inferredAncestry)
+}
+
+#' @param object Sample Dataset object for Ancestry predition
+#' @param trainSet optional, a data frame with known accestry (with column name 'Ancestry') and genotype PCs
+#' @param nPC Number of genotype PCs used in this analysis
 #' @export
 
 inferAncestry.sampleDataset <- function(
-  object, trainSet = NULL, nPC = 3, method = 'KNN', k = 5
+  object, trainSet = NULL, nPC = 3, k = 5
 ) {
+  require(class)
+
   PC = paste('PC', 1:nPC, sep = '')
   if(is.null(trainSet)) {
     # training without an external reference panel
-    if(!(any('knownancestry' %in% names(object$df))))
-      stop("No knownancestry column available in sample dataset, please provide a reference panel")
-    isTrainSet = !is.na(object$df$knownancestry)
+    if(!(any('knownAncestry' %in% names(object$df))))
+      stop("No knownAncestry column available in sample dataset, please provide a reference panel")
+    isTrainSet = !is.na(object$df$knownAncestry)
     trainSet = object$df[isTrainSet, PC]
     testSet = object$df[!isTrainSet, PC]
-    cl = object$df$knownancestry[isTrainSet]
+    cl = object$df$knownAncestry[isTrainSet]
   } else {
-    if(!any(trainSet$sampleId %in% object$df[[object$primaryID]]))
-      stop("sample IDs of training set did not match that of sample Dataset")
-    if(!any('ancestry' %in% names(trainSet)))
-      stop("no ancestry column presented in the trainSet")
-    trainSet = trainSet[ ,PC]
-    testSet = object$df[ ,PC]
-    cl = trainSet$ancestry
+    if(!any('Ancestry' %in% names(trainSet)))
+      stop("'Ancestry' column is not presented in the trainSet")
+    cl = trainSet$Ancestry
+    trainSet = trainSet[, PC]
+    testSet = object$df[, PC]
   }
-  if (method == 'KNN') {
-    library(class)
-    inferredancestry = knn(train = trainSet, test = testSet, cl = cl, k = k)
-  }
+  inferredAncestry = knn(train = trainSet, test = testSet, cl = cl, k = k)
   if (exists("isTrainSet")) {
-    object$df$inferredancestry = as.character(object$df$knownancestry)
-    object$df[!isTrainSet, 'inferredancestry'] = as.character(inferredancestry)
+    object$df$inferredAncestry = as.character(object$df$knownAncestry)
+    object$df[!isTrainSet, 'inferredAncestry'] = as.character(inferredAncestry)
   } else {
-    object$df$inferredancestry = as.character(inferredancestry)
+    object$df$inferredAncestry = as.character(inferredAncestry)
   }
   return(object)
 }
