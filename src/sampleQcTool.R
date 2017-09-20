@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
 
+
 library(devtools)
+install_github('xiaolicbs/genotypeQC')
 library(optparse)
 library(genotypeqc)
 
