@@ -1,6 +1,8 @@
 ---
 title: "Tutorial for the genotypeQC R library"
-output: html_notebook
+output:
+  html_notebook: default
+  html_document: default
 ---
 
 This is a [R Markdown](http://rmarkdown.rstudio.com) Notebook for utilzing functions of the genotypeQC R library. When you execute code within the notebook, the results appear beneath the code. 
@@ -12,11 +14,11 @@ Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by press
 When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file).
 
 ### Install required libraries
+This library required R version >= 3.3.2. 
 ```{r}
-install.packages('devtools')
-install_github('xiaolicbs/genotypeqc')
-
+#install.packages('devtools')
 library(devtools)
+install_github('xiaolicbs/genotypeqc')
 library(genotypeqc)
 ```
 
@@ -25,24 +27,69 @@ library(genotypeqc)
 setwd('~/genotypeqc/examples')
 bamQcMetr = read.csv('bamQcMetr.tsv', sep = '\t')
 vcfQcMetr = read.csv('vcfQcMetr.tsv', sep = '\t')
-attributes = read.csv('sampleAttributes.tsv', sep = '\t')
+annotations = read.csv('sampleAnnotations.tsv', sep = '\t')
+samplepc = read.csv('samplePCs.tsv', sep = '\t')
+refpc = read.csv('refPCs.tsv', sep ='\t')
 stratify = c('ANCESTRY', 'SeqTech')
 ```
 
 ### Construct an Sample Dataset object
 ```{r}
-sds = sampleDataset()
+sds = sampleDataset(bamQcMetr = bamQcMetr, vcfQcMetr = vcfQcMetr, annotations = annotations, primaryID = 'SampleID')
 ```
+### Attributes of sample data set
+A Sample Data Set object contains several attributes, including a data frame, which contains all the data for samples and
+several other attributes that contains metadata, such as qcMetrics, bamQcMetr, vcfQcMetr and PrimaryID. To check attributes of your current SDS:
+```{r}
+attributes(sds)
+```
+### Modify attributes of sample data set by
+Function `setAttr` can be used to modify attributes of SampleDataset. For example, to add genotype PCs to the SampleDataset: 
+```{r}
+sds = setAttr(sds, attributes = 'PC', data = samplepc, primaryID = 'SampleID')
+```
+
+### Access attributes of a SampleDataset
+Function 'getAttr' was designed to access attributes of a SampleDataset, for example, you can access sample annotations via:
+```{r}
+getAttr(sds, 'annotations', showID = T)
+```
+To know how many attributes are there, use:
+```{r}
+attributes(sds)$names
+```
+### Infer ancestry from 
+```{r}
+sds = inferAncestry(sds, trainSet = refpc[,c('PC1', 'PC2', 'PC3')], knownAncestry = refpc$group )
+getAttr(sds, 'inferredAncestry', showID = T)
+```
+
+
+
 ### Perform a stratified QC metrics analysis
 ```{r}
-sds = calZscore(sds, strat = 'seqPcrEth', qcMetrics = sds$qcMetrics)
+sds = calZscore(sds, strat = c('inferredAncestry', 'SeqTech'), qcMetrics = sds$vcfQcMetr)
 ```
 
 ### Filter samples with hard cutoffs and z-scores
 ```{r}
+cutoffs = data.frame(
+  qcMetrics = c('Percent_lt_30bp_frags', 'Contamination_Estimation', 'Percent_Chimeric_Reads'),
+  value = c(0.01, 0.02, 0.05), 
+  greater = c(T, T, T), 
+  stringsAsFactors = F
+)
 sds = flagSamples(sds, cutoffs = cutoffs, zscore = 4)
+getAttr(sds, 'flaggedReason') # show samples flagged
 ```
-### Add genotype PCs to the sample dataset object 
-```{r}
 
+### Save SampleDataset
+A S3 class function `save` is used to save SampleDataset to different formats. 
+```{r}
+prefix = 'examples'
+save(sds, RDS = paste(prefix, 'RDS', sep = '.'),
+     tsv = paste(prefix, 'tsv', sep = '.'),
+     xls = paste(prefix, 'xls', sep = '.'))
 ```
+
+
