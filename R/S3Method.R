@@ -10,7 +10,7 @@ save.sampleDataset <- function(object, file = NULL, format = 'RDS') {
   # output options
   if (is.null(file)) stop("Please specify output file name.")
   if (!(format %in% c('tsv', 'xls', 'RDS'))) {
-    stop("")
+    stop("unknown format")
   }
   if(!is.null(tsv)) {
     write.table(object$df, file = tsv, sep = '\t', row.names = F, quote = F)

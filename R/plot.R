@@ -2,7 +2,7 @@ require(ggplot2)
 require(grid)
 require(gridExtra)
 
-#' generate scatter plot of qcMetrics according to samples
+#' Generate scatter plot of qcMetrics according to samples
 #'
 #' @param sds sample dataset object
 #' @export
@@ -50,9 +50,11 @@ sampleQcPlot.sampleDataset <- function(
   }
 }
 
-#' @title plot outliers
+#' Plot outliers
 #'
 #' @param tab input table
+#' @param qcMetrics which QC metrics
+#' @param
 #' @export
 outlierPlots <- function(tab, qcMetrics, strat, main, outliers, type = 'violin'){
   plots <- list()  # new empty list

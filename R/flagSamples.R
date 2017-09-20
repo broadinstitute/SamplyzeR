@@ -40,6 +40,9 @@ flagSamples.sampleDataset <- function(object, cutoffs = NULL, zscore = NULL){
   # flag samples with GTEx default PctLt30bp 0.05, chim 0.09, Comtam 0.02
   object$df$flaggedReason = ''
   if(is.null(cutoffs) & is.null(zscore)) stop("Zscore and cutoffs should be provided.")
+  if(!all(cutoffs$qcMetrics %in% object$qcMetrics)){
+    stop("QC metrics from cutoff table is not consistent with that from sample dataset. ")
+  }
   if(!is.null(cutoffs)) {
     nCut = dim(cutoffs)[1]
     for(i in 1:nCut) {
@@ -47,9 +50,10 @@ flagSamples.sampleDataset <- function(object, cutoffs = NULL, zscore = NULL){
     }
   }
   if(!is.null(zscore)) {
-    for (i in object$vcfStratZscore) {
+    for (i in object$zscore) {
       object$df = flagSamples(object$df, i, 4, abs = T)
     }
   }
+  object['flaggedReason'] = 'flaggedReason'
   return(object)
 }

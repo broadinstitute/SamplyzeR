@@ -1,18 +1,19 @@
-#' Set attributes of a sample dataset
+#' Update a Sample Data Set
 #'
-#' Set attributes of a sample dataset
+#' Update entries of sample data set, such as the df, bamQcMetr, vcfQcMetr
 #'
 #' @param object sample dataset object
-#' @param ... other argumentsoxyg
+#' @param ... other arguments
 #'
 #' @return object
 #' @export
+#'
 setAttr <- function (object, ...) UseMethod('setAttr', object)
 
 #' Set attributes of a sample dataset
 #'
 #' @param object sampleDataset
-#' @param attributes which attributes to add to sample Dataset
+#' @param entry which entry to add to sample Dataset
 #' @param dataframe content to add to the dataframe
 #' @param by primary key of input data frame
 #'
@@ -20,21 +21,16 @@ setAttr <- function (object, ...) UseMethod('setAttr', object)
 #' @export
 
 setAttr.sampleDataset <- function(
-  object, attributes, input, primaryID = NULL, add = T
+  object, attributes, inputDf, primaryID = NULL
 ) {
-  if (attributes == 'df') {
-    if(!is.data.frame((input))) stop("Input should be dataframe!")
-    if(is.null(primaryID)) stop("Primary ID of input should be specified.")
-    if(!any(input[[primaryID]] %in% object$df[[object$primaryID]])) {
-      stop("There's no overlap between input and object primary keys. please double check your input")
-    }
-    if (add) {
-      object$df = merge(object$df, input, by.x = object$primaryID, by.y = primaryID,
-                        all.x = T)
-    } else {
-      object$df = input
-      object$primaryID = primaryID
-    }
+  if (!is.data.frame((inputDf))) stop("Input should be dataframe!")
+  if (is.null(primaryID)) stop("Primary ID of input should be specified.")
+  if (!any(inputDf[[primaryID]] %in% object$df[[object$primaryID]])) {
+    stop("There's no overlap between input and object primary keys. please double check your input")
   }
+
+  object$df = merge(object$df, inputDf, by.x = object$primaryID, by.y = primaryID,
+                    all.x = T)
+  object[attributes] = names(inputDf)[which(names(inputDf) != primaryID)]
   return(object)
 }

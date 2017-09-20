@@ -1,32 +1,33 @@
 #' Sample dataset object
 #'
-#' Create Object sample dataset object to explore outliers.
+#' Create a sample dataset object that contains all information needed to perform a sample
+#' quality control. The Dataset object is a list with one dataframe and
 #'
-#' @param df an R data.frame that contains all sample level data, including QC metrics and
-#' @param bamQcMetr if df is provided, this is a vector of names
-#' @param vcfQcMetr a data frame contain
-#' @param attributes
-#'
-#' @return an sampleDataset object
-#'
+#' @param bamQcMetr a data frame that contains BAM level QC metrics
+#' @param vcfQcMetr a data frame that contains VCF level QC metrics
+#' @param annotations a data frame that contains annotations of the samples.
+#' @param df optional, an R dataframe that contains all sample level data, including QC metrics and
+#'           sample annotations. When df is provided, bamQcMetr, vcfQcMetr and annotations should
+#'           be vectors with names of corresponding fields.
+#' @return an sampleDataset object.
 #' @export
 
-sampleDataset <- function(bamQcMetr, vcfQcMetr, attributes, primaryID = NULL, df = NULL) {
+sampleDataset <- function(bamQcMetr, vcfQcMetr, annotations, primaryID = NULL, df = NULL) {
   if(is.null(primaryID)) {
     stop("Primary ID of QC metrics and sample attributes should be provided.")
   }
   if(is.null(df)) {
     df = merge(bamQcMetr, vcfQcMetr, by = primaryID)
-    df = merge(df, attributes, by = primaryID)
+    df = merge(df, annotations, by = primaryID)
     bamQcMetr = names(bamQcMetr)[-which(names(bamQcMetr) == primaryID)]
     vcfQcMetr = names(vcfQcMetr)[-which(names(vcfQcMetr) == primaryID)]
-    attributes = names(attributes)[-which(names(attributes) == primaryID)]
+    attributes = names(annotations)[-which(names(annotations) == primaryID)]
   } else {
     if(is.data.frame(bamQcMetr)) { stop("bamQcMetr should not be a data.frame when df is presented." )}
     if(is.data.frame(vcfQcMetr)) { stop("vcfQcMetr should not be a data.frame when df is presented." )}
-    if(is.data.frame(attributes)){ stop("attributes should not be a data.frame when df is presented." )}
+    if(is.data.frame(annotations)){ stop("attributes should not be a data.frame when df is presented." )}
   }
-  object = list(df = df, batch = attributes,
+  object = list(df = df, annotations = annotations,
                 qcMetrics = c(bamQcMetr, vcfQcMetr),
                 bamQcMetr = bamQcMetr, vcfQcMetr = vcfQcMetr,
                 primaryID = primaryID)
