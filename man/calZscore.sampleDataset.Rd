@@ -2,9 +2,10 @@
 % Please edit documentation in R/calZscore.R
 \name{calZscore.sampleDataset}
 \alias{calZscore.sampleDataset}
-\title{Calculate z-score of sample dataset}
+\title{Calculate z-scores of QC metrics of a SampleDataset}
 \usage{
-\method{calZscore}{sampleDataset}(object, strat, qcMetrics = NULL)
+\method{calZscore}{sampleDataset}(object, strat = NULL, qcMetrics = NULL,
+  mad = T)
 }
 \arguments{
 \item{object}{a sample data set}
@@ -12,10 +13,12 @@
 \item{strat}{variable or vector of attributes the sample will be stratified by}
 
 \item{qcMetrics}{optional, which QC metrics should be stratified on.}
+
+\item{mad}{defaultwhether use Median Absolute Deviation to calculate z-score.}
 }
 \value{
 sampleDataset object
 }
 \description{
-Calculate z-score of sample dataset
+Calculate z-scores of QC metrics of a SampleDataset
 }

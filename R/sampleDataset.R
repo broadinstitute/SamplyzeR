@@ -21,7 +21,7 @@ sampleDataset <- function(bamQcMetr, vcfQcMetr, annotations, primaryID = NULL, d
     df = merge(df, annotations, by = primaryID)
     bamQcMetr = names(bamQcMetr)[-which(names(bamQcMetr) == primaryID)]
     vcfQcMetr = names(vcfQcMetr)[-which(names(vcfQcMetr) == primaryID)]
-    attributes = names(annotations)[-which(names(annotations) == primaryID)]
+    annotations = names(annotations)[-which(names(annotations) == primaryID)]
   } else {
     if(is.data.frame(bamQcMetr)) { stop("bamQcMetr should not be a data.frame when df is presented." )}
     if(is.data.frame(vcfQcMetr)) { stop("vcfQcMetr should not be a data.frame when df is presented." )}

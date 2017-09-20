@@ -23,37 +23,30 @@ inferAncestry.default <- function(testSet, trainSet, ancestry, k = 5) {
 #' Infer sample ancestry
 #'
 #' @param object Sample Dataset object for Ancestry predition
-#' @param trainSet optional, a data frame with known accestry (with column name 'Ancestry') and genotype PCs
-#' @param nPC Number of genotype PCs used in this analysis
+#' @param trainSet data frame with genotype PCs for each sample with known ancestry
+#' @param knownAncestry a vector with known ancestry for each sample in same order of trainSet
+#' @param nPC Use first n PCs to predict ancestry
 #' @export
 
 inferAncestry.sampleDataset <- function(
-  object, trainSet = NULL, nPC = 3, k = 5
+  object, trainSet, knownAncestry, nPC = 3, k = 5
 ) {
+  if(dim(trainSet)[1] != length(knownAncestry)) stop("Number of rows of training set is different from knownAncestry.")
 
   PC = paste('PC', 1:nPC, sep = '')
-  if(is.null(trainSet)) {
-    # training without an external reference panel
-    if(!(any('knownAncestry' %in% names(object$df))))
-      stop("No knownAncestry column available in sample dataset, please provide a reference panel")
-    isTrainSet = !is.na(object$df$knownAncestry)
-    trainSet = object$df[isTrainSet, PC]
-    testSet = object$df[!isTrainSet, PC]
-    cl = object$df$knownAncestry[isTrainSet]
-  } else {
-    if(!any('Ancestry' %in% names(trainSet)))
-      stop("'Ancestry' column is not presented in the trainSet")
-    ancestry = trainSet$Ancestry
-    trainSet = trainSet[, PC]
-    testSet = object$df[, PC]
-  }
-  inferredAncestry = inferAncestry(testSet, trainSet, ancestry = ancestry, k = k)
+  if(!all(PC %in% names(trainSet))) stop("Train Set does not contain nPC specified for the analysis.")
+  if(!all(PC %in% names(sds$df[sds$PC]))) stop("Test Set does not contain nPC specified for this analysis.")
+
+  trainSet = trainSet[, PC]
+  testSet = object$df[, PC]
+
+  inferredAncestry = inferAncestry(testSet, trainSet, ancestry = knownAncestry, k = k)
   if (exists("isTrainSet")) {
     object$df$inferredAncestry = as.character(object$df$knownAncestry)
     object$df[!isTrainSet, 'inferredAncestry'] = as.character(inferredAncestry)
   } else {
     object$df$inferredAncestry = as.character(inferredAncestry)
   }
+  object$inferredAncestry = 'inferredAncestry'
   return(object)
 }
-

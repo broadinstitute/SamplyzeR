@@ -2,20 +2,13 @@
 % Please edit documentation in R/inferAncestry.R
 \name{inferAncestry}
 \alias{inferAncestry}
-\title{Predict ancestry of samples from genotype Principle Components}
+\title{Predict sample ancestry from genotype Principle Components}
 \usage{
-inferAncestry(object, ...)
-}
-\arguments{
-\item{object}{Sample Dataset object for ancestry predition}
-
-\item{trainSet}{optional, a data frame with sample Id and ethnicity}
-
-\item{nPC}{Number of genotype PCs used}
+inferAncestry(...)
 }
 \value{
-updated sample Dataset object with inferredancestry tag
+Updated sample Dataset object with inferredAncestry tag
 }
 \description{
-Principle Components of genotypes
+Principle Components of genotypes with k nearest neighbours.
 }

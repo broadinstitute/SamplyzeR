@@ -20,17 +20,22 @@ setAttr <- function (object, ...) UseMethod('setAttr', object)
 #' @return updated sampleDataset object
 #' @export
 
-setAttr.sampleDataset <- function(
-  object, attributes, inputDf, primaryID = NULL
-) {
-  if (!is.data.frame((inputDf))) stop("Input should be dataframe!")
-  if (is.null(primaryID)) stop("Primary ID of input should be specified.")
-  if (!any(inputDf[[primaryID]] %in% object$df[[object$primaryID]])) {
+setAttr.sampleDataset <- function(object, attributes, data, primaryID, overwrite = F) {
+  if (!is.data.frame((data))) stop("Input should be dataframe!")
+  if (!any(data[[primaryID]] %in% object$df[[object$primaryID]])) {
     stop("There's no overlap between input and object primary keys. please double check your input")
   }
+  if (attributes %in% attributes(sds)$names) {
+    if(overwrite) {
+      toDrop = which(names(sds$df) %in% sds$annotations)
+      sds$df = sds$df[-toDrop]
+      } else {
+      stop( "Attribute already already exists, set overwrite = T to overwrite.")
 
-  object$df = merge(object$df, inputDf, by.x = object$primaryID, by.y = primaryID,
+    }
+  }
+  object$df = merge(object$df, data, by.x = object$primaryID, by.y = primaryID,
                     all.x = T)
-  object[attributes] = names(inputDf)[which(names(inputDf) != primaryID)]
+  object[attributes] = list(names(data)[which(names(data) != primaryID)])
   return(object)
 }

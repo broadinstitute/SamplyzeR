@@ -4,10 +4,15 @@ require(gridExtra)
 
 #' Generate scatter plot of qcMetrics according to samples
 #'
-#' @param sds sample dataset object
+#' @param object sample dataset object
 #' @export
-sampleQcPlot <- function (...) UseMethod('sampleQcPlot')
+sampleQcPlot <- function (object, ...) UseMethod('sampleQcPlot')
 
+#' Generate scatter plot of QC metrics
+#'
+#' @param object sample dataset object
+#' @param batch which batch to visualize
+#' @param pca whether perform pca plot
 #' @export
 sampleQcPlot.sampleDataset <- function(
   object, batch = NULL, qcMetrics, pca = F, imputedRace = T,
@@ -56,6 +61,8 @@ sampleQcPlot.sampleDataset <- function(
 #' @param qcMetrics which QC metrics
 #' @param
 #' @export
+#'
+
 outlierPlots <- function(tab, qcMetrics, strat, main, outliers, type = 'violin'){
   plots <- list()  # new empty list
   plots[[1]] = .scatter(tab, x = 'sample', y = qcMetrics, strat = strat, xlab = 'sample',

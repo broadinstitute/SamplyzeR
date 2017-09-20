@@ -4,7 +4,7 @@
 \alias{save.sampleDataset}
 \title{Write sample dataset to tsv, RDS or excel files with S3 method save.}
 \usage{
-save.sampleDataset(object, RDS = NULL, tsv = NULL, xls = NULL)
+\method{save}{sampleDataset}(object, RDS = NULL, tsv = NULL, xls = NULL)
 }
 \arguments{
 \item{object}{sample dataset}

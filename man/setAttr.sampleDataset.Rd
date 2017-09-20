@@ -4,13 +4,13 @@
 \alias{setAttr.sampleDataset}
 \title{Set attributes of a sample dataset}
 \usage{
-\method{setAttr}{sampleDataset}(object, attributes, input, primaryID = NULL,
-  add = T)
+\method{setAttr}{sampleDataset}(object, attributes, data, primaryID,
+  overwrite = F)
 }
 \arguments{
 \item{object}{sampleDataset}
 
-\item{attributes}{which attributes to add to sample Dataset}
+\item{entry}{which entry to add to sample Dataset}
 
 \item{dataframe}{content to add to the dataframe}
 

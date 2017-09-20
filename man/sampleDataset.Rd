@@ -4,20 +4,24 @@
 \alias{sampleDataset}
 \title{Sample dataset object}
 \usage{
-sampleDataset(bamQcMetr, vcfQcMetr, attributes, primaryID = NULL, df = NULL)
+sampleDataset(bamQcMetr, vcfQcMetr, annotations, primaryID = NULL,
+  df = NULL)
 }
 \arguments{
-\item{bamQcMetr}{if df is provided, this is a vector of names}
+\item{bamQcMetr}{a data frame that contains BAM level QC metrics}
 
-\item{vcfQcMetr}{a data frame contain}
+\item{vcfQcMetr}{a data frame that contains VCF level QC metrics}
 
-\item{attributes}{}
+\item{annotations}{a data frame that contains annotations of the samples.}
 
-\item{df}{an R data.frame that contains all sample level data, including QC metrics and}
+\item{df}{optional, an R dataframe that contains all sample level data, including QC metrics and
+sample annotations. When df is provided, bamQcMetr, vcfQcMetr and annotations should
+be vectors with names of corresponding fields.}
 }
 \value{
-an sampleDataset object
+an sampleDataset object.
 }
 \description{
-Create Object sample dataset object to explore outliers.
+Create a sample dataset object that contains all information needed to perform a sample
+quality control. The Dataset object is a list with one dataframe and
 }

@@ -1,3 +1,7 @@
+#' Save an object to a specific format
+#' @param object
+save <-function(object, ...) UseMethod('save', object)
+
 #' Write sample dataset to tsv, RDS or excel files with S3 method save.
 #'
 #' @param object sample dataset
@@ -6,11 +10,9 @@
 #' @param xls path and output name of excel file
 #' @export
 
-save.sampleDataset <- function(object, file = NULL, format = 'RDS') {
-  # output options
-  if (is.null(file)) stop("Please specify output file name.")
-  if (!(format %in% c('tsv', 'xls', 'RDS'))) {
-    stop("unknown format")
+save.sampleDataset <- function(object, RDS = NULL, tsv = NULL, xls = NULL) {
+  if (is.null(RDS) & is.null(tsv) & is.null(xls)) {
+    stop("Please specify at least one format (RDS, tsv or xls) for output")
   }
   if(!is.null(tsv)) {
     write.table(object$df, file = tsv, sep = '\t', row.names = F, quote = F)
@@ -19,7 +21,7 @@ save.sampleDataset <- function(object, file = NULL, format = 'RDS') {
     saveRDS(object, file = RDS)
   }
   if (!is.null(xls)) {
-    library(WriteXLS)
+    require(WriteXLS)
     WriteXLS(object$df, ExcelFileName = xls)
   }
 }
@@ -39,8 +41,7 @@ sort.sampleDataset <- function(object, by) {
 
 #' Show dimensions of sample dataset object
 #'
-#' @param object sample data set
-#'
+#' @param object sample data set object
 #' @return a vector of rows and columns of the data frame of sample data set
 #' @export
 

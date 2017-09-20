@@ -2,13 +2,15 @@
 % Please edit documentation in R/plot.R
 \name{outlierPlots}
 \alias{outlierPlots}
-\title{plot outliers}
+\title{Plot outliers}
 \usage{
 outlierPlots(tab, qcMetrics, strat, main, outliers, type = "violin")
 }
 \arguments{
 \item{tab}{input table}
+
+\item{qcMetrics}{which QC metrics}
 }
 \description{
-plot outliers
+Plot outliers
 }

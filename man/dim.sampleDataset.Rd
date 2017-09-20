@@ -7,7 +7,7 @@
 \method{dim}{sampleDataset}(object)
 }
 \arguments{
-\item{object}{sample data set}
+\item{object}{sample data set object}
 }
 \value{
 a vector of rows and columns of the data frame of sample data set

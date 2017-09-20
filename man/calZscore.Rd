@@ -2,18 +2,13 @@
 % Please edit documentation in R/calZscore.R
 \name{calZscore}
 \alias{calZscore}
-\title{Calculate z-score of a vector}
+\title{Calculate z-score of a vector or QC metrics of a SampleDataset}
 \usage{
-calZscore(x, ...)
-}
-\arguments{
-\item{x}{a vector of values.}
-
-\item{mad}{binary, whether use median absolute deviation, if false, standard deviation will be used.}
+calZscore(...)
 }
 \value{
-a vector of z-scores
+The form of the value returned by predict depends on the class of its argument. See the documentation of the particular methods for details of what is produced by that method.
 }
 \description{
-Calculate z-score of a vector
+Calculate z-score of a vector or QC metrics of a SampleDataset, see details in calZscore.default and calZscore.sampleDataset
 }

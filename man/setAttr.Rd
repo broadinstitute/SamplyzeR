@@ -2,18 +2,18 @@
 % Please edit documentation in R/setAttr.R
 \name{setAttr}
 \alias{setAttr}
-\title{Set attributes of a sample dataset}
+\title{Update a Sample Data Set}
 \usage{
 setAttr(object, ...)
 }
 \arguments{
 \item{object}{sample dataset object}
 
-\item{...}{other argumentsoxyg}
+\item{...}{other arguments}
 }
 \value{
 object
 }
 \description{
-Set attributes of a sample dataset
+Update entries of sample data set, such as the df, bamQcMetr, vcfQcMetr
 }
