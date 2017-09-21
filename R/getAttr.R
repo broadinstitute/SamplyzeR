@@ -14,6 +14,7 @@ getAttr <- function (object, ...) UseMethod('getAttr', object)
 #'
 #' @return data frame
 #' @export
+
 getAttr.sampleDataset <- function(object, attribute, showID = F) {
   if(!(attribute %in% attributes(object)$names)) {
     stop("Input attributes did not exist in provided data object, please double check it.")
