@@ -1,17 +1,16 @@
 #' Flag a sample
 #'
-#' Flag a sample
+#' Flag a sample from a data frame or a sampleDataset
+#' @export
 
 flagSamples <- function(...) UseMethod('flagSamples')
 
 #' Flag a sample from a data frame
 #'
-#' @usage flagSamples(df, stat, cutoff, greater = TRUE, abs = F)
-#'
 #' @param df a data frame contained summary statistics
 #'
 #' @return Return a data frame
-#'
+#' @export
 
 flagSamples.default <- function (df, stat, cutoff, greater = TRUE, abs = F) {
   stat = as.character(stat)
@@ -30,24 +29,20 @@ flagSamples.default <- function (df, stat, cutoff, greater = TRUE, abs = F) {
 #' Flag a sample from a sample data set
 #'
 #' @param object sample data set
-#' @param cutoffs a data frame
-#' @param zscore zscore cutoff
+#' @param cutoffs a data frame that contains three columns, including "qcMetrics", "value" and "greater"
+#' @param zscore zscore cutoff used
 #'
 #' @return an updated sample dataset object with flags added.
-#'
+#' @export
 
-flagSamples.sampleDataset <- function(object, cutoffs = NULL, zscore = NULL){
-  # flag samples with GTEx default PctLt30bp 0.05, chim 0.09, Comtam 0.02
+flagSamples.sampleDataset <- function(object, cutoffs, zscore = NULL){
   object$df$flaggedReason = ''
-  if(is.null(cutoffs) & is.null(zscore)) stop("Zscore and cutoffs should be provided.")
   if(!all(cutoffs$qcMetrics %in% object$qcMetrics)){
     stop("QC metrics from cutoff table is not consistent with that from sample dataset. ")
   }
-  if(!is.null(cutoffs)) {
-    nCut = dim(cutoffs)[1]
-    for(i in 1:nCut) {
-      object$df = flagSamples(object$df, cutoffs$qcMetrics[i], cutoffs$value[i], cutoffs$greater[i])
-    }
+  nCut = dim(cutoffs)[1]
+  for(i in 1:nCut) {
+    object$df = flagSamples(object$df, cutoffs$qcMetrics[i], cutoffs$value[i], cutoffs$greater[i])
   }
   if(!is.null(zscore)) {
     for (i in object$zscore) {
