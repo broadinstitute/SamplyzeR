@@ -28,8 +28,7 @@ save.sampleDataset <- function(object, RDS = NULL, tsv = NULL, xls = NULL) {
     saveRDS(object, file = RDS)
   }
   if (!is.null(xls)) {
-    require(WriteXLS)
-    WriteXLS(object$df, ExcelFileName = xls)
+    WriteXLS::WriteXLS(object$df, ExcelFileName = xls)
   }
 }
 
@@ -57,3 +56,11 @@ sort.sampleDataset <- function(object, by) {
 dim.sampleDataset <- function(object){
   dim(object$df)
 }
+
+#' @export
+print.sampleDataset <- function(object) {
+  cat("\n"
+
+  )
+}
+
