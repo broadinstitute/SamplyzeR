@@ -1,6 +1,6 @@
 #' Predict sample ancestry from genotype Principle Components
 #'
-#' @description Principle Components of genotypes with k nearest neighbours.
+#' Principle Components of genotypes with k nearest neighbours.
 #' @return Updated sample Dataset object with inferredAncestry tag
 #' @export
 
@@ -15,8 +15,7 @@ inferAncestry <- function(...) UseMethod('inferAncestry')
 #' @export
 
 inferAncestry.default <- function(testSet, trainSet, ancestry, k = 5) {
-  require(class)
-  inferredAncestry = knn(train = trainSet, test = testSet, cl = ancestry, k = k)
+  inferredAncestry = class::knn(train = trainSet, test = testSet, cl = ancestry, k = k)
   return(inferredAncestry)
 }
 
@@ -26,6 +25,7 @@ inferAncestry.default <- function(testSet, trainSet, ancestry, k = 5) {
 #' @param trainSet data frame with genotype PCs for each sample with known ancestry
 #' @param knownAncestry a vector with known ancestry for each sample in same order of trainSet
 #' @param nPC Use first n PCs to predict ancestry
+#'
 #' @export
 
 inferAncestry.sampleDataset <- function(
@@ -48,5 +48,6 @@ inferAncestry.sampleDataset <- function(
     object$df$inferredAncestry = as.character(inferredAncestry)
   }
   object$inferredAncestry = 'inferredAncestry'
+  object$annotations = c(object$annotations, 'inferredAncestry')
   return(object)
 }
