@@ -1,62 +1,57 @@
-require(ggplot2)
-require(grid)
-require(gridExtra)
-
-#' Generate scatter plot of qcMetrics according to samples
+#' Generate scatter plot of QC metrics according to samples
 #'
 #' @param object sample dataset object
 #'
 #' @export
+#'
 sampleQcPlot <- function (object, ...) UseMethod('sampleQcPlot')
+
+#' Generate scatter plot of an SampleDataset Object
+PCplots <- function (object, showPlot = T) {
+  if(!(hasAttr(object, c('PC', 'inferredAncestry')))) stop("Sample Dataset must have PC and inferred ancestry attributes.")
+
+  plt = list()
+  plt[[1]] = .scatter(data = object$df, x = 'PC1', y = 'PC2', strat = 'inferredAncestry', main = 'PC1 vs. PC2')
+  plt[[2]] = .scatter(data = object$df, x = 'PC1', y = 'PC3', strat = 'inferredAncestry', main = 'PC1 vs. PC3')
+  plt[[3]] = .scatter(data = object$df, x = 'PC1', y = 'PC2', strat = 'inferredAncestry', main = 'PC2 vs. PC3')
+  if(showPlot) { .multiplot(plotlist = plt, cols = 3) }
+  return(plt)
+}
 
 #' Generate scatter plot of QC metrics
 #'
 #' @param object sample dataset object
 #' @param annotation which annotation to visualize
 #' @param pca whether perform pca plot
-#' @param geom
 #'
 #' @export
 
 sampleQcPlot.sampleDataset <- function(
-  object, annotation = NULL, qcMetrics, pca = F, inferredAncestry = T,
-  geom = 'scatter', outliers = NULL, legend = T, main = 'QC'
+  object, annotation = NULL, qcMetrics, geom = c('scatter', 'violin', 'hist'),
+  outliers = NULL, legend = T, main = 'QC'
 ) {
   if(!(geom %in% c('scatter', 'violin', 'hist'))) stop("Geom should only be 'scatter', 'violin' or 'hist'.")
-  if (pca) {
-    if (inferredAncestry) {
-      strat = 'inferredAncestry'
-    } else {
-      strat = 'ANCESTRY'
+  if (!is.null(annotation)) {
+    if (geom == 'scatter') {
+      # scatter plot stratified by sample
+      object = sort(object, by = annotation)
+      plt = .scatter(data = object$df, x='index', y=qcMetrics, strat = annotation, xlab = 'samples',
+                     outliers = outliers, legend = legend, main = main)
     }
-    plot = list()
-    plot[[1]] = .scatter(data = object$df, x = 'PC1', y = 'PC2', strat = strat)
-    plot[[2]] = .scatter(data = object$df, x = 'PC1', y = 'PC3', strat = strat)
-    plot[[3]] = .scatter(data = object$df, x = 'PC1', y = 'PC2', strat = strat)
-    .multiplot(plotlist = plot, cols = 2)
+    if (geom == 'violin') {
+      object$df[[annotation]] = factor(.toSameLength(object$df[[annotation]]))
+      plt = ggplot2::ggplot(object$df, aes_string(annotation, qcMetrics, color = annotation)) +
+        ggplot2::geom_violin() + ggplot2::geom_jitter(height = 0, width = 0.3) + ggplot2::ggtitle(main)
+    }
+    if(!is.null(outliers)) {
+      plt = plt + ggplot2::geom_point(data = object$df[object$df$sampleId %in% outliers, ], colour = 'black', size = 3)
+    }
   } else {
-    if (!is.null(annotation)) {
-      if (geom == 'scatter') {
-        # scatter plot stratified by sample
-        object = sort(object, by = annotation)
-        plt = .scatter(data = object$df, x='index', y=qcMetrics, strat = annotation, xlab = 'samples',
-                       outliers = outliers, legend = legend, main = main)
-      }
-      if (geom == 'violin') {
-        object$df[[annotation]] = factor(.toSameLength(object$df[[annotation]]))
-        plt = ggplot(object$df, aes_string(annotation, qcMetrics, color = annotation)) +
-          geom_violin() + geom_jitter(height = 0, width = 0.3) + ggtitle(main)
-      }
-      if(!is.null(outliers)) {
-        plt = plt + geom_point(data = object$df[object$df$sampleId %in% outliers, ], colour = 'black', size = 3)
-      }
-    } else {
-      if (geom == 'hist')  {
-        plt = qplot(object$df[[qcMetrics]], geom = 'histogram', bins = 100, xlab = qcMetrics)
-      }
+    if (geom == 'hist')  {
+      plt = ggplot2::qplot(object$df[[qcMetrics]], geom = 'histogram', bins = 100, xlab = qcMetrics)
     }
-    return(plt)
   }
+  return(plt)
 }
 
 outlierPlots <- function(tab, qcMetrics, strat, main, outliers, type = 'violin'){
@@ -65,23 +60,23 @@ outlierPlots <- function(tab, qcMetrics, strat, main, outliers, type = 'violin')
                         outliers = outliers, main = main, legend = F)
 
   if (type == 'density') {
-    plots[[2]] = qplot(tab[, qcMetrics], color = tab[, strat], geom = "density",
+    plots[[2]] = ggplot2::qplot(tab[, qcMetrics], color = tab[, strat], geom = "density",
                        main= main, xlab = qcMetrics) +
       geom_vline(linetype="dashed", xintercept = tab[outlier.index, qcMetrics])
   } else {
-    plots[[2]] = ggplot(data = tab, aes_string(strat, qcMetrics, color = strat)) +
-      geom_violin() + geom_jitter(height = 0, width = 0.3, alpha = 0.3) +
-      ggtitle(main) + theme(axis.text.x = element_blank())
+    plots[[2]] = ggplot2::ggplot(data = tab, aes_string(strat, qcMetrics, color = strat)) +
+      ggplot2::geom_violin() + ggplot2::geom_jitter(height = 0, width = 0.3, alpha = 0.3) +
+      ggplot2::ggtitle(main) + ggplot2::theme(axis.text.x = element_blank())
     if(!is.null(outliers)) {
       plots[[2]] = plots[[2]] +
-        geom_point(data = tab[tab$sampleId %in% outliers, ], colour = 'black', size = 3)
+        ggplot2::geom_point(data = tab[tab$sampleId %in% outliers, ], colour = 'black', size = 3)
     }
   }
   .multiplot(plotlist = plots, cols = 2)
 }
 
 .multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-  library(grid)
+  # This function is modified from multiplot of Cookbook of R
   # Make a list from the ... arguments and plotlist
   plots <- c(list(...), plotlist)
 
@@ -99,8 +94,12 @@ outlierPlots <- function(tab, qcMetrics, strat, main, outliers, type = 'violin')
     print(plots[[1]])
   } else {
     # Set up the page
-    grid.newpage()
-    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    grid::grid.newpage()
+    grid::pushViewport(
+      grid::viewport(
+        layout = grid::grid.layout(nrow(layout), ncol(layout))
+      )
+    )
 
     # Make each plot, in the correct location
     for (i in 1:numPlots) {
@@ -117,8 +116,16 @@ outlierPlots <- function(tab, qcMetrics, strat, main, outliers, type = 'violin')
   format(vec, width = maxLen)
 }
 
-.scatter.default <- function(
-  data, x, y, strat, xlab = NULL, ylab = NULL, outliers = NULL, main = 'QC',
+#'
+#' Produce a scatter plot from a data frame
+#' @param data a data.frame
+#' @param strat by which column to stratify
+#' @param outliers a vector of outliers
+#' @param
+#' @param
+#'
+.scatter <- function(
+  data, x, y, strat, xlab = NULL, ylab = NULL, outliers = NULL, main = '',
   legend = T
 ) {
   if (is.null(xlab)) xlab = x
@@ -130,15 +137,14 @@ outlierPlots <- function(tab, qcMetrics, strat, main, outliers, type = 'violin')
   color = factor(data[[strat]])
 
   if (!is.null(outliers)) {
-    plt = ggplot(data = data, aes_string(x, y, color = color)) + labs(color = strat) + geom_point() +
-      geom_point(data = data[data$sampleId %in% outliers, ], color = 'black', size = 3) + ggtitle(main)
+    plt = ggplot2::ggplot(data = data, aes_string(x, y, color = color)) + ggplot2::labs(color = strat) + ggplot2::geom_point() +
+      ggplot2::geom_point(data = data[data$sampleId %in% outliers, ], color = 'black', size = 3) + ggplot2::ggtitle(main)
   } else {
-    plt = qplot(data[[x]], data[[y]], colour = color, xlab = xlab, ylab = ylab, main = main)
+    plt = ggplot2::qplot(data[[x]], data[[y]], colour = color, xlab = xlab, ylab = ylab, main = main)
   }
   #plt = plt + scale_color_manual(values = color24)
   if(!legend) {
-    plt = plt + guides(color = F)
+    plt = plt + ggplot2::guides(color = F)
   }
   return(plt)
 }
-
