@@ -6,6 +6,9 @@
 \usage{
 save(object, ...)
 }
+\arguments{
+\item{object}{}
+}
 \description{
-Save an object to a specific format
+Save an object to tsv, RDS or excel format
 }

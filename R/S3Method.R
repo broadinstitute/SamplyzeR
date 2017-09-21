@@ -1,5 +1,9 @@
 #' Save an object to a specific format
+#'
+#' Save an object to tsv, RDS or excel format
+#'
 #' @param object
+#'
 #' @export
 
 save <-function(object, ...) UseMethod('save')
@@ -10,6 +14,7 @@ save <-function(object, ...) UseMethod('save')
 #' @param tsv path and output name of tsv file
 #' @param RDS path and output name of RDS file
 #' @param xls path and output name of excel file
+#'
 #' @export
 
 save.sampleDataset <- function(object, RDS = NULL, tsv = NULL, xls = NULL) {
@@ -33,6 +38,7 @@ save.sampleDataset <- function(object, RDS = NULL, tsv = NULL, xls = NULL) {
 #' @param object sample dataset
 #' @param by sort by which category
 #' @return an sample dataset object with updated index
+#'
 #' @export
 
 sort.sampleDataset <- function(object, by) {
@@ -45,6 +51,7 @@ sort.sampleDataset <- function(object, by) {
 #'
 #' @param object sample data set object
 #' @return a vector of rows and columns of the data frame of sample data set
+#'
 #' @export
 
 dim.sampleDataset <- function(object){

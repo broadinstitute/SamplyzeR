@@ -5,25 +5,29 @@ require(gridExtra)
 #' Generate scatter plot of qcMetrics according to samples
 #'
 #' @param object sample dataset object
+#'
 #' @export
 sampleQcPlot <- function (object, ...) UseMethod('sampleQcPlot')
 
 #' Generate scatter plot of QC metrics
 #'
 #' @param object sample dataset object
-#' @param batch which batch to visualize
+#' @param annotation which annotation to visualize
 #' @param pca whether perform pca plot
+#' @param geom
+#'
 #' @export
+
 sampleQcPlot.sampleDataset <- function(
-  object, batch = NULL, qcMetrics, pca = F, imputedRace = T,
+  object, annotation = NULL, qcMetrics, pca = F, inferredAncestry = T,
   geom = 'scatter', outliers = NULL, legend = T, main = 'QC'
 ) {
-  library(ggplot2)
+  if(!(geom %in% c('scatter', 'violin', 'hist'))) stop("Geom should only be 'scatter', 'violin' or 'hist'.")
   if (pca) {
-    if (imputedRace) {
-      strat = 'imputedRace'
+    if (inferredAncestry) {
+      strat = 'inferredAncestry'
     } else {
-      strat = 'RACE'
+      strat = 'ANCESTRY'
     }
     plot = list()
     plot[[1]] = .scatter(data = object$df, x = 'PC1', y = 'PC2', strat = strat)
@@ -31,16 +35,16 @@ sampleQcPlot.sampleDataset <- function(
     plot[[3]] = .scatter(data = object$df, x = 'PC1', y = 'PC2', strat = strat)
     .multiplot(plotlist = plot, cols = 2)
   } else {
-    if (!is.null(batch)) {
+    if (!is.null(annotation)) {
       if (geom == 'scatter') {
         # scatter plot stratified by sample
-        object = sort(object, by = batch)
-        plt = .scatter(data = object$df, x='index', y=qcMetrics, strat = batch, xlab = 'samples',
+        object = sort(object, by = annotation)
+        plt = .scatter(data = object$df, x='index', y=qcMetrics, strat = annotation, xlab = 'samples',
                        outliers = outliers, legend = legend, main = main)
       }
       if (geom == 'violin') {
-        object$df[[batch]] = factor(.toSameLength(object$df[[batch]]))
-        plt = ggplot(object$df, aes_string(batch, qcMetrics, color = batch)) +
+        object$df[[annotation]] = factor(.toSameLength(object$df[[annotation]]))
+        plt = ggplot(object$df, aes_string(annotation, qcMetrics, color = annotation)) +
           geom_violin() + geom_jitter(height = 0, width = 0.3) + ggtitle(main)
       }
       if(!is.null(outliers)) {
@@ -54,14 +58,6 @@ sampleQcPlot.sampleDataset <- function(
     return(plt)
   }
 }
-
-#' Plot outliers
-#'
-#' @param tab input table
-#' @param qcMetrics which QC metrics
-#' @param
-#' @export
-#'
 
 outlierPlots <- function(tab, qcMetrics, strat, main, outliers, type = 'violin'){
   plots <- list()  # new empty list
@@ -121,7 +117,7 @@ outlierPlots <- function(tab, qcMetrics, strat, main, outliers, type = 'violin')
   format(vec, width = maxLen)
 }
 
-.scatter <- function(
+.scatter.default <- function(
   data, x, y, strat, xlab = NULL, ylab = NULL, outliers = NULL, main = 'QC',
   legend = T
 ) {
@@ -145,3 +141,4 @@ outlierPlots <- function(tab, qcMetrics, strat, main, outliers, type = 'violin')
   }
   return(plt)
 }
+

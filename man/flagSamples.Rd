@@ -7,5 +7,5 @@
 flagSamples(...)
 }
 \description{
-Flag a sample
+Flag a sample from a data frame or a sampleDataset
 }

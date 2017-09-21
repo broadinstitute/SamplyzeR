@@ -4,16 +4,18 @@
 \alias{sampleQcPlot.sampleDataset}
 \title{Generate scatter plot of QC metrics}
 \usage{
-\method{sampleQcPlot}{sampleDataset}(object, batch = NULL, qcMetrics,
-  pca = F, imputedRace = T, geom = "scatter", outliers = NULL,
+\method{sampleQcPlot}{sampleDataset}(object, annotation = NULL, qcMetrics,
+  pca = F, inferredAncestry = T, geom = "scatter", outliers = NULL,
   legend = T, main = "QC")
 }
 \arguments{
 \item{object}{sample dataset object}
 
-\item{batch}{which batch to visualize}
+\item{annotation}{which annotation to visualize}
 
 \item{pca}{whether perform pca plot}
+
+\item{geom}{}
 }
 \description{
 Generate scatter plot of QC metrics

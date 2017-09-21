@@ -4,7 +4,7 @@
 \alias{flagSamples.default}
 \title{Flag a sample from a data frame}
 \usage{
-flagSamples(df, stat, cutoff, greater = TRUE, abs = F)
+\method{flagSamples}{default}(df, stat, cutoff, greater = TRUE, abs = F)
 }
 \arguments{
 \item{df}{a data frame contained summary statistics}

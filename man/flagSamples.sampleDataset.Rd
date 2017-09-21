@@ -4,14 +4,14 @@
 \alias{flagSamples.sampleDataset}
 \title{Flag a sample from a sample data set}
 \usage{
-\method{flagSamples}{sampleDataset}(object, cutoffs = NULL, zscore = NULL)
+\method{flagSamples}{sampleDataset}(object, cutoffs, zscore = NULL)
 }
 \arguments{
 \item{object}{sample data set}
 
-\item{cutoffs}{a data frame}
+\item{cutoffs}{a data frame that contains three columns, including "qcMetrics", "value" and "greater"}
 
-\item{zscore}{zscore cutoff}
+\item{zscore}{zscore cutoff used}
 }
 \value{
 an updated sample dataset object with flags added.
