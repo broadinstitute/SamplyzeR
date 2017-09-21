@@ -1,6 +1,8 @@
 #' Save an object to a specific format
 #' @param object
-save <-function(object, ...) UseMethod('save', object)
+#' @export
+
+save <-function(object, ...) UseMethod('save')
 
 #' Write sample dataset to tsv, RDS or excel files with S3 method save.
 #'
