@@ -1,22 +1,10 @@
 #' Generate scatter plot of QC metrics according to samples
 #'
 #' @param object sample dataset object
+#' @param ... other arguments
 #'
 #' @export
-#'
 sampleQcPlot <- function (object, ...) UseMethod('sampleQcPlot')
-
-#' Generate scatter plot of an SampleDataset Object
-PCplots <- function (object, showPlot = T) {
-  if(!(hasAttr(object, c('PC', 'inferredAncestry')))) stop("Sample Dataset must have PC and inferred ancestry attributes.")
-
-  plt = list()
-  plt[[1]] = .scatter(data = object$df, x = 'PC1', y = 'PC2', strat = 'inferredAncestry', main = 'PC1 vs. PC2')
-  plt[[2]] = .scatter(data = object$df, x = 'PC1', y = 'PC3', strat = 'inferredAncestry', main = 'PC1 vs. PC3')
-  plt[[3]] = .scatter(data = object$df, x = 'PC1', y = 'PC2', strat = 'inferredAncestry', main = 'PC2 vs. PC3')
-  if(showPlot) { .multiplot(plotlist = plt, cols = 3) }
-  return(plt)
-}
 
 #' Generate scatter plot of QC metrics
 #'
@@ -26,30 +14,62 @@ PCplots <- function (object, showPlot = T) {
 #'
 #' @export
 
-sampleQcPlot.sampleDataset <- function(
-  object, annotation = NULL, qcMetrics, geom = c('scatter', 'violin', 'hist'),
+sampleQcPlot.default <- function(
+  data, annotation = NULL, qcMetric, geom = c('scatter', 'violin', 'hist'),
   outliers = NULL, legend = T, main = 'QC'
 ) {
-  if(!(geom %in% c('scatter', 'violin', 'hist'))) stop("Geom should only be 'scatter', 'violin' or 'hist'.")
+  geom <- match.arg(geom)
   if (!is.null(annotation)) {
     if (geom == 'scatter') {
       # scatter plot stratified by sample
-      object = sort(object, by = annotation)
-      plt = .scatter(data = object$df, x='index', y=qcMetrics, strat = annotation, xlab = 'samples',
+      plt = .scatter(data = data, x='index', y = qcMetric, strat = annotation, xlab = 'samples',
                      outliers = outliers, legend = legend, main = main)
     }
     if (geom == 'violin') {
-      object$df[[annotation]] = factor(.toSameLength(object$df[[annotation]]))
-      plt = ggplot2::ggplot(object$df, aes_string(annotation, qcMetrics, color = annotation)) +
+      data[[annotation]] = factor(.toSameLength(data[[annotation]]))
+      plt = ggplot2::ggplot(data, ggplot2::aes_string(annotation, qcMetric, color = annotation)) +
         ggplot2::geom_violin() + ggplot2::geom_jitter(height = 0, width = 0.3) + ggplot2::ggtitle(main)
     }
     if(!is.null(outliers)) {
-      plt = plt + ggplot2::geom_point(data = object$df[object$df$sampleId %in% outliers, ], colour = 'black', size = 3)
+      plt = plt + ggplot2::geom_point(data = data[data$sampleId %in% outliers, ], colour = 'black', size = 3)
     }
   } else {
     if (geom == 'hist')  {
-      plt = ggplot2::qplot(object$df[[qcMetrics]], geom = 'histogram', bins = 100, xlab = qcMetrics)
+      plt = ggplot2::qplot(data[[qcMetric]], geom = 'histogram', bins = 100, xlab = qcMetric)
     }
+  }
+  return(plt)
+}
+
+#' Generate a panel of sample QC plots across a list of qcMetrics
+#'
+#' @param object SampleDataset object
+#' @param annotations a character string of sample annotation to stratify by
+#' @param qcMetrics a character string or a vector includes QC metrics to explore; if unspecified, all QC metrics in the SDS will be used.
+#' @param geom a character string indicating which visualization pattern to be used. One of strings 'scatter', 'violin' or 'hist' can be used.
+#' @param outliers a vector of IDs of outliers to show on the figure
+#' @param legend whether to include a legend or not
+#' @param position position of the legend
+#' @return a list of grob objects
+#' @export
+#'
+
+sampleQcPlot.sampleDataset <- function(
+  object, qcMetrics = NULL, annotation = NULL, geom = c('scatter', 'violin', 'hist'),
+  outliers = NULL, legend = T, main = 'QC', position = c('bottom', 'right')
+) {
+  geom <- match.arg(geom)
+  position <- match.arg(position)
+  if(is.null(qcMetrics)) {
+    qcMetrics = sds$qcMetrics
+  }
+  if(!is.null(annotation)) {
+    object = sort(object, by = annotation)
+    plots = sapply(qcMetrics,
+                   function(x) sampleQcPlot(data = sds$df, annotation = annotation, geom = 'scatter',
+                   legend = T, main = x, qcMetric = x),
+                   simplify = F
+                  )
   }
   return(plt)
 }
@@ -64,7 +84,7 @@ outlierPlots <- function(tab, qcMetrics, strat, main, outliers, type = 'violin')
                        main= main, xlab = qcMetrics) +
       geom_vline(linetype="dashed", xintercept = tab[outlier.index, qcMetrics])
   } else {
-    plots[[2]] = ggplot2::ggplot(data = tab, aes_string(strat, qcMetrics, color = strat)) +
+    plots[[2]] = ggplot2::ggplot(data = tab, ggplot2::aes_string(strat, qcMetrics, color = strat)) +
       ggplot2::geom_violin() + ggplot2::geom_jitter(height = 0, width = 0.3, alpha = 0.3) +
       ggplot2::ggtitle(main) + ggplot2::theme(axis.text.x = element_blank())
     if(!is.null(outliers)) {
@@ -73,6 +93,20 @@ outlierPlots <- function(tab, qcMetrics, strat, main, outliers, type = 'violin')
     }
   }
   .multiplot(plotlist = plots, cols = 2)
+}
+
+#' Generate PC plot of an SampleDataset Object
+#'
+#' @export
+
+PCplots <- function (object, showPlot = T) {
+  if(!(hasAttr(object, c('PC', 'inferredAncestry')))) stop("Sample Dataset must have PC and inferred ancestry attributes.")
+  plt = list()
+  plt[[1]] = .scatter(data = object$df, x = 'PC1', y = 'PC2', strat = 'inferredAncestry', main = 'PC1 vs. PC2')
+  plt[[2]] = .scatter(data = object$df, x = 'PC1', y = 'PC3', strat = 'inferredAncestry', main = 'PC1 vs. PC3')
+  plt[[3]] = .scatter(data = object$df, x = 'PC1', y = 'PC2', strat = 'inferredAncestry', main = 'PC2 vs. PC3')
+  if(showPlot) { .multiplotWithSharedLegend(plots = plt, ncols = 3) }
+  return(plt)
 }
 
 .multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
@@ -112,18 +146,16 @@ outlierPlots <- function(tab, qcMetrics, strat, main, outliers, type = 'violin')
 }
 
 .toSameLength <- function(vec) {
-  maxLen = max(nchar((vec)))
+  maxLen = max(nchar(as.character(vec)))
   format(vec, width = maxLen)
 }
 
-#'
 #' Produce a scatter plot from a data frame
-#' @param data a data.frame
-#' @param strat by which column to stratify
-#' @param outliers a vector of outliers
-#' @param
-#' @param
 #'
+#' param data a data.frame
+#' param strat by which column to stratify
+#' param outliers a vector of outliers
+
 .scatter <- function(
   data, x, y, strat, xlab = NULL, ylab = NULL, outliers = NULL, main = '',
   legend = T
@@ -137,7 +169,7 @@ outlierPlots <- function(tab, qcMetrics, strat, main, outliers, type = 'violin')
   color = factor(data[[strat]])
 
   if (!is.null(outliers)) {
-    plt = ggplot2::ggplot(data = data, aes_string(x, y, color = color)) + ggplot2::labs(color = strat) + ggplot2::geom_point() +
+    plt = ggplot2::ggplot(data = data, ggplot2::aes_string(x, y, color = color)) + ggplot2::labs(color = strat) + ggplot2::geom_point() +
       ggplot2::geom_point(data = data[data$sampleId %in% outliers, ], color = 'black', size = 3) + ggplot2::ggtitle(main)
   } else {
     plt = ggplot2::qplot(data[[x]], data[[y]], colour = color, xlab = xlab, ylab = ylab, main = main)
@@ -147,4 +179,41 @@ outlierPlots <- function(tab, qcMetrics, strat, main, outliers, type = 'violin')
     plt = plt + ggplot2::guides(color = F)
   }
   return(plt)
+}
+
+#' Generate multiple plots with shared figure legend
+#'
+#' :param plots a list of grob objects
+#' :param nrows number of rows
+#'
+#' :Returns a grid graphical object (grob)
+#'
+.multiplotWithSharedLegend <- function(
+  plots, ncols = 1, position = c("bottom", "right"), show = T) {
+
+  nrows = ceiling(length(plots)/ncols)
+  position <- match.arg(position)
+  # extract legend info from first plot
+  g <- ggplot2::ggplotGrob(plots[[1]] + ggplot2::theme(legend.position = position))$grobs
+  legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]
+  lheight <- sum(legend$height)
+  lwidth <- sum(legend$width)
+
+  gl <- lapply(plots, function(x) x + ggplot2::theme(legend.position = "none"))
+  gl <- c(gl, nrow = nrows, ncol = ncols)
+
+  combined <- switch(position,
+                     "bottom" = gridExtra::arrangeGrob(do.call(gridExtra::arrangeGrob, gl),
+                                            legend,
+                                            ncol = 1,
+                                            heights = unit.c(unit(1, "npc") - lheight, lheight)),
+                     "right" = gridExtra::arrangeGrob(do.call(gridExtra::arrangeGrob, gl),
+                                           legend,
+                                           ncol = 2,
+                                           widths = unit.c(unit(1, "npc") - lwidth, lwidth)))
+  if(show) {
+    grid::grid.newpage()
+    grid::grid.draw(combined)
+  }
+  return(combined)
 }
