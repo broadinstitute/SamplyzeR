@@ -1,5 +1,4 @@
 
-
 .is.sds <- function(x) 'sampleDataset' %in% class(x)
 
 #' default bam QC parameters from picard tools
