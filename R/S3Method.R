@@ -59,8 +59,8 @@ dim.sampleDataset <- function(object){
 
 #' @export
 print.sampleDataset <- function(object) {
-  cat("\n"
-
-  )
+  cat("\nClass: SampleDataset\n",
+      "Samples:   ", dim(object)[1], "\n",
+      "Attributes:", attributes(object)$names, "\n\n"
+      )
 }
-
