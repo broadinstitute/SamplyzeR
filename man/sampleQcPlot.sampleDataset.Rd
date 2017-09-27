@@ -2,21 +2,30 @@
 % Please edit documentation in R/plot.R
 \name{sampleQcPlot.sampleDataset}
 \alias{sampleQcPlot.sampleDataset}
-\title{Generate scatter plot of QC metrics}
+\title{Generate a panel of sample QC plots across a list of qcMetrics}
 \usage{
-\method{sampleQcPlot}{sampleDataset}(object, annotation = NULL, qcMetrics,
-  pca = F, inferredAncestry = T, geom = "scatter", outliers = NULL,
-  legend = T, main = "QC")
+\method{sampleQcPlot}{sampleDataset}(object, qcMetrics, annotation = NULL,
+  geom = c("scatter", "violin", "hist"), outliers = NULL, legend = T,
+  main = "QC", position = c("right", "bottom"), ncols = 5, show = TRUE)
 }
 \arguments{
-\item{object}{sample dataset object}
+\item{object}{SampleDataset object}
 
-\item{annotation}{which annotation to visualize}
+\item{qcMetrics}{a character string or a vector includes QC metrics to explore; if unspecified, all QC metrics in the SDS will be used.}
 
-\item{pca}{whether perform pca plot}
+\item{geom}{a character string indicating which visualization pattern to be used. One of strings 'scatter', 'violin' or 'hist' can be used.}
 
-\item{geom}{}
+\item{outliers}{a vector of IDs of outliers to show on the figure}
+
+\item{legend}{whether to include a legend or not}
+
+\item{position}{position of the legend}
+
+\item{annotations}{a character string of sample annotation to stratify by}
+}
+\value{
+a list of grob objects
 }
 \description{
-Generate scatter plot of QC metrics
+Generate a panel of sample QC plots across a list of qcMetrics
 }

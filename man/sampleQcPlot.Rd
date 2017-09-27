@@ -2,13 +2,15 @@
 % Please edit documentation in R/plot.R
 \name{sampleQcPlot}
 \alias{sampleQcPlot}
-\title{Generate scatter plot of qcMetrics according to samples}
+\title{Generate scatter plot of QC metrics according to samples}
 \usage{
 sampleQcPlot(object, ...)
 }
 \arguments{
 \item{object}{sample dataset object}
+
+\item{...}{other arguments}
 }
 \description{
-Generate scatter plot of qcMetrics according to samples
+Generate scatter plot of QC metrics according to samples
 }
