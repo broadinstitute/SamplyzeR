@@ -12,10 +12,9 @@ sampleQcPlot <- function (object, ...) UseMethod('sampleQcPlot')
 #' @param annotation which annotation to visualize
 #' @param pca whether perform pca plot
 #'
-#' @export
 
 sampleQcPlot.default <- function(
-  data, annotation = NULL, qcMetric, geom = c('scatter', 'violin', 'hist'),
+  data, primaryID, qcMetric, annotation = NULL, geom = c('scatter', 'violin', 'hist'),
   outliers = NULL, legend = T, main = 'QC'
 ) {
   geom <- match.arg(geom)
@@ -55,9 +54,12 @@ sampleQcPlot.default <- function(
 #'
 
 sampleQcPlot.sampleDataset <- function(
-  object, qcMetrics = NULL, annotation = NULL, geom = c('scatter', 'violin', 'hist'),
-  outliers = NULL, legend = T, main = 'QC', position = c('bottom', 'right')
+  object, qcMetrics, annotation = NULL, geom = c('scatter', 'violin', 'hist'),
+  outliers = NULL, legend = T, main = 'QC', position = c('right', 'bottom'), ncols = 5,
+  show = TRUE
 ) {
+  if(length(qcMetrics) == 1) { ncols = 1 }
+  if(!all(outliers %in% sds$df[[sds$primaryID]])) stop("Not all outliers are in the Sample Dataset. Please double check.")
   geom <- match.arg(geom)
   position <- match.arg(position)
   if(is.null(qcMetrics)) {
@@ -67,11 +69,12 @@ sampleQcPlot.sampleDataset <- function(
     object = sort(object, by = annotation)
     plots = sapply(qcMetrics,
                    function(x) sampleQcPlot(data = sds$df, annotation = annotation, geom = 'scatter',
-                   legend = T, main = x, qcMetric = x),
+                   legend = T, main = x, qcMetric = x, outliers = outliers, primaryID = sds$primaryID),
                    simplify = F
                   )
+    grobList = .multiplotWithSharedLegend(plots, ncols, position, show)
   }
-  return(plt)
+  return(grobList)
 }
 
 outlierPlots <- function(tab, qcMetrics, strat, main, outliers, type = 'violin'){
@@ -109,7 +112,7 @@ PCplots <- function (object, showPlot = T) {
   return(plt)
 }
 
-.multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+.multiplot <- function(..., plotlist=NULL, file, ncols=1, layout=NULL) {
   # This function is modified from multiplot of Cookbook of R
   # Make a list from the ... arguments and plotlist
   plots <- c(list(...), plotlist)
@@ -120,8 +123,8 @@ PCplots <- function (object, showPlot = T) {
     # Make the panel
     # ncol: Number of columns of plots
     # nrow: Number of rows needed, calculated from # of cols
-    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
-                     ncol = cols, nrow = ceiling(numPlots/cols))
+    layout <- matrix(seq(1, cols * ceiling(numPlots/ncols)),
+                     ncol = cols, nrow = ceiling(numPlots/ncols))
   }
 
   if (numPlots==1) {
@@ -157,27 +160,29 @@ PCplots <- function (object, showPlot = T) {
 #' param outliers a vector of outliers
 
 .scatter <- function(
-  data, x, y, strat, xlab = NULL, ylab = NULL, outliers = NULL, main = '',
-  legend = T
+  data, x, y, strat, xlab = NULL, ylab = NULL, outliers = NULL, main = NULL,
+  legend = T, primaryID = NULL
 ) {
-  if (is.null(xlab)) xlab = x
-  if (is.null(ylab)) ylab = y
   if (!any(names(data) %in% x)) stop('X not exist in data frame')
   if (!any(names(data) %in% y)) stop('y not exist in data frame')
   if (!any(names(data) %in% strat)) stop('strat not exist in data frame')
-  if (!is.numeric(data[[strat]])) { data[[strat]] = .toSameLength(data[[strat]]) }
+
+  if (is.null(xlab)) xlab = x
+  if (is.null(ylab)) ylab = y
+
+  if (!is.numeric(data[[strat]])) data[[strat]] = .toSameLength(data[[strat]])
   color = factor(data[[strat]])
 
+  plt = ggplot2::ggplot(data = data, ggplot2::aes_string(x, y, color = color)) +
+    ggplot2::labs(color = strat) + ggplot2::geom_point() + ggplot2::xlab(xlab) +
+    ggplot2::ylab(ylab)
+
   if (!is.null(outliers)) {
-    plt = ggplot2::ggplot(data = data, ggplot2::aes_string(x, y, color = color)) + ggplot2::labs(color = strat) + ggplot2::geom_point() +
-      ggplot2::geom_point(data = data[data$sampleId %in% outliers, ], color = 'black', size = 3) + ggplot2::ggtitle(main)
-  } else {
-    plt = ggplot2::qplot(data[[x]], data[[y]], colour = color, xlab = xlab, ylab = ylab, main = main)
+    plt = plt + ggplot2::geom_point(data = data[data[[primaryID]] %in% outliers, ],
+                                    color = 'black', size = 3)
   }
-  #plt = plt + scale_color_manual(values = color24)
-  if(!legend) {
-    plt = plt + ggplot2::guides(color = F)
-  }
+
+  if (!legend) plt = plt + ggplot2::guides(color = F)
   return(plt)
 }
 
@@ -189,7 +194,7 @@ PCplots <- function (object, showPlot = T) {
 #' :Returns a grid graphical object (grob)
 #'
 .multiplotWithSharedLegend <- function(
-  plots, ncols = 1, position = c("bottom", "right"), show = T) {
+  plots, ncols = 5, position = c("bottom", "right"), show = T) {
 
   nrows = ceiling(length(plots)/ncols)
   position <- match.arg(position)
@@ -206,11 +211,11 @@ PCplots <- function (object, showPlot = T) {
                      "bottom" = gridExtra::arrangeGrob(do.call(gridExtra::arrangeGrob, gl),
                                             legend,
                                             ncol = 1,
-                                            heights = unit.c(unit(1, "npc") - lheight, lheight)),
+                                            heights = grid::unit.c(unit(1, "npc") - lheight, lheight)),
                      "right" = gridExtra::arrangeGrob(do.call(gridExtra::arrangeGrob, gl),
                                            legend,
                                            ncol = 2,
-                                           widths = unit.c(unit(1, "npc") - lwidth, lwidth)))
+                                           widths = grid::unit.c(unit(1, "npc") - lwidth, lwidth)))
   if(show) {
     grid::grid.newpage()
     grid::grid.draw(combined)
