@@ -10,7 +10,8 @@ LazyData: true
 RoxygenNote: 6.0.1.9000
 Suggests: knitr,
     rmarkdown,
-    Cairo
+    Cairo,
+    testthat
 VignetteBuilder: knitr
 Imports: class (>= 7.3-14),
     ggplot2 (>= 2.2.1),
