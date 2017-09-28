@@ -21,16 +21,13 @@ sampleQcPlot.default <- function(
   if (!is.null(annotation)) {
     if (geom == 'scatter') {
       # scatter plot stratified by sample
-      plt = .scatter(data = data, x='index', y = qcMetric, strat = annotation, xlab = 'samples',
-                     outliers = outliers, legend = legend, main = main)
+      plt = .scatter(data = data, x = 'index', y = qcMetric, strat = annotation, xlab = 'samples',
+                     legend = legend, main = main, outliers = outliers, primaryID = sds$primaryID)
     }
     if (geom == 'violin') {
       data[[annotation]] = factor(.toSameLength(data[[annotation]]))
       plt = ggplot2::ggplot(data, ggplot2::aes_string(annotation, qcMetric, color = annotation)) +
         ggplot2::geom_violin() + ggplot2::geom_jitter(height = 0, width = 0.3) + ggplot2::ggtitle(main)
-    }
-    if(!is.null(outliers)) {
-      plt = plt + ggplot2::geom_point(data = data[data$sampleId %in% outliers, ], colour = 'black', size = 3)
     }
   } else {
     if (geom == 'hist')  {
@@ -178,7 +175,7 @@ PCplots <- function (object, showPlot = T) {
     ggplot2::ylab(ylab)
 
   if (!is.null(outliers)) {
-    plt = plt + ggplot2::geom_point(data = data[data[[primaryID]] %in% outliers, ],
+    plt = plt + ggplot2::geom_point(data = data[ data[[primaryID]] %in% outliers, ],
                                     color = 'black', size = 3)
   }
 
@@ -211,11 +208,11 @@ PCplots <- function (object, showPlot = T) {
                      "bottom" = gridExtra::arrangeGrob(do.call(gridExtra::arrangeGrob, gl),
                                             legend,
                                             ncol = 1,
-                                            heights = grid::unit.c(unit(1, "npc") - lheight, lheight)),
+                                            heights = grid::unit.c(grid::unit(1, "npc") - lheight, lheight)),
                      "right" = gridExtra::arrangeGrob(do.call(gridExtra::arrangeGrob, gl),
                                            legend,
                                            ncol = 2,
-                                           widths = grid::unit.c(unit(1, "npc") - lwidth, lwidth)))
+                                           widths = grid::unit.c(grid::unit(1, "npc") - lwidth, lwidth)))
   if(show) {
     grid::grid.newpage()
     grid::grid.draw(combined)
