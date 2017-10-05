@@ -1,4 +1,4 @@
 library(testthat)
-library(genotypeqc)
+library(samplyzer)
 
-test_check("genotypeqc")
+test_check("samplyzer")

@@ -5,21 +5,21 @@ output:
   html_document: default
 ---
 
-This is a [R Markdown](http://rmarkdown.rstudio.com) Notebook for utilzing functions of the genotypeQC R library. When you execute code within the notebook, the results appear beneath the code. 
+This is a [R Markdown](http://rmarkdown.rstudio.com) Notebook for utilzing functions of the genotypeQC R library. When you execute code within the notebook, the results appear beneath the code.
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*.
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
 
 When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file).
 
 ### Install required libraries
-This library required R version >= 3.3.2. 
+This library required R version >= 3.3.2.
 ```{r}
 #install.packages('devtools')
 library(devtools)
-install_github('xiaolicbs/genotypeqc')
-library(genotypeqc)
+install_github('xiaolicbs/samplyzer')
+library(samplyzer)
 ```
 
 ### Load input files
@@ -45,7 +45,7 @@ several other attributes that contains metadata, such as qcMetrics, bamQcMetr, v
 attributes(sds)
 ```
 ### Modify attributes of sample data set by
-Function `setAttr` can be used to modify attributes of SampleDataset. For example, to add genotype PCs to the SampleDataset: 
+Function `setAttr` can be used to modify attributes of SampleDataset. For example, to add genotype PCs to the SampleDataset:
 ```{r}
 sds = setAttr(sds, attributes = 'PC', data = samplepc, primaryID = 'SampleID')
 ```
@@ -60,7 +60,7 @@ To know how many attributes are there, use:
 attributes(sds)
 print(sds)
 ```
-### Infer ancestry from 
+### Infer ancestry from
 ```{r}
 sds = inferAncestry(sds, trainSet = refpc[,c('PC1', 'PC2', 'PC3')], knownAncestry = refpc$group )
 getAttr(sds, 'inferredAncestry', showID = T)
@@ -75,8 +75,8 @@ sds = calZscore(sds, strat = c('inferredAncestry', 'SeqTech'), qcMetrics = sds$v
 ```{r}
 cutoffs = data.frame(
   qcMetrics = c('Percent_lt_30bp_frags', 'Contamination_Estimation', 'Percent_Chimeric_Reads'),
-  value = c(0.01, 0.02, 0.05), 
-  greater = c(T, T, T), 
+  value = c(0.01, 0.02, 0.05),
+  greater = c(T, T, T),
   stringsAsFactors = F
 )
 sds = flagSamples(sds, cutoffs = cutoffs, zscore = 4)
@@ -84,7 +84,7 @@ getAttr(sds, 'flaggedReason', showID = T) # show samples flagged
 ```
 
 ### Save SampleDataset
-A S3 class function `save` is used to save SampleDataset to different formats. 
+A S3 class function `save` is used to save SampleDataset to different formats.
 ```{r}
 prefix = 'examples'
 save(sds, RDS = paste(prefix, 'RDS', sep = '.'),
@@ -103,7 +103,7 @@ nhet = sampleQcPlot(sds, annotation = 'inferredAncestry', qcMetrics = 'nHets', g
 ```{r}
 plots = PCplots(sds)
 ```
-### Generate multipanel plots for 
+### Generate multipanel plots for
 ```{r}
 grobList = sampleQcPlot(sds, qcMetrics = sds$bamQcMetr, annotation = 'LCSETMax', geom = 'scatter', ncols = 3, outliers = 'Sample-001')
 ggplot2::ggsave('QcPlot.pdf', grobList, width = 12, height = 6)
