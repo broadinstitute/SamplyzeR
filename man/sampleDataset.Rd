@@ -4,8 +4,8 @@
 \alias{sampleDataset}
 \title{Sample dataset object}
 \usage{
-sampleDataset(bamQcMetr, vcfQcMetr, annotations, primaryID = NULL,
-  df = NULL)
+sampleDataset(bamQcMetr = NULL, vcfQcMetr = NULL, annotations,
+  primaryID = NULL, df = NULL)
 }
 \arguments{
 \item{bamQcMetr}{a data frame that contains BAM level QC metrics}
