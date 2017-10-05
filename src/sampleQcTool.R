@@ -2,7 +2,7 @@
 
 
 library(devtools)
-install_github('xiaolicbs/genotypeQC')
+install_github('xiaolicbs/SamplyzeR')
 library(optparse)
 library(SamplyzeR)
 
