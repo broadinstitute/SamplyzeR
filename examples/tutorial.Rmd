@@ -24,7 +24,7 @@ library(genotypeqc)
 
 ### Load input files
 ```{r}
-setwd('~/genotypeqc/examples')
+setwd('~/SamplyzeR/examples')
 bamQcMetr = read.csv('bamQcMetr.tsv', sep = '\t')
 vcfQcMetr = read.csv('vcfQcMetr.tsv', sep = '\t')
 annotations = read.csv('sampleAnnotations.tsv', sep = '\t')
@@ -37,6 +37,7 @@ stratify = c('ANCESTRY', 'SeqTech')
 ```{r}
 sds = sampleDataset(bamQcMetr = bamQcMetr, vcfQcMetr = vcfQcMetr, annotations = annotations, primaryID = 'SampleID')
 ```
+
 ### Attributes of sample data set
 A Sample Data Set object contains several attributes, including a data frame, which contains all the data for samples and
 several other attributes that contains metadata, such as qcMetrics, bamQcMetr, vcfQcMetr and PrimaryID. To check attributes of your current SDS:
@@ -52,19 +53,18 @@ sds = setAttr(sds, attributes = 'PC', data = samplepc, primaryID = 'SampleID')
 ### Access attributes of a SampleDataset
 Function 'getAttr' was designed to access attributes of a SampleDataset, for example, you can access sample annotations via:
 ```{r}
-getAttr(sds, 'annotations', showID = T)
+getAttr(sds, 'PC', showID = T)
 ```
 To know how many attributes are there, use:
 ```{r}
-attributes(sds)$names
+attributes(sds)
+print(sds)
 ```
 ### Infer ancestry from 
 ```{r}
 sds = inferAncestry(sds, trainSet = refpc[,c('PC1', 'PC2', 'PC3')], knownAncestry = refpc$group )
 getAttr(sds, 'inferredAncestry', showID = T)
 ```
-
-
 
 ### Perform a stratified QC metrics analysis
 ```{r}
@@ -80,7 +80,7 @@ cutoffs = data.frame(
   stringsAsFactors = F
 )
 sds = flagSamples(sds, cutoffs = cutoffs, zscore = 4)
-getAttr(sds, 'flaggedReason') # show samples flagged
+getAttr(sds, 'flaggedReason', showID = T) # show samples flagged
 ```
 
 ### Save SampleDataset
@@ -92,4 +92,26 @@ save(sds, RDS = paste(prefix, 'RDS', sep = '.'),
      xls = paste(prefix, 'xls', sep = '.'))
 ```
 
+### Visualize a QC metric by annotations
+```{r}
+plt = sampleQcPlot(sds, annotation = 'inferredAncestry', qcMetrics = 'nHets', geom = 'scatter',
+             main = 'nHet by inferredAncestry', outliers = 'Sample-001', show = T)
 
+nhet = sampleQcPlot(sds, annotation = 'inferredAncestry', qcMetrics = 'nHets', geom = 'scatter',
+             main = 'nHet by inferredAncestry', outliers = 'Sample-040', show = T)
+```
+```{r}
+plots = PCplots(sds)
+```
+### Generate multipanel plots for 
+```{r}
+grobList = sampleQcPlot(sds, qcMetrics = sds$bamQcMetr, annotation = 'LCSETMax', geom = 'scatter', ncols = 3, outliers = 'Sample-001')
+ggplot2::ggsave('QcPlot.pdf', grobList, width = 12, height = 6)
+```
+
+
+### Interactive exploration of QC metrics
+A shiny app was designed to interactively explore QC metrics
+```{r}
+
+```
