@@ -1,1 +1,1 @@
-# genotypeQC: an R package and Web App
+# SamplyzeR: an R package and Web App

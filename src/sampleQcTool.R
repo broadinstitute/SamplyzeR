@@ -4,7 +4,7 @@
 library(devtools)
 install_github('xiaolicbs/genotypeQC')
 library(optparse)
-library(genotypeqc)
+library(SamplyzeR)
 
 option_list <- list(
   make_option(c("-b", "--bamQcMetr"), help = "A tsv for BAM Level quality control metrics", default = NULL),
