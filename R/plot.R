@@ -53,7 +53,7 @@ sampleQcPlot.default <- function(
 sampleQcPlot.sampleDataset <- function(
   object, qcMetrics, annotation = NULL, geom = c('scatter', 'violin', 'hist'),
   outliers = NULL, legend = T, main = 'QC', position = c('right', 'bottom'), ncols = 5,
-  show = TRUE
+  show = FALSE
 ) {
   if(length(qcMetrics) == 1) { ncols = 1 }
   if(!all(outliers %in% sds$df[[sds$primaryID]])) stop("Not all outliers are in the Sample Dataset. Please double check.")
