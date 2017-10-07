@@ -27,13 +27,14 @@ sampleQcPlot.default <- function(
     if (geom == 'violin') {
       data[[annotation]] = factor(.toSameLength(data[[annotation]]))
       plt = ggplot2::ggplot(data, ggplot2::aes_string(annotation, qcMetric, color = annotation)) +
-        ggplot2::geom_violin() + ggplot2::geom_jitter(height = 0, width = 0.3) + ggplot2::ggtitle(main)
+        ggplot2::geom_violin() + ggplot2::geom_jitter(height = 0, width = 0.3)
     }
   } else {
     if (geom == 'hist')  {
       plt = ggplot2::qplot(data[[qcMetric]], geom = 'histogram', bins = 100, xlab = qcMetric)
     }
   }
+  plt = plt + ggplot2::ggtitle(main)
   return(plt)
 }
 
