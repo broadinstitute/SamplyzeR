@@ -42,8 +42,9 @@ save.sampleDataset <- function(object, RDS = NULL, tsv = NULL, xls = NULL) {
 
 sort.sampleDataset <- function(object, by) {
   byCol = which(names(object$df) == by)
-  object$df$index = order(order(object$df[ ,byCol], na.last = T))
-  object
+  object$df = object$df[order(object$df[ ,byCol], na.last = T),]
+  object$df$index = 1:dim(object$df)[1]
+  return(object)
 }
 
 #' Show dimensions of sample dataset object

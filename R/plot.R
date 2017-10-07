@@ -56,17 +56,17 @@ sampleQcPlot.sampleDataset <- function(
   show = FALSE
 ) {
   if(length(qcMetrics) == 1) { ncols = 1 }
-  if(!all(outliers %in% sds$df[[sds$primaryID]])) stop("Not all outliers are in the Sample Dataset. Please double check.")
+  if(!all(outliers %in% object$df[[object$primaryID]])) stop("Not all outliers are in the Sample Dataset. Please double check.")
   geom <- match.arg(geom)
   position <- match.arg(position)
   if(is.null(qcMetrics)) {
-    qcMetrics = sds$qcMetrics
+    qcMetrics = object$qcMetrics
   }
   if(!is.null(annotation)) {
     object = sort(object, by = annotation)
     plots = sapply(qcMetrics,
-                   function(x) sampleQcPlot(data = sds$df, annotation = annotation, geom = 'scatter',
-                   legend = T, main = x, qcMetric = x, outliers = outliers, primaryID = sds$primaryID),
+                   function(x) sampleQcPlot(data = object$df, annotation = annotation, geom = 'scatter',
+                   legend = T, main = x, qcMetric = x, outliers = outliers, primaryID = object$primaryID),
                    simplify = F
                   )
     grobList = .multiplotWithSharedLegend(plots, ncols, position, show)
@@ -178,7 +178,6 @@ PCplots <- function (object, showPlot = T) {
     plt = plt + ggplot2::geom_point(data = data[ data[[primaryID]] %in% outliers, ],
                                     color = 'black', size = 3)
   }
-
   if (!legend) plt = plt + ggplot2::guides(color = F)
   return(plt)
 }
