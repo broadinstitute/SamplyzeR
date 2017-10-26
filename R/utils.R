@@ -17,6 +17,10 @@
            "nTransversion","nNonRef", "rTiTv", "rHetHomVar", "rInsertionDeletion"))
 }
 
+.stratQcMetr <- function() {
+  return(c("nDeletion", "nInsertion", "nSNP", "rTiTv", "rHetHomVar", "rInsertionDeletion"))
+}
+
 .cutoff <- function(){
   data.frame(qcMetrics = c('PctLt30bp', 'pct_contamination', 'pct_chimerism', 'callRate'),
              value = c(5, 0.02, 0.05, 0.99),
