@@ -105,7 +105,7 @@ PCplots <- function (object, showPlot = T) {
   plt = list()
   plt[[1]] = .scatter(data = object$df, x = 'PC1', y = 'PC2', strat = 'inferredAncestry', main = 'PC1 vs. PC2')
   plt[[2]] = .scatter(data = object$df, x = 'PC1', y = 'PC3', strat = 'inferredAncestry', main = 'PC1 vs. PC3')
-  plt[[3]] = .scatter(data = object$df, x = 'PC1', y = 'PC2', strat = 'inferredAncestry', main = 'PC2 vs. PC3')
+  plt[[3]] = .scatter(data = object$df, x = 'PC2', y = 'PC3', strat = 'inferredAncestry', main = 'PC2 vs. PC3')
   if(showPlot) { .multiplotWithSharedLegend(plots = plt, ncols = 3) }
   return(plt)
 }
