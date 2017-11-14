@@ -16,7 +16,7 @@ sampleQcPlot <- function (object, ...) UseMethod('sampleQcPlot')
 
 sampleQcPlot.default <- function(
   data, primaryID, qcMetric, annotation = NULL, outliers = NULL, legend = T,
-  main = 'QC', geom = c('scatter', 'violin', 'hist'),
+  main = 'QC', geom = c('scatter', 'violin', 'hist')
 ) {
   geom <- match.arg(geom)
   if (!is.null(annotation)) {
