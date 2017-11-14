@@ -43,7 +43,7 @@ calZscore.sampleDataset <- function (object, strat = NULL, qcMetrics = NULL, mad
   if (is.null(strat)) {
     object$df[,object$zscore] = apply(object$df[,qcMetrics], 2, calZscore)
   } else {
-    object$df[object$zscoreBy] = apply(object$df[strat], 1, paste, collapse = '-')
+    object$df[object$zscoreBy] = apply(object$df[strat], 1, paste, collapse = '')
     stratLevels = unique(object$df[object$zscoreBy])
     stratLevels = stratLevels[!is.na(stratLevels)]
     for (i in stratLevels) {
