@@ -31,7 +31,7 @@ sampleDataset <- function(bamQcMetr = NULL, vcfQcMetr = NULL, annotations, prima
                 qcMetrics = c(bamQcMetr, vcfQcMetr),
                 bamQcMetr = bamQcMetr, vcfQcMetr = vcfQcMetr,
                 primaryID = primaryID)
-  object$df$index = 1:length(df[[primaryID]])
+ # object$df$index = 1:length(df[[primaryID]])
 
   class(object) <- 'sampleDataset'
   return(object)
