@@ -4,13 +4,6 @@ install_github('xiaolicbs/SamplyzeR')
 library(optparse)
 library(SamplyzeR)
 
-.stratQcMetrHail <- function() {
-  return(c("nDeletion", "nInsertion", "nSNP", "rTiTv", "rHetHomVar", "rInsertionDeletion"))
-}
-
-.stratQcMetrGATK <- function() {
-  return(c("nEvalVariants", "nInsertions", "nDeletions", "TiTvRatio", "InsDelRatio", "HetHomeRatio"))
-}
 option_list <- list(
   make_option(c("-b", "--bamQcMetr"), help = "A tsv for BAM Level quality control metrics", default = NULL),
   make_option(c("-v", "--vcfQcMetr"), help = "A tsv for VCF Level quality control metrics", default = NULL),
@@ -23,12 +16,14 @@ option_list <- list(
   make_option(c("--cutoffs", help = 'a tsv file that contains hard cutoffs for QC metrics', default = NULL)),
   make_option(c("-i", "--inbreedfile"), help = "Heterozygosity test results: first column shold 
               be sample Id, second column should Fstat",default= NULL),
+  make_option(c("-c", "--knownancestry"), help = "The known ancestry file: first column shold 
+              be sample Id, second column should known ancestry ",default= NULL),
   make_option(c("-ibd", "--ibdfile", help = "A tsv for Relatedness test,first tow columns are sample ID"), default = NULL),
   make_option(c("-pihat", "--PIHAT"), help = "The column name of PI_HAT value , for example : ibd.PI_HAT", default=NULL),
   make_option(c("-pbam", "--plotbamqc", help = "TRUE means ploting bam QC figure")),
   make_option(c("-pvcf", "--plotvcfqc", help = "TRUE means ploting vcf QC figure")),
   make_option(c("-order", "--sampleorder"), help = "A tsv for sample order index, first column is sample id, second is order number", default = NULL),
-  make_option(c("-z", "--zscoreqc"), help = "A list of QC attributes used to calculate zscore, separated by comma", default= NULL)Sa
+  make_option(c("-z", "--zscoreqc"), help = "A list of QC attributes used to calculate zscore, separated by comma", default= NULL)
 )
 
 opt <- parse_args(OptionParser(option_list=option_list))
@@ -138,6 +133,29 @@ if (!all(is.null(opt$refpc), is.null(opt$samplepc))) {
       sds$df <- merge(sds$df,fibd,by.x=1,by.y=1,all.x=T)
     }
   }  
+  
+  if(!is.null(opt$knownancestry)) {
+    ances <- read.delim(file=opt$knownancestry,sep="\t",header=T)
+    t <- which(ances[,2] == 99)
+    if(length(t) > 0) {
+      ances <- ances[-t,]
+    }
+    
+    infer <- sds$df[,c(opt$primaryID,"inferredAncestry")]
+    infer[,2] <- gsub("ASN","1",infer[,2])
+    infer[,2] <- gsub("AFR","2",infer[,2])
+    infer[,2] <- gsub("EUR", "3", infer[,2])
+    infer[,2] <- gsub("AMR","4", infer[,2])
+    all <- merge(infer,ances,by.x=1,by.y=1)
+    diff <- as.numeric(all[,2])-as.numeric(all[,3])
+    t <- which(diff == 0)
+    if(length(t) < dim(all)[1]) {
+      all <- all[-t,]
+      all[,2] <- paste("inferredAncestry=",all[,2],"|real=",all[,3],sep="")
+      names(all)[2] <- "Ancestry.flag" 
+      sds$df <- merge(sds$df,all[,c(1,2)],by.x=1,by.y=1,all.x=T)
+    }
+  }
 
 cat("\nSave output to RDS and write out sample info.\n")
 save(sds, RDS = paste(opt$prefix, 'RDS', sep = '.'),
