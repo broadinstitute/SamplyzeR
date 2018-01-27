@@ -12,9 +12,13 @@
 #' @return an sampleDataset object.
 #' @export
 
-sampleDataset <- function(bamQcMetr = NULL, vcfQcMetr = NULL, annotations, primaryID = NULL, df = NULL) {
-  if (is.null(primaryID)) stop("Primary ID of QC metrics and sample attributes should be provided.")
-  if (is.null(bamQcMetr) & is.null(vcfQcMetr)) stop("at least one set of QC metrics should be provided.")
+sampleDataset <- function(
+  bamQcMetr = NULL, vcfQcMetr = NULL, annotations, primaryID = NULL, df = NULL) {
+  if (is.null(primaryID))
+    stop("Primary ID of QC metrics and sample attributes should be provided.")
+  if (is.null(bamQcMetr) & is.null(vcfQcMetr))
+    stop("at least one set of QC metrics should be provided.")
+
   if (is.null(df)) {
     df = annotations
     if (!is.null(bamQcMetr)) df = merge(df, bamQcMetr, by = primaryID)
@@ -23,9 +27,12 @@ sampleDataset <- function(bamQcMetr = NULL, vcfQcMetr = NULL, annotations, prima
     vcfQcMetr = names(vcfQcMetr)[-which(names(vcfQcMetr) == primaryID)]
     annotations = names(annotations)[-which(names(annotations) == primaryID)]
   } else {
-    if (is.data.frame(bamQcMetr)) stop("bamQcMetr should not be a data.frame when df is presented." )
-    if (is.data.frame(vcfQcMetr)) stop("vcfQcMetr should not be a data.frame when df is presented." )
-    if (is.data.frame(annotations)) stop("attributes should not be a data.frame when df is presented." )
+    if (is.data.frame(bamQcMetr))
+      stop("bamQcMetr should not be a data.frame when df is presented." )
+    if (is.data.frame(vcfQcMetr))
+      stop("vcfQcMetr should not be a data.frame when df is presented." )
+    if (is.data.frame(annotations))
+      stop("attributes should not be a data.frame when df is presented." )
   }
   object = list(df = df, annotations = annotations,
                 qcMetrics = c(bamQcMetr, vcfQcMetr),

@@ -66,8 +66,10 @@ sampleQcPlot.sampleDataset <- function(
   ncols = 5, show = FALSE, sort = TRUE
 ) {
   if(length(qcMetrics) == 1) { ncols = 1 }
-  if(!all(outliers %in% object$df[[object$primaryID]])) {
-    stop("Not all outliers are in the Sample Dataset. Please double check.")
+  if (!is.null(outliers)) {
+    if(!all(outliers %in% object$df[[object$primaryID]])) {
+      stop("Not all outliers are in the Sample Dataset. Please double check.")
+    }
   }
   geom <- match.arg(geom)
   position <- match.arg(position)
@@ -79,11 +81,11 @@ sampleQcPlot.sampleDataset <- function(
     plots = sapply(
       qcMetrics,
       function(x) sampleQcPlot(
-        data = object$df, annotation = annotation, geom = 'scatter', legend = T,
+        data = object$df, annotation = annotation, geom = geom, legend = T,
         main = x, qcMetric=x, outliers=outliers, primaryID=object$primaryID),
       simplify = F
     )
-    grobList = .multiplotWithSharedLegend(plots, ncols, position, show)
+    grobList = multiplotWithSharedLegend(plots, ncols, position, show)
   }
   return(grobList)
 }
@@ -185,7 +187,7 @@ PCplots <- function (object, showPlot=T, cor=F, outliers=NULL) {
   plt[[1]] = .scatter(data = object$df, x = 'PC1', y = 'PC2', strat = 'inferredAncestry', main = 'PC1 vs. PC2')
   plt[[2]] = .scatter(data = object$df, x = 'PC1', y = 'PC3', strat = 'inferredAncestry', main = 'PC1 vs. PC3')
   plt[[3]] = .scatter(data = object$df, x = 'PC2', y = 'PC3', strat = 'inferredAncestry', main = 'PC2 vs. PC3')
-  if(showPlot) { .multiplotWithSharedLegend(plots = plt, ncols = 3) }
+  if(showPlot) { multiplotWithSharedLegend(plots = plt, ncols = 3) }
   return(plt)
 }
 
