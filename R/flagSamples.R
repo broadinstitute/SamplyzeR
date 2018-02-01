@@ -52,7 +52,7 @@ flagSamples.sampleDataset <- function(object, cutoffs, zscore = NULL){
     warning("Not all QC metrics from cutoff table is presented in the
             SampleDataset. ")
   }
-  if(all(!cutoffs$qcMetircs %in% object$qcMetrics)) {
+  if(all(!cutoffs$qcMetrics %in% object$qcMetrics)) {
     stop("None of metrics in the cutoff table is in the SampleDataset,
          please double check your input data.")
   }
