@@ -1,0 +1,2 @@
+library(SamplyzeR)
+context('getAttr')
