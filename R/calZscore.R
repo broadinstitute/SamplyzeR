@@ -17,7 +17,7 @@ calZscore <- function(...) UseMethod("calZscore")
 #'            standard deviation
 #' @return    a vector of z-scores
 #' @export
-#'
+
 calZscore.default <- function(x, mad = T) {
   if (mad) {
     dev = mad(x, na.rm = T)
@@ -31,31 +31,36 @@ calZscore.default <- function(x, mad = T) {
 #' Calculate z-scores of QC metrics of a SampleDataset
 #'
 #' @param object a sampleDataset object
-#' @param strat variable or vector of attributes the sample will be stratified
-#'              by
-#' @param mad binary, whether use Median Absolute Deviation to calculate
-#'            z-score or not, default is True
+#' @param strat optional, logical, variable or vector of attributes the sample
+#'              will be stratified by
+#' @param mad optional, binary, whether use Median Absolute Deviation to
+#'            calculate z-score or not, default is True
 #' @param qcMetrics optional, a vector of names of qc metrics to compute zscore
-#' @return sampleDataset object
+#' @param maxVcfZ optional, logical, calculate to report maximun Vcf Zscore
+#' @return sampleDataset object, with additional attributes: zscoreBy, zscore
+#'         and maximumVcfZscore
 #' @export
 
 calZscore.sampleDataset <- function (
-    object, strat = NULL, qcMetrics = NULL, mad = T) {
-
+    object, strat = NULL, qcMetrics = NULL, mad = T, maxVcfZ = F) {
   # use all QC metrics if not specified
   if (is.null(qcMetrics)) {
     qcMetrics = object$qcMetrics
   }
 
-  object$zscoreBy = paste(strat, collapse = '-')
-  # initialize output matrix
+  # initialize output matrix: re-write with setAttr()
   object$zscore = .zscoreColNames(qcMetrics)
   object$df[object$zscore] = NA
+
   if (is.null(strat)) {
-    object$df[, object$zscore] = apply(object$df[,qcMetrics], 2, calZscore)
+    # calculate z-score across all qcMetrics
+    object$df[, object$zscore] = apply(object$df[, qcMetrics], 2, calZscore)
   } else {
-    # calculate z-score within each stratification
+    # to do: re-write with setAttr()
+    object$zscoreBy = paste(strat, collapse = '-')
     object$df[object$zscoreBy] = apply(object$df[strat], 1, paste, collapse='')
+
+    # calculate z-score within each stratification
     stratLevels = unique(object$df[object$zscoreBy])
     stratLevels = stratLevels[!is.na(stratLevels)]
     for (i in stratLevels) {
@@ -64,7 +69,15 @@ calZscore.sampleDataset <- function (
                                               calZscore)
     }
   }
-  # update sampleDataset with z-scores
+  if (maxVcfZ) {
+    object = .calMaxVcfZ(object, qcMetrics)
+  }
+  return(object)
+}
+
+#' Calculate maximum vcf z-score and update the object with a maxVcfzscore
+#' column
+.calMaxVcfZ <- function(object, qcMetrics) {
   vcfQcMetrInUse = .zscoreColNames(intersect(object$vcfQcMetr, qcMetrics))
   object$df$maxVcfzscore = apply(abs(object$df[vcfQcMetrInUse]), 1, max)
   return(object)
