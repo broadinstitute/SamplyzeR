@@ -1,14 +1,11 @@
 .is.sds <- function(x) 'sampleDataset' %in% class(x)
 
-#' default bam QC parameters from picard tools
-#'
-#' @return a vector of QC metrics names
 
 #' Create a demo sample dataset with 5 Samples
+#' @param z: optional, logical, whether include z-score, default True
 #' @return SampleDataset object
 #' @export
-
-.sds <- function () {
+.sds <- function (z=T) {
   bamQcMetr = data.frame(
     'SampleID' = c('A', 'B', 'C', 'D', 'E'),
     'bam' = c(1, 2, 3, 4, 5))
@@ -20,9 +17,12 @@
     'Anno' = c('A1', 'A2', 'A3', 'A4', 'A5'))
   sds = sampleDataset(bamQcMetr = bamQcMetr, vcfQcMetr = vcfQcMetr,
                       annotations = annotations, primaryID = 'SampleID')
+  if(z) sds = calZscore(sds)
   return(sds)
 }
 
+#' default bam QC parameters from picard tools
+#' @return a vector of QC metrics names
 
 .bamQcMetr <- function(){
   return(c('mean_coverage', "pct_contamination", "pct_chimerism",
@@ -30,6 +30,8 @@
            'StdInsertSize', 'PctLt30bp'))
 }
 
+#' default bam QC parameters from picard tools
+#' @return a vector of QC metrics names
 .vcfQcMetr <- function(){
   return(c("callRate", "nCalled", "nNotCalled", "nHomRef", "nHet", "nHomVar",
            "nSNP", "nInsertion", "nDeletion", "nSingleton", "nTransition",

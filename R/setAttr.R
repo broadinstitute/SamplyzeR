@@ -32,8 +32,8 @@ setAttr.sampleDataset <- function(object, attributes, data, primaryID,
     if(overwrite) {
       toDrop = which(names(sds$df) %in% sds$annotations)
       sds$df = sds$df[-toDrop]
-      } else {
-      stop( "Attribute already already exists, set overwrite = T to overwrite.")
+    } else {
+      stop("Attribute already already exists, set overwrite = T to overwrite.")
     }
   }
   object$df = merge(object$df, data, by.x = object$primaryID, by.y = primaryID,

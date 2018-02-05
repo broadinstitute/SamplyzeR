@@ -7,8 +7,8 @@ flagSamples <- function(...) UseMethod('flagSamples')
 
 #' Flag rows of a data.frame based on values of a column
 #'
-#' Compare values in a column of data.frame, and add a flaggedReason column
-#' in the data
+#' @description Compare values in a column of data.frame, and add a
+#' flaggedReason column in the data
 #'
 #' Caveat: this function is not able to define greater or equal
 #'
@@ -31,23 +31,30 @@ flagSamples.default <- function (df, column, cutoff, greater) {
     flag = paste(column, cutoff, sep = '<=')
     index = which(df[column] <= cutoff)
   }
-  df$flaggedReason[index] = paste(flag, df$flaggedReason[index], sep = ',')
+  if ('flaggedReason' %in% colnames(df)) {
+    df$flaggedReason[index] = sapply(
+      df$flaggedReason[index],
+      function(x) if(x != ''){ paste(x, flag, sep = ',') } else { flag })
+  } else {
+    df$flaggedReason = ''
+    df$flaggedReason[index] = flag
+  }
   return(df)
 }
 
-#' Flag a sample from a sample data set
+#' Flag a sample from a sampleDataset
 #'
 #' @param object a sampleDataset object
 #' @param cutoffs a data.frame that specifies cutoff values for qcMetrics.
 #'                Contains three columns, including "qcMetrics", "value"
 #'                and "greater"
-#' @param zscore zscore cutoff used, will not flag samples based on z-score
-#'               if not specified. Default value is NULL.
-#'
+#' @param zscore a scalar value that zscore cutoff used, will not flag samples
+#'               based on z-score if not specified. Default value is NULL.
 #' @return an updated sample dataset object with flags added.
 #' @export
 
 flagSamples.sampleDataset <- function(object, cutoffs, zscore = NULL){
+  # conditions
   if(!all(cutoffs$qcMetrics %in% object$qcMetrics)){
     warning("Not all QC metrics from cutoff table is presented in the
             SampleDataset. ")
@@ -56,12 +63,18 @@ flagSamples.sampleDataset <- function(object, cutoffs, zscore = NULL){
     stop("None of metrics in the cutoff table is in the SampleDataset,
          please double check your input data.")
   }
+  if (!is.null(zscore) && !('zscore' %in% attributes(sds)$names)) {
+    stop("Input dataset has no z-score, please calculate z-score before
+         applying z-score filters.")
+  }
 
   object$df$flaggedReason = ''
-  object$df = sapply(
-    1:dim(cutoffs)[1],
-    function(i) flagSamples(object$df, cutoffs$qcMetrics[i], cutoffs$value[i],
-                            cutoffs$greater[i]))
+  for (i in dim(cutoffs)[1]) {
+    # cannot use sapply since each time need to update 'flaggedReason' field
+    object$df = flagSamples(object$df, cutoffs$qcMetrics[i], cutoffs$value[i],
+                            cutoffs$greater[i])
+  }
+
   if(!is.null(zscore)) {
     for (i in object$zscore) {
       object$df = flagSamples(object$df, i, zscore, greater = T)
