@@ -42,7 +42,7 @@ save.sampleDataset <- function(object, RDS = NULL, tsv = NULL, xls = NULL) {
 
 sort.sampleDataset <- function(object, by) {
   byCol = which(names(object$df) == by)
-  object$df = object$df[order(object$df[ ,byCol], na.last = T),]
+  object$df = object$df[order(object$df[ ,byCol, with=F], na.last = T),]
   object$df$index = 1:dim(object$df)[1]
   return(object)
 }

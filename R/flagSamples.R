@@ -26,18 +26,21 @@ flagSamples.default <- function (df, column, cutoff, greater) {
   column = as.character(column)
   if (greater) {
     flag = paste(column, cutoff, sep = '>')
-    index = which(df[column] > cutoff)
+    index = which(df[, column, with=F] > cutoff)
   } else {
     flag = paste(column, cutoff, sep = '<=')
-    index = which(df[column] <= cutoff)
+    index = which(df[, column, with=F] <= cutoff)
   }
-  if ('flaggedReason' %in% colnames(df)) {
-    df$flaggedReason[index] = sapply(
-      df$flaggedReason[index],
-      function(x) if(x != ''){ paste(x, flag, sep = ',') } else { flag })
-  } else {
+  if (!('flaggedReason' %in% names(df))) {
     df$flaggedReason = ''
-    df$flaggedReason[index] = flag
+  }
+  # to do: rewrite with sapply
+  for (i in index) {
+    if (df$flaggedReason[i] == '') {
+      df$flaggedReason[i] = flag      
+    } else {
+      df$flaggedReason[i] = paste(df$flaggedReason[i], flag, sep = ',')
+    }
   }
   return(df)
 }
@@ -69,8 +72,8 @@ flagSamples.sampleDataset <- function(object, cutoffs, zscore = NULL){
   }
 
   object$df$flaggedReason = ''
-  for (i in dim(cutoffs)[1]) {
-    # cannot use sapply since each time need to update 'flaggedReason' field
+  for (i in 1:dim(cutoffs)[1]) {
+    # to do: re-write with sapply
     object$df = flagSamples(object$df, cutoffs$qcMetrics[i], cutoffs$value[i],
                             cutoffs$greater[i])
   }
