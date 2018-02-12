@@ -26,10 +26,10 @@ flagSamples.default <- function (df, column, cutoff, greater) {
   column = as.character(column)
   if (greater) {
     flag = paste(column, cutoff, sep = '>')
-    index = which(df[, column, with=F] > cutoff)
+    index = which(df[, column] > cutoff)
   } else {
     flag = paste(column, cutoff, sep = '<=')
-    index = which(df[, column, with=F] <= cutoff)
+    index = which(df[, column] <= cutoff)
   }
   if (!('flaggedReason' %in% names(df))) {
     df$flaggedReason = ''
@@ -37,7 +37,7 @@ flagSamples.default <- function (df, column, cutoff, greater) {
   # to do: rewrite with sapply
   for (i in index) {
     if (df$flaggedReason[i] == '') {
-      df$flaggedReason[i] = flag      
+      df$flaggedReason[i] = flag
     } else {
       df$flaggedReason[i] = paste(df$flaggedReason[i], flag, sep = ',')
     }
