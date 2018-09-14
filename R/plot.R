@@ -22,7 +22,7 @@ sampleQcPlot.default <- function(
   if (!is.null(annotation)) {
     if (geom == 'scatter') {
       # scatter plot stratified by sample
-      plt = .scatter(data = data, x = 'index', y = qcMetric, strat=annotation,
+      plt = scatter(data = data, x = 'index', y = qcMetric, strat=annotation,
                      xlab = 'samples', legend = legend, main = main,
                      outliers = outliers, primaryID = sds$primaryID)
     }
@@ -104,7 +104,7 @@ outlierPlots <- function(...) UseMethod('outlierPlots')
 outlierPlots.default <- function(tab, qcMetrics, strat, main, outliers,
                          primaryID=NULL, type='violin'){
   plots <- list()
-  plots[[1]] = .scatter(tab, x = 'sample', y = qcMetrics, strat = strat,
+  plots[[1]] = scatter(tab, x = 'sample', y = qcMetrics, strat = strat,
                         xlab = 'sample', outliers = outliers, main = main,
                         legend = T, primaryID = primaryID)
   if (type == 'density') {
@@ -177,16 +177,16 @@ PCplots <- function (object, showPlot=T, cor=F, outliers=NULL) {
     stop("Sample Dataset must have PC and inferred ancestry attributes.")
   }
   plt = list()
-  plt[[1]] = .scatter(data = object$df, x = 'PC1', y = 'PC2', outliers=outliers,
+  plt[[1]] = scatter(data = object$df, x = 'PC1', y = 'PC2', outliers=outliers,
                       strat = 'inferredAncestry', main = 'PC1 vs. PC2')
-  plt[[2]] = .scatter(data = object$df, x = 'PC1', y = 'PC3',
+  plt[[2]] = scatter(data = object$df, x = 'PC1', y = 'PC3',
                       strat = 'inferredAncestry', main = 'PC1 vs. PC3')
-  plt[[3]] = .scatter(data = object$df, x = 'PC1', y = 'PC2',
+  plt[[3]] = scatter(data = object$df, x = 'PC1', y = 'PC2',
                       strat = 'inferredAncestry', main = 'PC2 vs. PC3')
   if (showPlot) multiplotWithSharedLegend(plots = plt, ncols = 3)
-  plt[[1]] = .scatter(data = object$df, x = 'PC1', y = 'PC2', strat = 'inferredAncestry', main = 'PC1 vs. PC2')
-  plt[[2]] = .scatter(data = object$df, x = 'PC1', y = 'PC3', strat = 'inferredAncestry', main = 'PC1 vs. PC3')
-  plt[[3]] = .scatter(data = object$df, x = 'PC2', y = 'PC3', strat = 'inferredAncestry', main = 'PC2 vs. PC3')
+  plt[[1]] = scatter(data = object$df, x = 'PC1', y = 'PC2', strat = 'inferredAncestry', main = 'PC1 vs. PC2')
+  plt[[2]] = scatter(data = object$df, x = 'PC1', y = 'PC3', strat = 'inferredAncestry', main = 'PC1 vs. PC3')
+  plt[[3]] = scatter(data = object$df, x = 'PC2', y = 'PC3', strat = 'inferredAncestry', main = 'PC2 vs. PC3')
   if(showPlot) { multiplotWithSharedLegend(plots = plt, ncols = 3) }
   return(plt)
 }
@@ -251,8 +251,9 @@ PCplots <- function (object, showPlot=T, cor=F, outliers=NULL) {
 #' @param main main title of the plot
 #' @param legend binary, whether to plot legend or not
 #' @param primaryID the primary ID used to
-
-.scatter <- function(
+#' @export
+#'
+scatter <- function(
   data, x, y, strat, xlab = NULL, ylab = NULL, outliers = NULL, main = NULL,
   legend = T, primaryID = NULL
 ) {
@@ -267,7 +268,8 @@ PCplots <- function (object, showPlot=T, cor=F, outliers=NULL) {
   color = factor(data[[strat]])
 
   plt = (ggplot2::ggplot(data = data, ggplot2::aes_string(x, y, color = color))
-         + ggplot2::labs(color = strat) + ggplot2::geom_point()
+         + ggplot2::labs(color = strat)
+         + ggplot2::geom_point()
          + ggplot2::xlab(xlab) + ggplot2::ylab(ylab))
 
   if (!is.null(outliers)) {
