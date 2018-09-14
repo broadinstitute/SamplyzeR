@@ -1,4 +1,4 @@
-Package: SamplyzeR
+Package: samplyzer
 Title: What the Package Does (one line, title case)
 Version: 0.0.0.9000
 Authors@R: person("Xiao", "Li", email = "xiaoli@broadinstitute.org", role = c("aut", "cre"))
