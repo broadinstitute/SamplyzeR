@@ -1,4 +1,4 @@
-library(SamplyzeR)
+library(samplyzer)
 context("SampleDataset")
 
 bamQcMetr = data.frame('SampleID' = c("A", "B", "C"), 'bam' = c(1,2,3))

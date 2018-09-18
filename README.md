@@ -1,6 +1,5 @@
-samplyzer
------
-samplyzer is an R package and Web Application that enables efficient explore 
+# samplyzer
+samplyzer is an R package and Web Application that enables efficient exploration of sample level QC statistics.
 
 ## Requirements
 * R >= 3.3.2
@@ -13,13 +12,13 @@ samplyzer is an R package and Web Application that enables efficient explore
 ## Installation
 This tool is still under development, and haven't yet released to CRAN. To install from github, you will need to have `devtools` installed. 
 
-```
+```r
 library(devtools)
 install_github('xiaolicbs/samplyzer')
 ```
 
 ## Usage
-Please refer to the tutorial [here](vignetts/tutorial.html). 
+Please refer to the tutorial [here](vignetts/tutorial.Rmd). 
 
 ## License
 This software is free and is under the MIT license. 

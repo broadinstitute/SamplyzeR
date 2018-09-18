@@ -1,4 +1,4 @@
-library(SamplyzeR)
+library(samplyzer)
 context("FlagSamples")
 
 # test flagSamples.default

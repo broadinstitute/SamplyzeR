@@ -1,4 +1,4 @@
 library(testthat)
-library(SamplyzeR)
+library(samplyzer)
 
-test_check("SamplyzeR")
+test_check("samplyzer")
