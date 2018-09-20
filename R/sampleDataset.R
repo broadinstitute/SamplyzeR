@@ -1,10 +1,8 @@
-library(tools)
-
-.loadData <- function (input) {
+.loadInput <- function (input) {
   if (is.data.frame(input)) {
     df = input
   } else if (is.character(input)) {
-    df = read_csv(input, sep='\t')
+    df = read.csv(input, sep='\t')
   } else {
     stop("Input is not a tsv file or a data.frame")
   }
@@ -29,14 +27,15 @@ library(tools)
 #' Create a sample dataset object that contains all information needed to
 #' perform a sample quality control. The Dataset object is a list with one
 #' dataframe.
-#'
-#' @param bamQcMetr a data frame that contains BAM level QC metrics
-#' @param vcfQcMetr a data frame that contains VCF level QC metrics
-#' @param annotations a data frame that contains annotations of the samples.
-#' @param df optional, an R dataframe that contains all sample level data, including QC metrics and
-#'           sample annotations. When df is provided, bamQcMetr, vcfQcMetr and annotations should
-#'           be vectors with names of corresponding fields.
+#' @param annotInput a tsv file or data.frame that contains sample annotations
+#' @param bamQcInput a tsv file data frame that contains BAM QC metrics
+#' @param vcfQcInput a tsv file or a data frame that contains VCF QC metrics
+#' @param primaryID ID used for each sample
 #' @param stratify a scalar or vector containing annotations to stratify against
+#' @param df optional, an R dataframe that contains all sample level data,
+#'           including QC metrics and sample annotations. When df is provided,
+#'           bamQcMetr, vcfQcMetr and annotations should be vectors with names
+#'           of corresponding fields.
 #' @return an sampleDataset object.
 #' @export
 
@@ -44,33 +43,37 @@ sampleDataset <- function(
   annotInput, primaryID, bamQcInput=NULL, vcfQcInput=NULL, stratify=NULL,
   df=NULL
 ){
-  if (!exists(annotInput) || !exists(primaryID))
-    stop("Primary ID of QC metrics and sample attributes should be provided.")
-  if (is.null(bamQcMetr) & is.null(vcfQcMetr))
+  if (!exists('annotInput')) { stop("AnnotTsv should be provided.") }
+  if (!exists('primaryID')){ stop("PrimaryID should be provided.") }
+  if (is.null(bamQcInput) & is.null(vcfQcInput))
     stop("at least one set of QC metrics should be provided.")
+
   # import annotation
   df = .loadInput(annotInput)
-  annotNames = .getNames(df)
+  annotNames = .getNames(df, primaryID)
+
   if (!all(stratify %in% annotNames)) {
     stop("Not all stratified factors are in the annotation file,
          please double check your input stratify option.")
   }
 
+  bamQcMetrName = NULL
+  vcfQcMetrName = NULL
+  sds = list(annotations = annotNames, primaryID = primaryID)
   if (!is.null(bamQcInput)) {
     bamQcMetr = .loadInput(bamQcInput)
     df = mergeMetr(df, bamQcMetr, primaryID)
-    bamQcMetrName = .getNames(bamQcMetr)
+    bamQcMetrName = .getNames(bamQcMetr, primaryID)
+    sds$bamQcMetr = bamQcMetrName
   }
   if (!is.null(vcfQcInput)) {
     vcfQcMetr = .loadInput(vcfQcInput)
     df = .mergeMetr(df, vcfQcMetr, primaryID)
-    vcfQcMetrName = .getNames(vcfQcMetr)
+    vcfQcMetrName = .getNames(vcfQcMetr, primaryID)
   }
-  sds = list(df = df, annotations = annotations,
-                qcMetrics = c(bamQcMetrName, vcfQcMetrName),
-                bamQcMetr = bamQcMetr, vcfQcMetr = vcfQcMetr,
-                primaryID = primaryID)
+  sds = list(df = df, qcMetrics = c(bamQcMetrName, vcfQcMetrName),
+            bamQcMetr = bamQcMetrName, vcfQcMetr = vcfQcMetrName)
   sds$df$index = 1:length(df[[primaryID]])
-  class(object) <- 'sampleDataset'
-  return(object)
+  class(sds) <- 'sampleDataset'
+  return(sds)
 }
