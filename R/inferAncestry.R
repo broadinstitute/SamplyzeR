@@ -1,7 +1,7 @@
 #' Predict sample ancestry from genotype Principle Components
 #'
 #' Principle Components of genotypes with k nearest neighbours.
-#' @return Updated sample Dataset object with inferredAncestry tag
+#' @return Updated sample Dataset sds with inferredAncestry tag
 #' @export
 
 inferAncestry <- function(...) UseMethod('inferAncestry')
@@ -21,7 +21,7 @@ inferAncestry.default <- function(testSet, trainSet, ancestry, k = 5) {
 
 #' Infer sample ancestry
 #'
-#' @param object Sample Dataset object for Ancestry predition
+#' @param sds Sample Dataset sds for Ancestry predition
 #' @param trainSet data frame with genotype PCs for each sample with known ancestry
 #' @param knownAncestry a vector with known ancestry for each sample in same order of trainSet
 #' @param nPC Use first n PCs to predict ancestry
@@ -29,7 +29,7 @@ inferAncestry.default <- function(testSet, trainSet, ancestry, k = 5) {
 #' @export
 
 inferAncestry.sampleDataset <- function(
-  object, trainSet, knownAncestry, nPC = 3, k = 5
+  sds, trainSet, knownAncestry, nPC = 3, k = 5
 ) {
   if(dim(trainSet)[1] != length(knownAncestry)) stop("Number of rows of training set is different from knownAncestry.")
 
@@ -38,16 +38,16 @@ inferAncestry.sampleDataset <- function(
   if(!all(PC %in% names(sds$df[sds$PC]))) stop("Test Set does not contain nPC specified for this analysis.")
 
   trainSet = trainSet[, PC]
-  testSet = object$df[, PC]
+  testSet = sds$df[, PC]
 
   inferredAncestry = inferAncestry(testSet, trainSet, ancestry = knownAncestry, k = k)
   if (exists("isTrainSet")) {
-    object$df$inferredAncestry = as.character(object$df$knownAncestry)
-    object$df[!isTrainSet, 'inferredAncestry'] = as.character(inferredAncestry)
+    sds$df$inferredAncestry = as.character(sds$df$knownAncestry)
+    sds$df[!isTrainSet, 'inferredAncestry'] = as.character(inferredAncestry)
   } else {
-    object$df$inferredAncestry = as.character(inferredAncestry)
+    sds$df$inferredAncestry = as.character(inferredAncestry)
   }
-  object$inferredAncestry = 'inferredAncestry'
-  object$annotations = c(object$annotations, 'inferredAncestry')
-  return(object)
+  sds$inferredAncestry = 'inferredAncestry'
+  sds$annot = c(sds$annot, 'inferredAncestry')
+  return(sds)
 }

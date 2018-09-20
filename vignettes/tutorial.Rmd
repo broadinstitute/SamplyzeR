@@ -1,5 +1,5 @@
 ---
-title: "Tutorial for the genotypeQC R library"
+title: "Tutorial for the samplyzer R library"
 output:
   html_notebook: default
   html_document: default
@@ -19,12 +19,12 @@ This library required R version >= 3.3.2.
 #install.packages('devtools')
 library(devtools)
 install_github('xiaolicbs/samplyzer')
-library(SamplyzeR)
+library(samplyzer)
 ```
 
 ### Load input files
 ```{r}
-setwd('~/SamplyzeR/examples')
+setwd('/Users/xiaoli/samplyzer/vignettes/data')
 bamQcMetr = read.csv('bamQcMetr.tsv', sep = '\t')
 vcfQcMetr = read.csv('vcfQcMetr.tsv', sep = '\t')
 annotations = read.csv('sampleAnnotations.tsv', sep = '\t')
@@ -35,7 +35,8 @@ stratify = c('ANCESTRY', 'SeqTech')
 
 ### Construct an Sample Dataset object
 ```{r}
-sds = sampleDataset(bamQcMetr = bamQcMetr, vcfQcMetr = vcfQcMetr, annotations = annotations, primaryID = 'SampleID')
+sds = sampleDataset(bamQcMetr = bamQcMetr, vcfQcMetr = vcfQcMetr, 
+                    annotations = annotations, primaryID = 'SampleID')
 ```
 
 ### Attributes of sample data set

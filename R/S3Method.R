@@ -1,67 +1,67 @@
-#' Save an object to a specific format
+#' Save an sds to a specific format
 #'
-#' Save an object to tsv, RDS or excel format
+#' Save an sds to tsv, RDS or excel format
 #'
-#' @param object
+#' @param sds
 #'
 #' @export
 
-save <-function(object, ...) UseMethod('save')
+save <-function(sds, ...) UseMethod('save')
 
 #' Write sample dataset to tsv, RDS or excel files with S3 method save.
 #'
-#' @param object sample dataset
+#' @param sds sample dataset
 #' @param tsv path and output name of tsv file
 #' @param RDS path and output name of RDS file
 #' @param xls path and output name of excel file
 #'
 #' @export
 
-save.sampleDataset <- function(object, RDS = NULL, tsv = NULL, xls = NULL) {
+save.sampleDataset <- function(sds, RDS = NULL, tsv = NULL, xls = NULL) {
   if (is.null(RDS) & is.null(tsv) & is.null(xls)) {
     stop("Please specify at least one format (RDS, tsv or xls) for output")
   }
   if(!is.null(tsv)) {
-    write.table(object$df, file = tsv, sep = '\t', row.names = F, quote = F)
+    write.table(sds$df, file = tsv, sep = '\t', row.names = F, quote = F)
   }
   if (!is.null(RDS)) {
-    saveRDS(object, file = RDS)
+    saveRDS(sds, file = RDS)
   }
   if (!is.null(xls)) {
-    WriteXLS::WriteXLS(object$df, ExcelFileName = xls)
+    WriteXLS::WriteXLS(sds$df, ExcelFileName = xls)
   }
 }
 
 #' Update index of sample dataset by different annotation categories
 #'
-#' @param object sample dataset
+#' @param sds sample dataset
 #' @param by sort by which category
-#' @return an sample dataset object with updated index
+#' @return an sample dataset sds with updated index
 #'
 #' @export
 
-sort.sampleDataset <- function(object, by) {
-  byCol = which(names(object$df) == by)
-  object$df = object$df[order(object$df[, byCol], na.last = T),]
-  object$df$index = 1:dim(object$df)[1]
-  return(object)
+sort.sampleDataset <- function(sds, by) {
+  byCol = which(names(sds$df) == by)
+  sds$df = sds$df[order(sds$df[, byCol], na.last = T),]
+  sds$df$index = 1:dim(sds$df)[1]
+  return(sds)
 }
 
-#' Show dimensions of sample dataset object
+#' Show dimensions of sample dataset sds
 #'
-#' @param object sample data set object
+#' @param sds sample data set sds
 #' @return a vector of rows and columns of the data frame of sample data set
 #'
 #' @export
 
-dim.sampleDataset <- function(object){
-  dim(object$df)
+dim.sampleDataset <- function(sds){
+  dim(sds$df)
 }
 
 #' @export
-print.sampleDataset <- function(object) {
+print.sampleDataset <- function(sds) {
   cat("\nClass: SampleDataset\n",
-      "Samples:   ", dim(object)[1], "\n",
-      "Attributes:", attributes(object)$names, "\n\n"
+      "Samples:   ", dim(sds)[1], "\n",
+      "Attributes:", attributes(sds)$names, "\n\n"
       )
 }

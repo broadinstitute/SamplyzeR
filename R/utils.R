@@ -12,11 +12,11 @@
   vcfQcMetr = data.frame(
     'SampleID' = c('A', 'B', 'C', 'D', 'E'),
     'vcf' = c(1, 2, 3, 4, 5))
-  annotations = data.frame(
+  annot = data.frame(
     'SampleID' = c('A', 'B', 'C', 'D', 'E'),
     'Anno' = c('A1', 'A2', 'A3', 'A4', 'A5'))
   sds = sampleDataset(bamQcMetr = bamQcMetr, vcfQcMetr = vcfQcMetr,
-                      annotations = annotations, primaryID = 'SampleID')
+                      annot = annot, primaryID = 'SampleID')
   if(z) sds = calZscore(sds)
   return(sds)
 }

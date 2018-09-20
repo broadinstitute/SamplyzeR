@@ -1,35 +1,35 @@
 #' Generate scatter plot of QC metrics according to samples
 #'
-#' @param object sample dataset object
+#' @param sds sample dataset sds
 #' @param ... other arguments
 #'
 #' @export
 #'
-sampleQcPlot <- function (object, ...) UseMethod('sampleQcPlot')
+sampleQcPlot <- function (sds, ...) UseMethod('sampleQcPlot')
 
 #' Generate scatter plot of QC metrics
 #'
-#' @param object sample dataset object
-#' @param annotation which annotation to visualize
+#' @param sds sample dataset sds
+#' @param annot which annot to visualize
 #' @param pca whether perform pca plot
 #'
 
 sampleQcPlot.default <- function(
-  data, primaryID, qcMetric, annotation = NULL, outliers = NULL, legend = T,
+  data, primaryID, qcMetric, annot = NULL, outliers = NULL, legend = T,
   main = 'QC', geom = c('scatter', 'violin', 'hist')
 ) {
   geom <- match.arg(geom)
-  if (!is.null(annotation)) {
+  if (!is.null(annot)) {
     if (geom == 'scatter') {
       # scatter plot stratified by sample
-      plt = scatter(data = data, x = 'index', y = qcMetric, strat=annotation,
+      plt = scatter(data = data, x = 'index', y = qcMetric, strat=annot,
                      xlab = 'samples', legend = legend, main = main,
                      outliers = outliers, primaryID = sds$primaryID)
     }
     if (geom == 'violin') {
-      data[[annotation]] = factor(.toSameLength(data[[annotation]]))
-      plt <- (ggplot2::ggplot(data, ggplot2::aes_string(annotation, qcMetric,
-                                                      color = annotation))
+      data[[annot]] = factor(.toSameLength(data[[annot]]))
+      plt <- (ggplot2::ggplot(data, ggplot2::aes_string(annot, qcMetric,
+                                                      color = annot))
               + ggplot2::geom_violin()
               + ggplot2::geom_jitter(height = 0, width = 0.3))
     }
@@ -45,8 +45,8 @@ sampleQcPlot.default <- function(
 
 #' Generate a panel of sample QC plots across a list of qcMetrics
 #'
-#' @param object SampleDataset object
-#' @param annotations a character string of sample annotation to stratify by
+#' @param sds SampleDataset sds
+#' @param annot optional, a character string of sample annot to stratify by
 #' @param qcMetrics a character string or a vector includes QC metrics to
 #'                  explore; if unspecified, all QC metrics in the SDS will
 #'                  be used.
@@ -55,38 +55,36 @@ sampleQcPlot.default <- function(
 #' @param outliers a vector of IDs of outliers to show on the figure
 #' @param legend whether to include a legend or not
 #' @param position position of the legend
-#' @param sort whether to sort by annotation when ploting
-#' @return a list of grob objects
+#' @param sort whether to sort by annot when ploting
+#' @return a list of grob sdss
 #' @export
-#'
 
 sampleQcPlot.sampleDataset <- function(
-  object, qcMetrics, annotation = NULL, geom = c('scatter', 'violin', 'hist'),
+  sds, annot, qcMetrics = sds$qcMetrics, geom = c('scatter', 'violin', 'hist'),
   outliers = NULL, legend = T, main = 'QC', position = c('right', 'bottom'),
   ncols = 5, show = FALSE, sort = TRUE
 ) {
   if(length(qcMetrics) == 1) { ncols = 1 }
   if (!is.null(outliers)) {
-    if(!all(outliers %in% object$df[[object$primaryID]])) {
+    if(!all(outliers %in% sds$df[[sds$primaryID]])) {
       stop("Not all outliers are in the Sample Dataset. Please double check.")
     }
   }
   geom <- match.arg(geom)
   position <- match.arg(position)
   if(is.null(qcMetrics)) {
-    qcMetrics = object$qcMetrics
+    qcMetrics = sds$qcMetrics
   }
-  if(!is.null(annotation)) {
-    if (sort) object = sort(object, by = annotation)
-    plots = sapply(
-      qcMetrics,
-      function(x) sampleQcPlot(
-        data = object$df, annotation = annotation, geom = geom, legend = T,
-        main = x, qcMetric=x, outliers=outliers, primaryID=object$primaryID),
-      simplify = F
-    )
-    grobList = multiplotWithSharedLegend(plots, ncols, position, show)
-  }
+  if (sort) sds = sort(sds, by = annot)
+  plots = sapply(
+    qcMetrics,
+    function(x) sampleQcPlot(
+      data = sds$df, annot = annot, geom = geom, legend = T,
+      main = x, qcMetric=x, outliers=outliers, primaryID=sds$primaryID
+    ),
+    simplify = F
+  )
+  grobList = multiplotWithSharedLegend(plots, ncols, position, show)
   return(grobList)
 }
 
@@ -126,7 +124,7 @@ outlierPlots.default <- function(tab, qcMetrics, strat, main, outliers,
                                           colour = 'black', size = 3))
     }
   }
-  .multiplot(plotlist = plots, ncols = 2)
+  multiplot(plotlist = plots, ncols = 2)
 }
 
 #' Produce outlier plots for a sampleDataset
@@ -134,9 +132,9 @@ outlierPlots.default <- function(tab, qcMetrics, strat, main, outliers,
 #' @return A pdf with all plots
 
 outlierPlots.sampleDataset <- function(
-  object, title, width=15, height=6
+  sds, title, width=15, height=6
 ) {
-  if(grepl('-', object$zscoreBy)) {
+  if(grepl('-', sds$zscoreBy)) {
     stop("zscoreBy should not contain '-', please refine that")
   }
   pdf(file=paste(title, outlier, "pdf", sep="."), width=width, height=height)
@@ -144,7 +142,7 @@ outlierPlots.sampleDataset <- function(
   sapply(sds$qcMetrics,
          function(qcMetr)
             outlierPlots(
-              object$df, qcMetr, strat, main, outlier, primaryID=sds$primaryID
+              sds$df, qcMetr, strat, main, outlier, primaryID=sds$primaryID
             )
   )
 
@@ -159,34 +157,34 @@ outlierPlots.sampleDataset <- function(
                  qcMetrics, zscore, "by", strat, sep = " ")
 
   }
-  PCplots(object, outliers)
+  PCplots(sds, outliers)
   dev.off()
 }
 
-#' Generate PC plot of an SampleDataset Object
+#' Generate PC plot of an SampleDataset sds
 #'
-#' @param object sample data set
+#' @param sds sample data set
 #' @param showPlot whether to show plot
 #'
-#' @return a list of ggplot objects
+#' @return a list of ggplot sdss
 #'
 #' @export
 
-PCplots <- function (object, showPlot=T, cor=F, outliers=NULL) {
-  if(!(hasAttr(object, c('PC', 'inferredAncestry')))) {
+PCplots <- function (sds, showPlot=T, cor=F, outliers=NULL) {
+  if(!(hasAttr(sds, c('PC', 'inferredAncestry')))) {
     stop("Sample Dataset must have PC and inferred ancestry attributes.")
   }
   plt = list()
-  plt[[1]] = scatter(data = object$df, x = 'PC1', y = 'PC2', outliers=outliers,
+  plt[[1]] = scatter(data = sds$df, x = 'PC1', y = 'PC2', outliers=outliers,
                       strat = 'inferredAncestry', main = 'PC1 vs. PC2')
-  plt[[2]] = scatter(data = object$df, x = 'PC1', y = 'PC3',
+  plt[[2]] = scatter(data = sds$df, x = 'PC1', y = 'PC3',
                       strat = 'inferredAncestry', main = 'PC1 vs. PC3')
-  plt[[3]] = scatter(data = object$df, x = 'PC1', y = 'PC2',
+  plt[[3]] = scatter(data = sds$df, x = 'PC1', y = 'PC2',
                       strat = 'inferredAncestry', main = 'PC2 vs. PC3')
   if (showPlot) multiplotWithSharedLegend(plots = plt, ncols = 3)
-  plt[[1]] = scatter(data = object$df, x = 'PC1', y = 'PC2', strat = 'inferredAncestry', main = 'PC1 vs. PC2')
-  plt[[2]] = scatter(data = object$df, x = 'PC1', y = 'PC3', strat = 'inferredAncestry', main = 'PC1 vs. PC3')
-  plt[[3]] = scatter(data = object$df, x = 'PC2', y = 'PC3', strat = 'inferredAncestry', main = 'PC2 vs. PC3')
+  plt[[1]] = scatter(data = sds$df, x = 'PC1', y = 'PC2', strat = 'inferredAncestry', main = 'PC1 vs. PC2')
+  plt[[2]] = scatter(data = sds$df, x = 'PC1', y = 'PC3', strat = 'inferredAncestry', main = 'PC1 vs. PC3')
+  plt[[3]] = scatter(data = sds$df, x = 'PC2', y = 'PC3', strat = 'inferredAncestry', main = 'PC2 vs. PC3')
   if(showPlot) { multiplotWithSharedLegend(plots = plt, ncols = 3) }
   return(plt)
 }
@@ -198,7 +196,7 @@ PCplots <- function (object, showPlot=T, cor=F, outliers=NULL) {
 #' @param ncols number of columns in the plot
 #'
 
-.multiplot <- function(..., plotlist=NULL, file=NULL, ncols=1, layout=NULL) {
+multiplot <- function(..., plotlist=NULL, file=NULL, ncols=1, layout=NULL) {
   # This function is modified from multiplot of Cookbook of R
   # Make a list from the ... arguments and plotlist
   plots <- c(list(...), plotlist)
@@ -284,12 +282,12 @@ scatter <- function(
 
 #' Generate multiple plots with shared figure legend
 #'
-#' @param plots a list of grob objects
+#' @param plots a list of grob sdss
 #' @param ncols number of rows
 #' @param position Position of the legend, between "bottom" and "right"
 #' @param show whether show the plot or not
 #'
-#' @return a grid graphical object (grob)
+#' @return a grid graphical sds (grob)
 #' @export
 #'
 multiplotWithSharedLegend <- function(

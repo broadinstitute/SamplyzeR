@@ -47,22 +47,22 @@ flagSamples.default <- function (df, column, cutoff, greater) {
 
 #' Flag a sample from a sampleDataset
 #'
-#' @param object a sampleDataset object
+#' @param sds a sampleDataset sds
 #' @param cutoffs a data.frame that specifies cutoff values for qcMetrics.
 #'                Contains three columns, including "qcMetrics", "value"
 #'                and "greater"
 #' @param zscore a scalar value that zscore cutoff used, will not flag samples
 #'               based on z-score if not specified. Default value is NULL.
-#' @return an updated sample dataset object with flags added.
+#' @return an updated sample dataset sds with flags added.
 #' @export
 
-flagSamples.sampleDataset <- function(object, cutoffs, zscore = NULL){
+flagSamples.sampleDataset <- function(sds, cutoffs, zscore = NULL){
   # conditions
-  if(!all(cutoffs$qcMetrics %in% object$qcMetrics)){
+  if(!all(cutoffs$qcMetrics %in% sds$qcMetrics)){
     warning("Not all QC metrics from cutoff table is presented in the
             SampleDataset. ")
   }
-  if(all(!cutoffs$qcMetrics %in% object$qcMetrics)) {
+  if(all(!cutoffs$qcMetrics %in% sds$qcMetrics)) {
     stop("None of metrics in the cutoff table is in the SampleDataset,
          please double check your input data.")
   }
@@ -71,19 +71,19 @@ flagSamples.sampleDataset <- function(object, cutoffs, zscore = NULL){
          applying z-score filters.")
   }
 
-  object$df$flaggedReason = ''
+  sds$df$flaggedReason = ''
   for (i in 1:dim(cutoffs)[1]) {
     # to do: re-write with sapply
-    object$df = flagSamples(object$df, cutoffs$qcMetrics[i], cutoffs$value[i],
+    sds$df = flagSamples(sds$df, cutoffs$qcMetrics[i], cutoffs$value[i],
                             cutoffs$greater[i])
   }
 
   if(!is.null(zscore)) {
-    for (i in object$zscore) {
-      object$df = flagSamples(object$df, i, zscore, greater = T)
-      object$df = flagSamples(object$df, i, -zscore, greater = F)
+    for (i in sds$zscore) {
+      sds$df = flagSamples(sds$df, i, zscore, greater = T)
+      sds$df = flagSamples(sds$df, i, -zscore, greater = F)
     }
   }
-  object['flaggedReason'] = 'flaggedReason'
-  return(object)
+  sds['flaggedReason'] = 'flaggedReason'
+  return(sds)
 }
