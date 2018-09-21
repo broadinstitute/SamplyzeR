@@ -15,8 +15,8 @@
   annot = data.frame(
     'SampleID' = c('A', 'B', 'C', 'D', 'E'),
     'Anno' = c('A1', 'A2', 'A3', 'A4', 'A5'))
-  sds = sampleDataset(bamQcMetr = bamQcMetr, vcfQcMetr = vcfQcMetr,
-                      annot = annot, primaryID = 'SampleID')
+  sds = sampleDataset(bamQcInput = bamQcMetr, vcfQcInpu = vcfQcMetr,
+                      annotInput = annot, primaryID = 'SampleID')
   if(z) sds = calZscore(sds)
   return(sds)
 }
