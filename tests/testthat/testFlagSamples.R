@@ -44,19 +44,20 @@ test_that("Flag samples from a sampleDataset", {
     qcMetrics = c('bam', 'vcf'), greater = c(T, F), values = c(2, 3))
 
   # expectFlagReason = c('', '', '', '')
-  # sds = flagSamples(.sds(), cutoffs)
+  # sds = flagSamples(sdsExample(), cutoffs)
   # expect_equal(sds$df$flaggedReason, expectFlagReason)
 
   # test: Flag samples of a SampleDataset with zscore
 
-  test_out = flagSamples(.sds(), cutoffs, zscore=0.5)
+  test_out = flagSamples(sdsExample(), cutoffs, zscore=0.5)
   expect_out = data.frame(
     flaggedReason = c('vcf<=3,bamZscore<=-0.5,vcfZscore<=-0.5',
                       'vcf<=3,bamZscore<=-0.5,vcfZscore<=-0.5',
-                      'vcf<=3', 'bamZscore>0.5,vcfZscore>0.5',
-                      'bamZscore>0.5,vcfZscore>0.5'),
+                      'bam>2,vcf<=3',
+                      'bam>2,bamZscore>0.5,vcfZscore>0.5',
+                      'bam>2,bamZscore>0.5,vcfZscore>0.5'),
     stringsAsFactors = F)
   expect_equal(
-    getAttr(flagSamples(.sds(), cutoffs, zscore=0.5), 'flaggedReason'),
+    getAttr(flagSamples(sdsExample(), cutoffs, zscore=0.5), 'flaggedReason'),
     expect_out)
 })

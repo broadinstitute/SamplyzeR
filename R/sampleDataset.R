@@ -66,7 +66,6 @@ sampleDataset <- function(
       bamQcMetr = .loadInput(bamQcInput)
       df = .mergeMetr(df, bamQcMetr, primaryID)
       bamQcMetrName = .getNames(bamQcMetr, primaryID)
-      sds$bamQcMetr = bamQcMetrName
     }
     if (!is.null(vcfQcInput)) {
       vcfQcMetr = .loadInput(vcfQcInput)
