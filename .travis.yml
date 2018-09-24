@@ -1,11 +1,8 @@
 language: r
 cache: packages
-<<<<<<< HEAD
 
 r_github_packages:
      - r-lib/covr
 
 after_success:
      - Rscript -e 'covr::coveralls()'
-=======
->>>>>>> fix #13
