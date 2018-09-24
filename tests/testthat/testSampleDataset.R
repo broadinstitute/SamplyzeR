@@ -1,5 +1,11 @@
 library(samplyzer)
-context("SampleDataset")
+context("sampleDataset")
+
+bamQcMetrDf <- data.frame('SampleID' = c("A", "B", "C"), 'bam' = c(1,2,3))
+vcfQcMetrDf <- data.frame('SampleID' = c("A", "B", "C"), 'vcf' = c(1,2,3))
+annotDf <- data.frame('SampleID' = c("A", "B", "C"),
+                      'annot1' = c("A", "B", "C"))
+
 
 test_that("Create a SampleDataset", {
   sds = sampleDataset(bamQcInput = bamQcMetrDf, vcfQcInput = vcfQcMetrDf,

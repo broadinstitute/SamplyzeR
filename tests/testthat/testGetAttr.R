@@ -1,2 +1,2 @@
-library(SamplyzeR)
+library(samplyzer)
 context('getAttr')
