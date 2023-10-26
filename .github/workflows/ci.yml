@@ -1,9 +1,9 @@
 name: R CI
 on:
   push:
-    branches: [main, master, CICD, test]
+    branches: [main, master, develop, test]
   pull_request:
-    branches: [main, master, CICD, test]
+    branches: [main, master, develop, test]
 
 jobs:
   test-coverage:
