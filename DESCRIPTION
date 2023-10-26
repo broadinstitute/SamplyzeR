@@ -2,6 +2,8 @@ Package: samplyzer
 Title: What the Package Does (one line, title case)
 Version: 0.0.0.9000
 Authors@R: person("Xiao", "Li", email = "xiaoli@broadinstitute.org", role = c("aut", "cre"))
+Author: Xiao Li
+Maintainer: Xiao Li <xiaoli@broadinstitute.org>
 Description: What the package does (one paragraph).
 Depends: R (>= 3.3.2)
 License: What license is it under?
@@ -12,11 +14,10 @@ Suggests: knitr,
     rmarkdown,
     Cairo,
     testthat,
-    covr
-Remotes: r-lib/covr
 VignetteBuilder: knitr
 Imports: class (>= 7.3-14),
     ggplot2 (>= 2.2.1),
     WriteXLS (>= 4.0.0),
     grid (>= 3.3.2),
-    gridExtra (>= 2.2.1)
+    gridExtra (>= 2.2.1),
+    covr
