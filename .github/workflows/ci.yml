@@ -24,9 +24,6 @@ jobs:
         with:
           use-public-rspm: true
 
-      # - name: Install covr package
-      #   run: Rscript -e 'install.packages("covr")'
-
       - name: Install Dependencies
         run: |
           R -e 'install.packages(c("devtools", "covr", "ggplot2", "WriteXLS", "gridExtra", "Cairo"))'
