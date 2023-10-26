@@ -6,7 +6,7 @@ branches:
   only:
     - main
     - master
-    - CI/CD
+    - develop
     - test
 
 before_install:
