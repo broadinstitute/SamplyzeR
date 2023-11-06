@@ -17,11 +17,12 @@ This tool is still under development, and haven't yet released to CRAN. To insta
 
 ```r
 library(devtools)
-install_github('xiaolicbs/samplyzer')
+install_github("xiaolicbs/samplyzer", ref = "fix")
 ```
 
 ## Usage
 Please refer to the tutorial [here](vignetts/tutorial.Rmd).
+For more information, visit our website: [Sample Explorer Website](https://xlab.shinyapps.io/qcexplorer/).
 
 ## License
 This software is free and is under the MIT license.

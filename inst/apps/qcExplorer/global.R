@@ -7,7 +7,6 @@ library(grDevices)
 library(RColorBrewer)
 library(samplyzer)
 library(gdata)
-library(dplyr)
 
 subsetTable <- function(input, sds, id){
   # sort data frame
