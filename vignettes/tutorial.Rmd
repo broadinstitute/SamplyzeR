@@ -18,7 +18,7 @@ This library required R version >= 3.3.2.
 ```{r}
 #install.packages('devtools')
 library(devtools)
-install_github('xiaolicbs/samplyzer',force = TRUE)
+install_github('xiaolicbs/samplyzer',ref = "fix", force = TRUE)
 library(samplyzer)
 ```
 
@@ -67,7 +67,7 @@ print(sds)
 ```
 ### Infer ancestry from
 ```{r}
-sds = inferAncestry(sds, trainSet = refpc[,c('PC1', 'PC2', 'PC3')], knownAncestry = refpc$group )
+sds = inferAncestry(sds, trainSet = refpc[, grep("^PC", names(refpc))], knownAncestry = refpc$group)
 getAttr(sds, 'inferredAncestry', showID = T)
 ```
 
@@ -85,6 +85,7 @@ cutoffs = data.frame(
   stringsAsFactors = F
 )
 sds = flagSamples(sds, cutoffs = cutoffs, zscore = 4)
+hasAttr(sds, 'flaggedReason')
 getAttr(sds, 'flaggedReason', showID = T) # show samples flagged
 ```
 
@@ -102,10 +103,9 @@ plt = sampleQcPlot(sds, annot  = 'inferredAncestry', qcMetrics = 'nHets', geom =
              main = 'nHet by inferredAncestry', outliers = 'Sample-001', show = T)
 nhet = sampleQcPlot(sds, annot = 'inferredAncestry', qcMetrics = 'nHets', geom = 'scatter',
              main = 'nHet by inferredAncestry', outliers = 'Sample-040', show = T)
-```
-```{r}
 plots = PCplots(sds)
 ```
+
 ### Generate multipanel plots for
 ```{r}
 grobList = sampleQcPlot(sds, qcMetrics = sds$bamQcMetr, annot = 'LCSETMax', geom = 'scatter', ncols = 3, outliers = 'Sample-001')
@@ -113,8 +113,12 @@ ggplot2::ggsave('QcPlot.pdf', grobList, width = 12, height = 6)
 ```
 
 
+
 ### Interactive exploration of QC metrics
 A shiny app was designed to interactively explore QC metrics
 ```{r}
-
+pca = samplyzer:::scatter(data =sds$df, x = 'PC3', y = 'PC6', strat = 'LCSETMax',outliers = 'Sample-001', primaryID = sds$primaryID)
+qcCorr = samplyzer:::scatter(data = sds$df, x = 'Mean_Coverage', y = 'nHets', strat = 'SeqTech', outliers = 'Sample-001', primaryID = sds$primaryID)
+print(pca)
+print(qcCorr)
 ```
