@@ -235,6 +235,7 @@ multiplot <- function(..., plotlist=NULL, file=NULL, ncols=1, layout=NULL) {
 #' Normalize elements of a vector to similar size
 
 .toSameLength <- function(vec) {
+  if (length(vec) == 0) stop("Vector is empty.")
   maxLen = max(nchar(as.character(vec)))
   format(vec, width = maxLen)
 }
@@ -261,7 +262,6 @@ scatter <- function(
 
   if (is.null(xlab)) xlab = x
   if (is.null(ylab)) ylab = y
-
   if (!is.numeric(data[[strat]])) data[[strat]] = .toSameLength(data[[strat]])
   color = factor(data[[strat]])
 
