@@ -1,8 +1,17 @@
-# samplyzer
-[![Build Status](https://travis-ci.com/xiaoli0/samplyzer.svg?branch=master)](https://travis-ci.org/xiaoli0/samplyzer)
-[![AppVeyor Build  Status](https://ci.appveyor.com/api/projects/status/github/xiaoli0/samplyzer?branch=master&svg=true)](https://ci.appveyor.com/project/xiaoli0/samplyzer)  
-[![Coverage Status](https://coveralls.io/repos/github/xiaolicbs/samplyzer/badge.svg?branch=master)](https://coveralls.io/github/xiaolicbs/samplyzer?branch=master)  
-samplyzer is an R package and Web Application that enables efficient exploration of sample level QC statistics.
+<!-- markdownlint-disable MD033 MD041 -->
+<h2 align="center">
+SAMPLYZER
+</h2>
+<p align ="center">
+<strong>An R package and web application for efficient sample quality control of human whole genome and whole exome sequencing data</strong>
+</p>
+
+<p align ="center">
+  <a title="R Version"> <img src='https://img.shields.io/badge/R-3.3.2-brightgreen'> </a>
+</p>
+
+---
+# samplyzer: an R pakcage and Web App that 
 
 ## Requirements
 * R >= 3.3.2
@@ -17,7 +26,7 @@ This tool is still under development, and haven't yet released to CRAN. To insta
 
 ```r
 library(devtools)
-install_github('xiaolicbs/samplyzer')
+install_github('x-lab/samplyzer')
 ```
 
 ## Usage
