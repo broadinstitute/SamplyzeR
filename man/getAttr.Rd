@@ -2,13 +2,23 @@
 % Please edit documentation in R/getAttr.R
 \name{getAttr}
 \alias{getAttr}
-\title{Get attributes of an object}
+\title{Get attributes of an sds}
 \usage{
-getAttr(object, ...)
+getAttr(sds, ...)
 }
 \arguments{
-\item{object}{sample dataset object}
+\item{sds}{sample dataset}
+
+\item{attribute}{name of attribute to return}
+
+\item{showID}{whether to display sample IDs or not in the output data frame}
+}
+\value{
+a data frame that contains values of specific attribute
 }
 \description{
-Get attributes of an object
+Get attributes of an sds
+}
+\seealso{
+{\link{getAttr.sampleDataset}}
 }

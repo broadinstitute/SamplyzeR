@@ -4,19 +4,17 @@
 \alias{getAttr.sampleDataset}
 \title{Get attributes of a SampleDataset}
 \usage{
-\method{getAttr}{sampleDataset}(object, attribute, showID = F)
+\method{getAttr}{sampleDataset}(sds, attribute, showID = F)
 }
 \arguments{
-\item{object}{sample data set}
+\item{sds}{sample data set}
 
 \item{attribute}{name of attribute to return}
 
-\item{showID}{whether to display sample IDs or not in the output data fram}
-
-\item{return}{a data frame that contains values of specific attribute}
+\item{showID}{whether to display sample IDs or not in the output data frame}
 }
 \value{
-data frame
+a data frame that contains values of specific attribute
 }
 \description{
 Get attributes of a SampleDataset
