@@ -1,8 +1,36 @@
 language: r
+sudo: false
 cache: packages
 
-r_github_packages:
-     - r-lib/covr
+branches:
+  only:
+    - main
+    - master
+    - CI/CD
+    - test
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -y texlive-latex-base
+  - sudo apt-get install texlive-fonts-extra
+
+install:
+  - Rscript -e 'install.packages("covr")'
+  - R -e 'install.packages(c("devtools", "ggplot2", "WriteXLS", "gridExtra", "Cairo"))'
+
+script:
+  - R CMD build .
+  - R CMD check --as-cran *tar.gz
+  - Rscript -e 'library(devtools); devtools::test()'
+  - Rscript -e 'library(covr); covr::codecov()'
 
 after_success:
-     - Rscript -e 'covr::coveralls()'
+  - Rscript -e 'covr::codecov()'
+
+addons:
+  apt:
+    packages:
+      - libxml2-dev
+
+notifications:
+  email: false
