@@ -66,12 +66,12 @@ flagSamples.sampleDataset <- function(sds, cutoffs, zscore = NULL){
     stop("None of metrics in the cutoff table is in the SampleDataset,
          please double check your input data.")
   }
-  if (!is.null(zscore) && !('zscore' %in% attributes(sds)$names)) {
+  if (!is.null(zscore) && !('zscore' %in% names(attributes(sds)))) {
     stop("Input dataset has no z-score, please calculate z-score before
          applying z-score filters.")
   }
 
-  sds$df$flaggedReason = ''
+  sds$df$flaggedReason <- ''
   for (i in 1:dim(cutoffs)[1]) {
     # to do: re-write with sapply
     sds$df = flagSamples(sds$df, cutoffs$qcMetrics[i], cutoffs$value[i],
@@ -84,6 +84,6 @@ flagSamples.sampleDataset <- function(sds, cutoffs, zscore = NULL){
       sds$df = flagSamples(sds$df, i, -zscore, greater = F)
     }
   }
-  sds['flaggedReason'] = 'flaggedReason'
+  sds['flaggedReason'] <- 'flaggedReason'
   return(sds)
 }

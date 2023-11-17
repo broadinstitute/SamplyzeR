@@ -1,8 +1,8 @@
 .loadInput <- function (input) {
   if (is.data.frame(input)) {
-    df = input
+    df <- input
   } else if (is.character(input)) {
-    df = read.csv(input, sep='\t')
+    df <- read.csv(input, sep='\t')
   } else {
     stop("Input is not a tsv file or a data.frame")
   }
@@ -10,12 +10,13 @@
 }
 
 .mergeMetr <- function(df, metrDf, primaryID) {
-  df = merge(df, metrDf, by = primaryID)
+  df <- merge(df, metrDf, by = primaryID)
   return(df)
 }
 
 .getNames <- function(df, primaryID) {
-  df = names(df)[-which(names(df) == primaryID)]
+  return(names(df)[-which(names(df) == primaryID)])
+  #df = names(df)[-which(names(df) == primaryID)]
 }
 
 #' Sample dataset object
@@ -53,37 +54,38 @@ sampleDataset <- function(
 
   # import annotation
   if (is.null(df)) {
-    df = .loadInput(annotInput)
-    annotNames = .getNames(df, primaryID)
+    df <- .loadInput(annotInput)
+    annotNames <- .getNames(df, primaryID)
 
     if (!all(stratify %in% annotNames)) {
       stop("Not all stratified factors are in the annotation file,
            please double check your input stratify option.")
     }
-    bamQcMetrName = NULL
-    vcfQcMetrName = NULL
+
+    bamQcMetrName <- NULL
+    vcfQcMetrName <- NULL
     if (!is.null(bamQcInput)) {
-      bamQcMetr = .loadInput(bamQcInput)
-      df = .mergeMetr(df, bamQcMetr, primaryID)
-      bamQcMetrName = .getNames(bamQcMetr, primaryID)
+      bamQcMetr <- .loadInput(bamQcInput)
+      df <- .mergeMetr(df, bamQcMetr, primaryID)
+      bamQcMetrName <- .getNames(bamQcMetr, primaryID)
     }
     if (!is.null(vcfQcInput)) {
-      vcfQcMetr = .loadInput(vcfQcInput)
-      df = .mergeMetr(df, vcfQcMetr, primaryID)
-      vcfQcMetrName = .getNames(vcfQcMetr, primaryID)
+      vcfQcMetr <- .loadInput(vcfQcInput)
+      df <- .mergeMetr(df, vcfQcMetr, primaryID)
+      vcfQcMetrName <- .getNames(vcfQcMetr, primaryID)
     }
   } else {
     # directly create SDS from an already defined data.frame
-    bamQcMetrName = bamQcInput
-    vcfQcMetrName = vcfQcInput
-    annot = annotInput
+    bamQcMetrName <- bamQcInput
+    vcfQcMetrName <- vcfQcInput
+    annot <- annotInput
   }
 
   sds = list(df = df, qcMetrics = c(bamQcMetrName, vcfQcMetrName),
              bamQcMetr = bamQcMetrName, vcfQcMetr = vcfQcMetrName,
              annot = annotNames, primaryID = primaryID)
 
-  sds$df$index = 1:length(df[[primaryID]])
+  sds$df$index <- 1:length(df[[primaryID]])
   class(sds) <- 'sampleDataset'
   return(sds)
 }
