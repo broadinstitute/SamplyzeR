@@ -4,10 +4,10 @@
 \alias{save.sampleDataset}
 \title{Write sample dataset to tsv, RDS or excel files with S3 method save.}
 \usage{
-\method{save}{sampleDataset}(object, RDS = NULL, tsv = NULL, xls = NULL)
+\method{save}{sampleDataset}(sds, RDS = NULL, tsv = NULL, xls = NULL)
 }
 \arguments{
-\item{object}{sample dataset}
+\item{sds}{sample dataset}
 
 \item{RDS}{path and output name of RDS file}
 

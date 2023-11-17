@@ -2,18 +2,27 @@
 % Please edit documentation in R/setAttr.R
 \name{setAttr}
 \alias{setAttr}
-\title{Update a Sample Data Set}
+\title{Update a Sample Dataset}
 \usage{
-setAttr(object, ...)
+setAttr(sds, ...)
 }
 \arguments{
-\item{object}{sample dataset object}
+\item{sds}{A sample dataset object}
 
-\item{...}{other arguments}
+\item{attributes}{character vector specifying the attributes to add or update in the sample Dataset}
+
+\item{data}{data.frame, content to add to the dataframe}
+
+\item{primaryID}{primary key of input data frame}
+
+\item{overwrite}{logical, indicating whether to overwrite existing attributes if they already exist}
 }
 \value{
-object
+An updated sample dataset
 }
 \description{
-Update entries of sample data set, such as the df, bamQcMetr, vcfQcMetr
+Update entries of a sample dataset, such as the df, bamQcMetr, vcfQcMetr.
+}
+\seealso{
+{\link{setAttr.sampleDataset}}
 }
