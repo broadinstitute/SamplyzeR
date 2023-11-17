@@ -40,4 +40,5 @@ getColor<- function(n) {
 
 source("ui.R")
 source("server.R")
-shinyApp(ui, server)
+#shinyApp(ui, server)
+shiny::shinyApp(ui, server, options = list(launch.browser = TRUE), "https://xlab.shinyapps.io/samplyzer/")
