@@ -18,13 +18,13 @@ This library required R version >= 3.3.2.
 ```{r}
 #install.packages('devtools')
 library(devtools)
-install_github('xiaolicbs/samplyzer')
+install_github('xiaolicbs/samplyzer',force = TRUE)
 library(samplyzer)
 ```
 
 ### Load input files
 ```{r}
-setwd('/Users/xiaoli/samplyzer/vignettes/data')
+setwd('./data')
 bamQcMetr = read.csv('bamQcMetr.tsv', sep = '\t')
 vcfQcMetr = read.csv('vcfQcMetr.tsv', sep = '\t')
 annotations = read.csv('sampleAnnotations.tsv', sep = '\t')
@@ -35,8 +35,12 @@ stratify = c('ANCESTRY', 'SeqTech')
 
 ### Construct an Sample Dataset object
 ```{r}
-sds = sampleDataset(bamQcMetr = bamQcMetr, vcfQcMetr = vcfQcMetr, 
-                    annotations = annotations, primaryID = 'SampleID')
+#sds = sampleDataset(bamQcMetr = bamQcMetr, vcfQcMetr = vcfQcMetr, 
+#                    annotations = annotations, primaryID = 'SampleID')
+sds = sampleDataset(bamQcInput = bamQcMetr, vcfQcInput = vcfQcMetr, 
+                    annotInput = annotations, primaryID = 'SampleID')
+str(sds)
+
 ```
 
 ### Attributes of sample data set
@@ -63,7 +67,7 @@ print(sds)
 ```
 ### Infer ancestry from
 ```{r}
-sds = inferAncestry(sds, trainSet = refpc[,c('PC1', 'PC2', 'PC3')], knownAncestry = refpc$group )
+sds = inferAncestry(sds, trainSet = refpc[, grep("^PC", names(refpc))], knownAncestry = refpc$group)
 getAttr(sds, 'inferredAncestry', showID = T)
 ```
 
@@ -81,6 +85,7 @@ cutoffs = data.frame(
   stringsAsFactors = F
 )
 sds = flagSamples(sds, cutoffs = cutoffs, zscore = 4)
+hasAttr(sds, 'flaggedReason')
 getAttr(sds, 'flaggedReason', showID = T) # show samples flagged
 ```
 
@@ -89,30 +94,31 @@ A S3 class function `save` is used to save SampleDataset to different formats.
 ```{r}
 prefix = 'examples'
 save(sds, RDS = paste(prefix, 'RDS', sep = '.'),
-     tsv = paste(prefix, 'tsv', sep = '.'),
-     xls = paste(prefix, 'xls', sep = '.'))
+     tsv = paste(prefix, 'tsv', sep = '.'))
 ```
 
 ### Visualize a QC metric by annotations
 ```{r}
-plt = sampleQcPlot(sds, annotation = 'inferredAncestry', qcMetrics = 'nHets', geom = 'scatter',
+plt = sampleQcPlot(sds, annot  = 'inferredAncestry', qcMetrics = 'nHets', geom = 'scatter',
              main = 'nHet by inferredAncestry', outliers = 'Sample-001', show = T)
-
-nhet = sampleQcPlot(sds, annotation = 'inferredAncestry', qcMetrics = 'nHets', geom = 'scatter',
+nhet = sampleQcPlot(sds, annot = 'inferredAncestry', qcMetrics = 'nHets', geom = 'scatter',
              main = 'nHet by inferredAncestry', outliers = 'Sample-040', show = T)
-```
-```{r}
 plots = PCplots(sds)
 ```
+
 ### Generate multipanel plots for
 ```{r}
-grobList = sampleQcPlot(sds, qcMetrics = sds$bamQcMetr, annotation = 'LCSETMax', geom = 'scatter', ncols = 3, outliers = 'Sample-001')
+grobList = sampleQcPlot(sds, qcMetrics = sds$bamQcMetr, annot = 'LCSETMax', geom = 'scatter', ncols = 3, outliers = 'Sample-001')
 ggplot2::ggsave('QcPlot.pdf', grobList, width = 12, height = 6)
 ```
+
 
 
 ### Interactive exploration of QC metrics
 A shiny app was designed to interactively explore QC metrics
 ```{r}
-
+pca = samplyzer:::scatter(data =sds$df, x = 'PC3', y = 'PC6', strat = 'LCSETMax',outliers = 'Sample-001', primaryID = sds$primaryID)
+qcCorr = samplyzer:::scatter(data = sds$df, x = 'Mean_Coverage', y = 'nHets', strat = 'SeqTech', outliers = 'Sample-001', primaryID = sds$primaryID)
+print(pca)
+print(qcCorr)
 ```
