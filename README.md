@@ -87,7 +87,7 @@ For detailed RMD examples, please refer to the run script [here](vignettes/tutor
 
 ### 3. Web Interface
 
-SAMPLYZER offers a user-friendly web interface for interactive data exploration: [Sample Explorer Website](https://xlab.shinyapps.io/qcexplorer/).
+SAMPLYZER offers a user-friendly web interface for interactive data exploration: [Sample Explorer Website](https://xlab.shinyapps.io/samplyzer/).
 
 ![Alt text](https://img1.imgtp.com/2023/11/15/U5l1sV53.png)https://img1.imgtp.com/2023/11/15/U5l1sV53.png)
 
