@@ -19,27 +19,24 @@ sampleQcPlot.default <- function(
   main = 'QC', geom = c('scatter', 'violin', 'hist')
 ) {
   geom <- match.arg(geom)
-  if (!is.null(annot)) {
-    if (geom == 'scatter') {
-      # scatter plot stratified by sample
-      plt = scatter(data = data, x = 'index', y = qcMetric, strat=annot,
-                     xlab = 'samples', legend = legend, main = main,
-                     outliers = outliers, primaryID = sds$primaryID)
-    }
-    if (geom == 'violin') {
-      data[[annot]] = factor(.toSameLength(data[[annot]]))
-      plt <- (ggplot2::ggplot(data, ggplot2::aes_string(annot, qcMetric,
+  if (!is.null(annot) && geom == 'scatter') {
+    # scatter plot stratified by sample
+    plt <- scatter(data = data, x = 'index', y = qcMetric, strat=annot,
+                  xlab = 'samples', legend = legend, main = main,
+                  outliers = outliers, primaryID = primaryID)
+  }else if(!is.null(annot) && geom == 'violin'){
+    data[[annot]] = factor(.toSameLength(data[[annot]]))
+    plt <- (ggplot2::ggplot(data, ggplot2::aes_string(annot, qcMetric,
                                                       color = annot))
-              + ggplot2::geom_violin()
-              + ggplot2::geom_jitter(height = 0, width = 0.3))
-    }
-  } else {
-    if (geom == 'hist')  {
-      plt = ggplot2::qplot(data[[qcMetric]], geom = 'histogram', bins = 100,
-                           xlab = qcMetric)
-    }
+            + ggplot2::geom_violin()
+            + ggplot2::geom_jitter(height = 0, width = 0.3))
+  }else if(geom == 'hist'){
+    plt <- ggplot2::qplot(data[[qcMetric]], geom = 'histogram', bins = 100,
+                         xlab = qcMetric)
   }
-  plt = plt + ggplot2::ggtitle(main)
+  if(!is.null(plt)){
+    plt <- plt + ggplot2::ggtitle(main)
+  }
   return(plt)
 }
 
@@ -65,17 +62,17 @@ sampleQcPlot.sampleDataset <- function(
   ncols = 5, show = FALSE, sort = TRUE
 ) {
   if(length(qcMetrics) == 1) { ncols = 1 }
-  if (!is.null(outliers)) {
-    if(!all(outliers %in% sds$df[[sds$primaryID]])) {
-      stop("Not all outliers are in the Sample Dataset. Please double check.")
-    }
+  if (!is.null(outliers) && length(setdiff(outliers, sds$df[[sds$primaryID]])) > 0) {
+    stop("Not all outliers are in the Sample Dataset. Please double check.")
   }
+  if(is.null(qcMetrics)) {
+    qcMetrics <- sds$qcMetrics
+  }
+  if (sort) sds <- sort(sds, by = annot)
+
   geom <- match.arg(geom)
   position <- match.arg(position)
-  if(is.null(qcMetrics)) {
-    qcMetrics = sds$qcMetrics
-  }
-  if (sort) sds = sort(sds, by = annot)
+
   plots = sapply(
     qcMetrics,
     function(x) sampleQcPlot(
@@ -102,16 +99,16 @@ outlierPlots <- function(...) UseMethod('outlierPlots')
 outlierPlots.default <- function(tab, qcMetrics, strat, main, outliers,
                          primaryID=NULL, type='violin'){
   plots <- list()
-  plots[[1]] = scatter(tab, x = 'sample', y = qcMetrics, strat = strat,
+  plots[[1]] <- scatter(tab, x = 'sample', y = qcMetrics, strat = strat,
                         xlab = 'sample', outliers = outliers, main = main,
                         legend = T, primaryID = primaryID)
   if (type == 'density') {
-    plots[[2]] = (ggplot2::qplot(tab[, qcMetrics], color = tab[, strat],
+    plots[[2]] <- (ggplot2::qplot(tab[, qcMetrics], color = tab[, strat],
                                 geom = "density", main= main, xlab = qcMetrics)
                   + geom_vline(linetype="dashed",
                                xintercept = tab[outlier.index, qcMetrics]))
   } else {
-    plots[[2]] = (ggplot2::ggplot(data = tab,
+    plots[[2]] <- (ggplot2::ggplot(data = tab,
                                   ggplot2::aes_string(x=strat, y=qcMetrics,
                                                       color = strat))
                   + ggplot2::geom_violin()
@@ -119,12 +116,12 @@ outlierPlots.default <- function(tab, qcMetrics, strat, main, outliers,
                   + ggplot2::ggtitle(main)
                   + ggplot2::theme(axis.text.x = ggplot2::element_blank()))
     if(!is.null(outliers)) {
-      plots[[2]] = (plots[[2]]
+      plots[[2]] <- (plots[[2]]
                     + ggplot2::geom_point(data=tab[tab$sampleId %in% outliers,],
                                           colour = 'black', size = 3))
     }
   }
-  multiplot(plotlist = plots, ncols = 2)
+  return(multiplot(plotlist = plots, ncols = 2))
 }
 
 #' Produce outlier plots for a sampleDataset

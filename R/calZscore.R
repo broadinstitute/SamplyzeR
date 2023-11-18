@@ -20,12 +20,18 @@ calZscore <- function(...) UseMethod("calZscore")
 
 calZscore.default <- function(x, mad = T) {
   if (mad) {
-    dev = mad(x, na.rm = T)
+    dev <- mad(x, na.rm = T)
   } else {
-    dev = sd(x, na.rm = T)
+    dev <- sd(x, na.rm = T)
   }
-  x = round((x-median(x, na.rm = T))/dev, 3)
-  x
+  # Avoid division by zero
+  if (dev  == 0) {
+    warning("Standard deviation is zero. Returning original values.")
+    return(x)
+  }
+
+  x <- round((x-median(x, na.rm = T))/dev, 3)
+  return(x)
 }
 
 #' Calculate z-scores of QC metrics of a SampleDataset
@@ -52,6 +58,7 @@ calZscore.sampleDataset <- function (
   object$zscore = .zscoreColNames(qcMetrics)
   object$df[object$zscore] = NA
 
+
   if (is.null(strat)) {
     # calculate z-score across all qcMetrics
     object$df[, object$zscore] = apply(object$df[, qcMetrics], 2, calZscore)
@@ -75,15 +82,26 @@ calZscore.sampleDataset <- function (
   return(object)
 }
 
-#' Calculate maximum vcf z-score and update the object with a maxVcfzscore
-#' column
+#' Calculate maximum VCF z-score and update the object with a maxVcfZscore column
+#'
+#' @param object a sampleDataset object
+#' @param qcMetrics a vector of names of QC metrics
+#' @return updated sampleDataset object with a new maxVcfZscore column
+#'
+#' @export
 .calMaxVcfZ <- function(object, qcMetrics) {
   vcfQcMetrInUse = .zscoreColNames(intersect(object$vcfQcMetr, qcMetrics))
   object$df$maxVcfzscore = apply(abs(object$df[vcfQcMetrInUse]), 1, max)
   return(object)
 }
 
+
 #' Get z-score column names
+#'
+#' @param qcMetrics a vector of QC metric names
+#' @return a vector of z-score column names
+#'
+#' @export
 .zscoreColNames <- function (qcMetrics) {
   return(paste(qcMetrics, 'Zscore', sep = ''))
 }
