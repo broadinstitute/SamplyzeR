@@ -8,6 +8,7 @@ branches:
     - master
     - CI/CD
     - test
+    - fix/45-fix_ci_yaml
 
 before_install:
   - sudo apt-get update
