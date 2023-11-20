@@ -1,18 +1,33 @@
 #!/usr/bin/env Rscript
-devtools::install_github('xiaolicbs/samplyzer')  # Stay current version
+if (!require("samplyzer"))devtools::install_github("xiaolicbs/samplyzer", force = TRUE)
 library(argparse)
 library(samplyzer)
 
-createSds <- function(bamQcInput, vcfQcInput, annotTsv, stratify, primaryID){
-  stratify = unlist(strsplit(stratify, ','))
-  sds = sampleDataset(annotTsv, primaryID, bamQcInput, vcfQcInput, stratify)
+# Function to create sampleDataset
+createSds <- function(bamQcInput, vcfQcInput, annotTsv, stratify, primaryID) {
+  stratify <- unlist(strsplit(stratify, ','))
+  sds <- sampleDataset(annotations, primaryID, bamQcMetr, vcfQcMetr, stratify)
 }
 
-qcMetrScatterPlots <- function(sds, stratify, prefix){
-  grobList = sampleQcPlot(sds, qcMetrics=sds$bamQcMetr, annotation = stratify,
-                          geom = 'scatter', ncols = 2, show = F)
-  ggplot2::ggsave(paste(prefix, stratify,'QcMetrScatter.pdf', sep = '.'),
-                  grobList, width = 12, height = 15)
+qcMetrScatterPlots <- function(sds, stratify_values, outliers, prefix, geom) {
+  # splice stratify_values
+  stratify_list <- strsplit(stratify_values, ',')[[1]]
+  for (stratify in stratify_list) {
+    for (metric in sds$qcMetrics) {
+      tryCatch({
+        # qcMetric and stratify
+        grobList <- sampleQcPlot(sds, qcMetrics = metric, annot = stratify,
+                                 geom = geom, outliers = outliers, show = T)
+        filename <- paste(prefix, stratify, metric, 'QcMetrScatter.pdf', sep = '_')
+        # save
+        ggplot2::ggsave(filename, grobList, width = 12, height = 15)
+      }, error = function(e) {
+        cat("Error occurred for", stratify, metric, ": ", conditionMessage(e), "\n")
+        # next
+      })
+    }
+  }
+  cat("qcMetr Plots\n")
   return(TRUE)
 }
 
@@ -26,103 +41,115 @@ cutoffDf <- function (cutoffTsv) {
       stringsAsFactors = F
     )
   } else {
-    cutoffs = read.csv(opt$cutoffs, sep = '\t')
+    cutoffs = cutoffTsv
   }
   return(cutoffs)
 }
 
-stratfityAnalysis <- function(sds, stratify, cutoffDf) {
+stratfityAnalysis <- function(sds, stratify, cutoffDf, prefix) {
   cat(" o Perform a stratified QC metrics analysis\n")
   # Calculate z-scores for each batch across different ancestry
-  sds = calZscore(sds, strat=c(stratify,'inferredAncestry'),
-                  qcMetrics = .stratQcMetrGATK())
-
+  stratify_list <- strsplit(stratify, ',')[[1]]
+  sds = calZscore(sds,
+                  strat=c(stratify_list),
+                  qcMetrics = sds$vcfQcMetr)
   cat(" o Filter samples with hard cutoffs and z-scores\n")
   sds = flagSamples(sds, cutoffs=cutoffDf, zscore=4)
-  return(sds)
+  save(sds, RDS = paste(prefix, 'RDS', sep = '.'),tsv = paste(prefix, 'tsv', sep = '.'))
+  return(TRUE)
 }
 
-pcaAnalysis <- function(sds, samplePc, refPC) {
-  if (!all(is.null(refPc), is.null(samplePc))) {
-    cat(" o Load Sample and Reference genotype PCs\n")
-    samplepc = read.csv(opt$samplepc, sep = '\t')
-    refpc = read.csv(opt$refpc, sep = '\t')
-
+pcaAnalysis <- function(sds, samplepc, refpc, primaryID, outliers, stratify_values, qcX, qcY, prefix) {
+  if (!all(is.null(refpc), is.null(samplepc))) {
     cat(" o Add genotype PCs to sample Dataset\n")
     sds = setAttr(sds, attributes = 'PC', data = samplepc,
-                  primaryID = opt$primaryID)
+                  primaryID = primaryID)
 
     cat(" o Infer ancestry from PCA results\n")
-    sds = inferAncestry(sds, trainSet = refpc[,c('PC1', 'PC2', 'PC3')],
-                        knownAncestry = refpc$knownAncestry)
+    sds = inferAncestry(sds,
+                        trainSet = refpc[, grep("^PC", names(refpc))],
+                        knownAncestry = refpc$group)
+    stratify_list <- strsplit(stratify_values, ',')[[1]]
+    for (stratify in stratify_list) {
+      if(!all(is.null(qcX), is.null(qcY))){
+        tryCatch({
+          qcCorr = samplyzer:::scatter(
+            data = sds$df, x = qcX, y = qcY, strat = stratify,
+            outliers = outliers, primaryID = sds$primaryID)
+          # save
+          filename <- paste(prefix, stratify, qcX, qcY, 'QcMetrPcaAnalysis.pdf', sep = '_')
+          ggplot2::ggsave(filename, qcCorr, width = 12, height = 15)
+        }, error = function(e) {
+          cat("Error occurred for", stratify, ": ", conditionMessage(e), "\n")
+        })
+      }
+    }
   }
-  return(sds)
+  cat("PCA Analysis\n")
+  return(TRUE)
 }
 
-sampleQc <- function (
-  annotTsv, primaryID, stratify, prefix, bamQcTsv, vcfQcTsv, cutoffTsv,
-  samplePc, refPc, zscore) {
-  sds = sampleDataset(bamQcInput, vcfQcInput, annotTsv, stratify, primaryID)
-  # qcMetrScatterPlots(sds, stratify, prefix)
-  #
-  # # analysis indicator
-  # ifHardCutoff = FALSE; ifPca = FALSE; ifZscore = FALSE
-  # if (!is.null(cutoffTsv)) { ifHardCutoff = TRUE }
-  # if (!is.null(samplePc) & !is.null(refPc)){ ifPca = TRUE }
-  # if (ifHardCutoff & ifPca){ ifZscore=TRUE }
-  #
-  # if (ifHardCutoff) {
-  #   cutoffDf = cutoffDf(cutoffTsv)
-  #   sds = flagSamples(sds, cutoffs=cutoffDf)
-  # }
-  # if (ifPca) { sds = pcaAnalysis(sds, samplePc, refPc) }
-  # if (ifZscore) { sds = stratifyAnalysis(sds, stratify, cutoffDf) }
-  # save(sds, RDS=paste(prefix, '.RDS', sep=''), tsv=paste(prefix,'.tsv',sep=''),
-  #      xls=paste(prefix, '.xls', sep=''))
-  # cat("Save BAM QC plot to pdf.\n")
-}
-
-# main
-toolDescr = paste('This tool performs routine sample QC process, including',
-'sample QC plots, PCA plots, flag outliers based on certain cutoffs.')
-
-parser <- ArgumentParser(description=toolDescr)
-
-# required arguments
+#  main
+toolDescr <- paste('This tool performs routine sample QC process, including sample QC plots, PCA plots, flag outliers based on certain cutoffs.')
+args <- commandArgs(trailingOnly = TRUE)
+parser <- ArgumentParser(description = toolDescr)
+# Add command-line arguments
+parser$add_argument("-b", "--bamQcMetr", required=TRUE, help = "Path to BAM QC metrics file")
+parser$add_argument("-v", "--vcfQcMetr", required=TRUE, help = "Path to VCF QC metrics file")
+parser$add_argument("-a", "--annotations", required=TRUE, help = "Path to sample annotations file")
+parser$add_argument("-d", "--primaryID", required=TRUE, help = "Name of primary IDs in input TSVs to specify each sample")
 parser$add_argument(
-  "-a", "--annotTsv", required=TRUE, help = "A sample annotation file tsv")
-parser$add_argument(
-  "-d", "--primaryID", required=TRUE,
-  help = "Name of primary IDs in input TSVs to specific each sample")
-parser$add_argument(
-  "-s", "--stratify", required=TRUE,
-  help=paste("A list of attributes used in the stratified QC metrics analysis",
-             "separated by comma"))
-parser$add_argument(
-  "-p", "--prefix", required=TRUE, help = "Prefix of output files")
+  "--stratify",required=TRUE, help = "List of attributes for stratification")
 
 # optional arguments
 parser$add_argument(
-  "-b", "--bamQcTsv", default = NULL,
-  help = "A tsv for BAM Level quality control metrics")
-parser$add_argument(
-  "-v", "--vcfQcTsv", default = NULL,
-  help = "A tsv for VCF Level quality control metrics")
+  "-o", "--outliers", default = 'Sample-001', help = "Sample ID")
 parser$add_argument(
   "--cutoffTsv", default = NULL,
   help = 'a tsv file that contains hard cutoffs for QC metrics')
 parser$add_argument(
-  "-g", "--samplePc", default = NULL,
+  "-g", "--samplepc", default = NULL,
   help = 'A tsv file with genotype PCs for each sample')
 parser$add_argument(
-  "-r", "--refPc", default = NULL,
+  "-r", "--refpc", default = NULL,
   help = 'A tsv file with genotype PCs from a reference set of samples')
 parser$add_argument(
   '-z', '--zscore', default=4, type="integer",
-  help='zscore cutoff used to flag outlier samples'
-)
+  help='zscore cutoff used to flag outlier samples')
+parser$add_argument(
+  "-p", "--prefix", default = 'examples', help = "Prefix of output files")
+parser$add_argument(
+  "-x", "--pcX", default = 'Mean_Coverage', help = "pca analysis QC metrics")
+parser$add_argument(
+  "-y", "--pcY", default = 'nHets', help = "pca analysis QC metrics")
+parser$add_argument(
+  "--geom", default ='scatter', help = "QC metrics geom")
+
+# Parse command-line arguments
 args <- parser$parse_args()
 
-sampleQc(
-  args$annotTsv, args$primaryID, args$stratify, args$prefix, args$bamQcTsv,
-  args$vcfQcTsv, args$QcCutoffs, args$samplePc, args$refPc, args$zscore)
+
+
+# Extract file paths and other parameters from parsed arguments
+# Read data files
+bamQcMetr <- read.csv(args$bamQcMet, sep = '\t')
+vcfQcMetr <- read.csv(args$vcfQcMetr, sep = '\t')
+annotations <- read.csv(args$annotations, sep = '\t')
+if (!is.null(args$cutoffTsv) && file.exists(args$cutoffTsv)) {
+  cutoffTsv <- read.csv(args$cutoffTsv, sep = '\t')
+}else{
+  cutoffTsv <- NULL
+}
+
+sds <- createSds(bamQcMetr, vcfQcMetr, annotations, args$stratify, args$primaryID)
+# qcMetr plot
+qcMetrScatterPlots(sds, args$stratify, args$outliers, args$prefix, args$geom)
+# stratfityAnalysis
+myCutoffs <- cutoffDf(cutoffTsv)
+stratfityAnalysis(sds, args$stratify, myCutoffs, args$prefix)
+# pca
+if(!is.null(args$refpc) && file.exists(args$refpc) && !is.null(args$samplepc) && file.exists(args$samplepc)){
+  samplepc <- read.csv(args$samplepc, sep = '\t')
+  refpc <- read.csv(args$refpc, sep = '\t')
+  pcaAnalysis(sds, samplepc, refpc, args$primaryID, args$outliers, args$stratify, args$pcX, args$pcY, args$prefix)
+}
