@@ -2,13 +2,13 @@
 % Please edit documentation in R/getAttr.R
 \name{getAttr}
 \alias{getAttr}
-\title{Get attributes of an object}
+\title{Get attributes of an sds}
 \usage{
-getAttr(object, ...)
+getAttr(sds, ...)
 }
 \arguments{
-\item{object}{sample dataset object}
+\item{sds}{sample dataset sds}
 }
 \description{
-Get attributes of an object
+Get attributes of an sds
 }

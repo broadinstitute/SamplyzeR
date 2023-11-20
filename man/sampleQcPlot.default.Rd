@@ -4,14 +4,21 @@
 \alias{sampleQcPlot.default}
 \title{Generate scatter plot of QC metrics}
 \usage{
-\method{sampleQcPlot}{default}(data, primaryID, qcMetric, annotation = NULL,
-  geom = c("scatter", "violin", "hist"), outliers = NULL, legend = T,
-  main = "QC")
+\method{sampleQcPlot}{default}(
+  data,
+  primaryID,
+  qcMetric,
+  annot = NULL,
+  outliers = NULL,
+  legend = T,
+  main = "QC",
+  geom = c("scatter", "violin", "hist")
+)
 }
 \arguments{
-\item{annotation}{which annotation to visualize}
+\item{annot}{which annot to visualize}
 
-\item{object}{sample dataset object}
+\item{sds}{sample dataset sds}
 
 \item{pca}{whether perform pca plot}
 }

@@ -2,16 +2,16 @@
 % Please edit documentation in R/S3Method.R
 \name{dim.sampleDataset}
 \alias{dim.sampleDataset}
-\title{Show dimensions of sample dataset object}
+\title{Show dimensions of sample dataset sds}
 \usage{
-\method{dim}{sampleDataset}(object)
+\method{dim}{sampleDataset}(sds)
 }
 \arguments{
-\item{object}{sample data set object}
+\item{sds}{sample data set sds}
 }
 \value{
 a vector of rows and columns of the data frame of sample data set
 }
 \description{
-Show dimensions of sample dataset object
+Show dimensions of sample dataset sds
 }

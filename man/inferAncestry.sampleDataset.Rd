@@ -4,11 +4,10 @@
 \alias{inferAncestry.sampleDataset}
 \title{Infer sample ancestry}
 \usage{
-\method{inferAncestry}{sampleDataset}(object, trainSet, knownAncestry,
-  nPC = 3, k = 5)
+\method{inferAncestry}{sampleDataset}(sds, trainSet, knownAncestry, nPC = 3, k = 5)
 }
 \arguments{
-\item{object}{Sample Dataset object for Ancestry predition}
+\item{sds}{Sample Dataset sds for Ancestry predition}
 
 \item{trainSet}{data frame with genotype PCs for each sample with known ancestry}
 
