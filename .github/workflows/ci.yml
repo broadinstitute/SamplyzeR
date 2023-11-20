@@ -1,9 +1,9 @@
 name: R CI
 on:
   push:
-    branches: ["*"]
+    branches: [main, fix/45-fix_ci_yaml]
   pull_request:
-    branches: ["*"]
+    branches: [main, fix/45-fix_ci_yaml]
 
 jobs:
   test-coverage:
