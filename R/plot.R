@@ -90,7 +90,11 @@ sampleQcPlot.sampleDataset <- function(
 
 
 #' Produce outlier plot
+#' @param sds sample dataset sds
+#' @param ... other arguments
 #'
+#' @export
+
 outlierPlots <- function(...) UseMethod('outlierPlots')
 
 #' Produce outlier plot
