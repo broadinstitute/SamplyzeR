@@ -37,12 +37,12 @@ jobs:
           R CMD check .
         # R CMD check --as-cran *tar.gz 
 
-      # - name: Run Tests and Generate Coverage
-      #   run: |
-      #     Rscript -e 'library(devtools); devtools::test()'
-      #     Rscript -e 'library(covr); covr::codecov()'
+      - name: Run Tests and Generate Coverage
+        run: |
+          Rscript -e 'library(devtools); devtools::test()'
+          Rscript -e 'library(covr); covr::codecov()'
       
-      # - name: Upload coverage reports to Codecov
-      #   uses: codecov/codecov-action@v3
-      #   env:
-      #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
