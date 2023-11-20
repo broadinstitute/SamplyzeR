@@ -108,10 +108,6 @@ outlierPlots <- function(...) UseMethod('outlierPlots')
 #' @param type type of plot, either 'violin' or 'density'
 #' @return a list of outlier plots
 #'
-#' @examples
-#' outlierPlots.default(tab, qcMetrics = c("Metric1", "Metric2"), strat = "Group",
-#'                       main = "Outlier Plots", outliers = c("SampleA", "SampleB"),
-#'                       primaryID = "SampleID", type = "violin")
 #'
 
 outlierPlots.default <- function(tab, qcMetrics, strat, main, outliers,
