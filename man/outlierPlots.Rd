@@ -6,6 +6,11 @@
 \usage{
 outlierPlots(...)
 }
+\arguments{
+\item{...}{other arguments}
+
+\item{sds}{sample dataset sds}
+}
 \description{
 Produce outlier plot
 }

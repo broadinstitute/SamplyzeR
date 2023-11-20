@@ -35,9 +35,3 @@ a list of outlier plots
 \description{
 Produce outlier plot
 }
-\examples{
-outlierPlots.default(tab, qcMetrics = c("Metric1", "Metric2"), strat = "Group",
-                      main = "Outlier Plots", outliers = c("SampleA", "SampleB"),
-                      primaryID = "SampleID", type = "violin")
-
-}
