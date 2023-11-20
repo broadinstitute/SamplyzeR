@@ -1,5 +1,4 @@
 # samplyzer
-[![Build Status](https://travis-ci.com/xiaoli0/samplyzer.svg?branch=master)](https://travis-ci.org/xiaoli0/samplyzer)
 [![R CI](https://github.com/x-lab/samplyzer/actions/workflows/ci.yml/badge.svg)](https://github.com/x-lab/samplyzer/actions/workflows/ci.yml)
 [![AppVeyor Build  Status](https://ci.appveyor.com/api/projects/status/u8scd9ecoe67k9cw?svg=true)](https://ci.appveyor.com/project/1677953017/samplyzer)
 [![codecov](https://codecov.io/gh/x-lab/samplyzer/graph/badge.svg?token=eNYYjuMXIw)](https://codecov.io/gh/x-lab/samplyzer)
