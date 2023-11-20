@@ -2,6 +2,7 @@ Package: samplyzer
 Title: What the Package Does (one line, title case)
 Version: 0.0.0.9000
 Authors@R: person("Xiao", "Li", email = "xiaoli@broadinstitute.org", role = c("aut", "cre"))
+Maintainer: Xiao Li <xiaoli@broadinstitute.org>
 Description: What the package does (one paragraph).
 Depends: R (>= 3.3.2)
 License: What license is it under?
