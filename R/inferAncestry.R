@@ -21,9 +21,6 @@ inferAncestry <- function(...) UseMethod('inferAncestry')
 #' @return A vector of inferred ancestries.
 #' @export
 #'
-#' @examples
-#' # Usage of inferAncestry.default
-#' inferredAncestry <- inferAncestry.default(testSet, trainSet, ancestry, k = 5)
 #' @seealso{\link{inferAncestry.sampleDataset}}
 #' @seealso{\link{inferAncestry}}
 
@@ -41,10 +38,6 @@ inferAncestry.default <- function(testSet, trainSet, ancestry, k = 5) {
 #'
 #' @return Updated sample Dataset sds with inferredAncestry tag.
 #' @export
-#'
-#' @examples
-#' # Usage of inferAncestry.sampleDataset
-#' sds <- inferAncestry.sampleDataset(sds, trainSet, knownAncestry, nPC = 3, k = 5)
 #'
 #' @seealso{\link{inferAncestry}}
 #' @seealso{\link{inferAncestry.default}}
