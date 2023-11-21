@@ -1,18 +1,32 @@
 #' Generate scatter plot of QC metrics according to samples
 #'
-#' @param sds sample dataset sds
+#' @param sds sample dataset `sds`
 #' @param ... other arguments
 #'
+#' @seealso{\link{sampleQcPlot.default}}
+#' @seealso{\link{sampleQcPlot.sampleDataset}}
 #' @export
 #'
 sampleQcPlot <- function (sds, ...) UseMethod('sampleQcPlot')
 
 #' Generate scatter plot of QC metrics
 #'
-#' @param sds sample dataset sds
-#' @param annot which annot to visualize
-#' @param pca whether perform pca plot
+#' This function generates a scatter plot of QC metrics based on the specified parameters.
 #'
+#' @param data Sample dataset `data`.
+#' @param primaryID Primary ID used for each sample.
+#' @param qcMetric QC metric to visualize.
+#' @param annot Annotation variable to stratify by (optional).
+#' @param outliers Samples to highlight as outliers (optional).
+#' @param legend Logical, whether to show the legend (default is TRUE).
+#' @param main Title of the plot (default is 'QC').
+#' @param geom Type of plot: 'scatter', 'violin', or 'hist' (default is 'scatter').
+#'
+#' @return A scatter plot of QC metrics.
+#'
+#' @seealso{\link{sampleQcPlot}}
+#' @seealso{\link{sampleQcPlot.default}}
+#' @export
 
 sampleQcPlot.default <- function(
   data, primaryID, qcMetric, annot = NULL, outliers = NULL, legend = T,
@@ -22,12 +36,9 @@ sampleQcPlot.default <- function(
   if (!is.null(annot)) {
     if (geom == 'scatter') {
       # scatter plot stratified by sample
-      #plt = scatter(data = data, x = 'index', y = qcMetric, strat=annot,
-      #               xlab = 'samples', legend = legend, main = main,
-      #               outliers = outliers, primaryID = sds$primaryID)
       plt = scatter(data = data, x = 'index', y = qcMetric, strat=annot,
-                    xlab = 'samples', legend = legend, main = main,
-                    outliers = outliers, primaryID = primaryID)
+                     xlab = 'samples', legend = legend, main = main,
+                     outliers = outliers, primaryID = sds$primaryID)
     }
     if (geom == 'violin') {
       data[[annot]] = factor(.toSameLength(data[[annot]]))
@@ -48,7 +59,7 @@ sampleQcPlot.default <- function(
 
 #' Generate a panel of sample QC plots across a list of qcMetrics
 #'
-#' @param sds SampleDataset sds
+#' @param sds SampleDataset `sds`
 #' @param annot optional, a character string of sample annot to stratify by
 #' @param qcMetrics a character string or a vector includes QC metrics to
 #'                  explore; if unspecified, all QC metrics in the SDS will
@@ -59,7 +70,11 @@ sampleQcPlot.default <- function(
 #' @param legend whether to include a legend or not
 #' @param position position of the legend
 #' @param sort whether to sort by annot when ploting
-#' @return a list of grob sdss
+#' @return a list of grob sds
+#'
+#' @seealso{\link{sampleQcPlot}}
+#' @seealso{\link{sampleQcPlot.sampleDataset}}
+#'
 #' @export
 
 sampleQcPlot.sampleDataset <- function(
@@ -94,13 +109,52 @@ sampleQcPlot.sampleDataset <- function(
 
 #' Produce outlier plot
 #'
+#' @param tab Input table with data.
+#' @param qcMetrics Metrics to plot.
+#' @param strat Factor by which to stratify the dots.
+#' @param main Title of the plot.
+#' @param outliers List of outliers.
+#' @param primaryID Identifier for samples (if available).
+#' @param type Type of plot ('violin' or 'density').
+#'
+#' @seealso{\link{outlierPlots.default}}
+#' @seealso{\link{outlierPlots.sampleDataset}}
+#' @seealso{\link{PCplots}}
+#' @seealso{\link{multiplot}}
+#' @seealso{\link{scatter}}
+#' @seealso{\link{multiplotWithSharedLegend}}
+#' @seealso{\link{geom_split_violin}}
+#'
+#' @export
+
 outlierPlots <- function(...) UseMethod('outlierPlots')
 
-#' @param tab input table with
-#' @param qcMetrics which metrics to plot
-#' @param strat by which factor to stratify the dots
-#' @param main title of the
-#' @return
+#' Generate outlier plots for a dataset
+#'
+#' @param tab Input table with data.
+#' @param qcMetrics Metrics to plot.
+#' @param strat Factor by which to stratify the dots.
+#' @param main Title of the plot.
+#' @param outliers List of outliers.
+#' @param primaryID Identifier for samples (if available).
+#' @param type Type of plot ('violin' or 'density').
+#'
+#' @return A list of outlier plots.
+#'
+#' @examples
+#' \dontrun{
+#' # Example usage:
+#' outlierPlots.default(tab, qcMetrics = "Metric1", strat = "Group", main = "Outlier Plot")
+#' }
+#'
+#' @seealso{\link{outlierPlots}}
+#' @seealso{\link{outlierPlots.sampleDataset}}
+#' @seealso{\link{PCplots}}
+#' @seealso{\link{multiplot}}
+#' @seealso{\link{scatter}}
+#' @seealso{\link{multiplotWithSharedLegend}}
+#' @seealso{\link{geom_split_violin}}
+#' @export
 
 outlierPlots.default <- function(tab, qcMetrics, strat, main, outliers,
                          primaryID=NULL, type='violin'){
@@ -132,7 +186,27 @@ outlierPlots.default <- function(tab, qcMetrics, strat, main, outliers,
 
 #' Produce outlier plots for a sampleDataset
 #'
-#' @return A pdf with all plots
+#' @param sds A sample dataset object.
+#' @param title Title for the PDF file.
+#' @param width Width of the PDF.
+#' @param height Height of the PDF.
+#'
+#' @return A PDF file containing outlier plots.
+#'
+#' @examples
+#' \dontrun{
+#' # Example usage:
+#' outlierPlots.sampleDataset(sds, title = "Outlier_Plots", width = 15, height = 6)
+#' }
+#'
+#' @seealso{\link{outlierPlots.default}}
+#' @seealso{\link{outlierPlots}}
+#' @seealso{\link{PCplots}}
+#' @seealso{\link{multiplot}}
+#' @seealso{\link{scatter}}
+#' @seealso{\link{multiplotWithSharedLegend}}
+#' @seealso{\link{geom_split_violin}}
+#' @export
 
 outlierPlots.sampleDataset <- function(
   sds, title, width=15, height=6
@@ -164,12 +238,24 @@ outlierPlots.sampleDataset <- function(
   dev.off()
 }
 
-#' Generate PC plot of an SampleDataset sds
+#' Generate PC plot of a SampleDataset
 #'
-#' @param sds sample data set
-#' @param showPlot whether to show plot
+#' This function generates principal component (PC) plots based on the specified SampleDataset.
 #'
-#' @return a list of ggplot sdss
+#' @param sds SampleDataset object containing PC and inferredAncestry attributes.
+#' @param showPlot Logical, whether to display the plots (default is TRUE).
+#' @param cor Logical, whether to calculate correlation between PCs (default is FALSE).
+#' @param outliers Samples to highlight as outliers (optional).
+#'
+#' @return A list of ggplot objects representing PC plots.
+#'
+#' @seealso{\link{outlierPlots}}
+#' @seealso{\link{outlierPlots.default}}
+#' @seealso{\link{outlierPlots.sampleDataset}}
+#' @seealso{\link{multiplot}}
+#' @seealso{\link{scatter}}
+#' @seealso{\link{multiplotWithSharedLegend}}
+#' @seealso{\link{geom_split_violin}}
 #'
 #' @export
 
@@ -192,12 +278,33 @@ PCplots <- function (sds, showPlot=T, cor=F, outliers=NULL) {
   return(plt)
 }
 
-#' generate multi panel plots
+#' Generate multi-panel plots
 #'
-#' @param plotlist a list of plot
-#' @param file
+#' This function creates a multi-panel plot from a list of ggplot2 objects.
+#'
+#' @param ... ggplot2 objects
+#' @param plotlist a list of ggplot2 objects
+#' @param file output file name (optional)
 #' @param ncols number of columns in the plot
+#' @param layout matrix specifying the layout of panels
 #'
+#' @return The multi-panel plot
+#'
+#' @examples
+#' \dontrun{
+#' # Example usage:
+#' multiplot(plot1, plot2, ncols = 2)
+#' }
+#'
+#' @seealso{\link{outlierPlots}}
+#' @seealso{\link{outlierPlots.default}}
+#' @seealso{\link{outlierPlots.sampleDataset}}
+#' @seealso{\link{PCplots}}
+#' @seealso{\link{scatter}}
+#' @seealso{\link{multiplotWithSharedLegend}}
+#' @seealso{\link{geom_split_violin}}
+#'
+#' @export
 
 multiplot <- function(..., plotlist=NULL, file=NULL, ncols=1, layout=NULL) {
   # This function is modified from multiplot of Cookbook of R
@@ -252,6 +359,15 @@ multiplot <- function(..., plotlist=NULL, file=NULL, ncols=1, layout=NULL) {
 #' @param main main title of the plot
 #' @param legend binary, whether to plot legend or not
 #' @param primaryID the primary ID used to
+#'
+#' @seealso{\link{outlierPlots}}
+#' @seealso{\link{outlierPlots.default}}
+#' @seealso{\link{outlierPlots.sampleDataset}}
+#' @seealso{\link{PCplots}}
+#' @seealso{\link{multiplot}}
+#' @seealso{\link{multiplotWithSharedLegend}}
+#' @seealso{\link{geom_split_violin}}
+#'
 #' @export
 #'
 scatter <- function(
@@ -290,7 +406,16 @@ scatter <- function(
 #' @param position Position of the legend, between "bottom" and "right"
 #' @param show whether show the plot or not
 #'
-#' @return a grid graphical sds (grob)
+#' @return a grid graphical `sds` (grob)
+#'
+#' @seealso{\link{outlierPlots}}
+#' @seealso{\link{outlierPlots.default}}
+#' @seealso{\link{outlierPlots.sampleDataset}}
+#' @seealso{\link{PCplots}}
+#' @seealso{\link{multiplot}}
+#' @seealso{\link{scatter}}
+#' @seealso{\link{geom_split_violin}}
+#'
 #' @export
 #'
 multiplotWithSharedLegend <- function(
@@ -327,6 +452,8 @@ multiplotWithSharedLegend <- function(
   return(combined)
 }
 
+#' @importFrom ggplot2 Geom
+#' @export
 
 GeomSplitViolin <- ggplot2::ggproto(
   "GeomSplitViolin", ggplot2::GeomViolin,
@@ -359,7 +486,32 @@ GeomSplitViolin <- ggplot2::ggproto(
     }
   })
 
+#' Create a split violin plot
+#'
+#' @param mapping Aesthetic mappings
+#' @param data The data to be displayed in this layer
+#' @param stat The statistical transformation to use on the data for this layer
+#' @param position Position adjustment
+#' @param ... Other arguments passed to the layer
+#' @param draw_quantiles Quantiles to be drawn
+#' @param trim Should the data be trimmed?
+#' @param scale Area or count for width of violin
+#' @param na.rm Should missing values be removed?
+#' @param show.legend Should this layer be included in the legends?
+#' @param inherit.aes Should inherit aesthetics from the parent plot?
+#'
+#' @return A ggplot2 layer for a split violin plot
+#'
+#' @seealso{\link{outlierPlots}}
+#' @seealso{\link{outlierPlots.default}}
+#' @seealso{\link{outlierPlots.sampleDataset}}
+#' @seealso{\link{PCplots}}
+#' @seealso{\link{multiplot}}
+#' @seealso{\link{scatter}}
+#' @seealso{\link{multiplotWithSharedLegend}}
+#'
 #' @export
+
 geom_split_violin <- function (
   mapping = NULL, data = NULL, stat = "ydensity", position = "identity", ...,
   draw_quantiles = NULL, trim = TRUE, scale = "area", na.rm = FALSE,

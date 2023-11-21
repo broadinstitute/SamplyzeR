@@ -1,18 +1,23 @@
-
-
 <h2 align="center">
-SAMPLYZER
+  SAMPLYZER
 </h2>
-<p align ="center">
-<strong>An R package and web application for efficient sample quality control of human whole genome and whole exome sequencing data</strong>
+
+<p align="center">
+  <strong>An R package and web application for efficient sample quality control of human whole genome and whole exome sequencing data</strong>
 </p>
 
-
-<p align ="center">
+<p align="center">
   <a title="R Version"> <img src='https://img.shields.io/badge/R-3.3.2-brightgreen'> </a>
+  <a href="https://github.com/x-lab/samplyzer/actions/workflows/ci.yml">
+    <img alt="R CI" src="https://github.com/x-lab/samplyzer/actions/workflows/ci.yml/badge.svg">
+  </a>
+  <a href="https://ci.appveyor.com/project/1677953017/samplyzer">
+    <img alt="AppVeyor Build Status" src="https://ci.appveyor.com/api/projects/status/u8scd9ecoe67k9cw?svg=true">
+  </a>
+  <a href="https://codecov.io/gh/x-lab/samplyzer">
+    <img alt="codecov" src="https://codecov.io/gh/x-lab/samplyzer/graph/badge.svg?token=eNYYjuMXIw">
+  </a>
 </p>
-
-
 ---
 
 
@@ -89,7 +94,7 @@ For detailed RMD examples, please refer to the run script [here](vignettes/tutor
 
 ### 3. Web Interface
 
-SAMPLYZER offers a user-friendly web interface for interactive data exploration: [Sample Explorer Website](https://xlab.shinyapps.io/qcexplorer/).
+SAMPLYZER offers a user-friendly web interface for interactive data exploration: [Sample Explorer Website](https://xlab.shinyapps.io/samplyzer/).
 
 ![Alt text](https://img1.imgtp.com/2023/11/15/U5l1sV53.png)https://img1.imgtp.com/2023/11/15/U5l1sV53.png)
 

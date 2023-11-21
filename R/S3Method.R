@@ -1,10 +1,15 @@
 #' Save an sds to a specific format
 #'
-#' Save an sds to tsv, RDS or excel format
+#' @description Save an sds to tsv, RDS or excel format
 #'
-#' @param sds
+#' @param sds sample dataset
+#' @param ... Additional arguments to be passed.
 #'
 #' @export
+#' @seealso{\link{sort.sampleDataset}}
+#' @seealso{\link{save.sampleDataset}}
+#' @seealso{\link{dim.sampleDataset}}
+#' @seealso{\link{print.sampleDataset}}
 
 save <-function(sds, ...) UseMethod('save')
 
@@ -36,7 +41,7 @@ save.sampleDataset <- function(sds, RDS = NULL, tsv = NULL, xls = NULL) {
 #'
 #' @param sds sample dataset
 #' @param by sort by which category
-#' @return an sample dataset sds with updated index
+#' @return A sample dataset `sds` with updated index.
 #'
 #' @export
 
@@ -49,15 +54,18 @@ sort.sampleDataset <- function(sds, by) {
 
 #' Show dimensions of sample dataset sds
 #'
-#' @param sds sample data set sds
+#' @param sds Sample dataset `sds`.
 #' @return a vector of rows and columns of the data frame of sample data set
 #'
 #' @export
-
 dim.sampleDataset <- function(sds){
   dim(sds$df)
 }
 
+#' Print information about the sample dataset `sds`.
+#'
+#' @param sds Sample dataset `sds`.
+#'
 #' @export
 print.sampleDataset <- function(sds) {
   cat("\nClass: SampleDataset\n",

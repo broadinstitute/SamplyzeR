@@ -1,0 +1,42 @@
+init:
+  ps: |
+    $ErrorActionPreference = "Stop"
+    Invoke-WebRequest http://raw.githubusercontent.com/krlmlr/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
+    Import-Module '..\appveyor-tool.ps1'
+
+install:
+  ps: Bootstrap
+
+# Adapt as necessary starting from here
+build_script:
+  - R -e "install.packages(c('devtools', 'covr', 'ggplot2', 'WriteXLS', 'gridExtra', 'Cairo'), repos='https://cloud.r-project.org/')"
+# - travis-tool.sh install_deps
+
+test_script:
+  - travis-tool.sh run_tests
+
+on_failure:
+  - travis-tool.sh dump_logs
+
+environment:
+  my_variable:
+    secure: dfWwR38iwmYAo9ub0Rg/24EXPUVttaLwhuinDYH3oyIjkt7ozFoyE43t6W9G/w2l  #GitHub Access Token
+
+artifacts:
+  - path: '*.Rcheck\**\*.log'
+    name: Logs
+
+  - path: '*.Rcheck\**\*.out'
+    name: Logs
+
+  - path: '*.Rcheck\**\*.fail'
+    name: Logs
+
+  - path: '*.Rcheck\**\*.Rout'
+    name: Logs
+
+  - path: '\*_*.tar.gz'
+    name: Bits
+
+  - path: '\*_*.zip'
+    name: Bits

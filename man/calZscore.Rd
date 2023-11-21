@@ -6,9 +6,19 @@
 \usage{
 calZscore(...)
 }
+\arguments{
+\item{...}{Additional arguments to be passed.}
+}
 \value{
-The form of the value returned by predict depends on the class of its argument. See the documentation of the particular methods for details of what is produced by that method.
+The form of the value returned by predict depends on the class of
+its argument. See the documentation of the particular methods for
+details of what is produced by that method.
 }
 \description{
-Calculate z-score of a vector or QC metrics of a SampleDataset, see details in calZscore.default and calZscore.sampleDataset
+Calculate z-score of a vector or QC metrics of a SampleDataset.
+}
+\seealso{
+{\link{calZscore.default}}
+
+{\link{calZscore.sampleDataset}}
 }
