@@ -21,11 +21,6 @@ Updated sample Dataset sds with inferredAncestry tag.
 \description{
 Infer sample ancestry
 }
-\examples{
-# Usage of inferAncestry.sampleDataset
-sds <- inferAncestry.sampleDataset(sds, trainSet, knownAncestry, nPC = 3, k = 5)
-
-}
 \seealso{
 {\link{inferAncestry}}
 

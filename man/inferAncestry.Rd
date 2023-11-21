@@ -15,10 +15,6 @@ Updated sample Dataset sds with inferredAncestry tag.
 \description{
 Principle Components of genotypes with k nearest neighbours.
 }
-\examples{
-# Usage of inferAncestry
-sds <- inferAncestry.sampleDataset(sds, trainSet, knownAncestry, nPC = 3, k = 5)
-}
 \seealso{
 {\link{inferAncestry.sampleDataset}}
 

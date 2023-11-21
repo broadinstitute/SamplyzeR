@@ -21,10 +21,6 @@ A vector of inferred ancestries.
 \description{
 Infer ancestry with KNN
 }
-\examples{
-# Usage of inferAncestry.default
-inferredAncestry <- inferAncestry.default(testSet, trainSet, ancestry, k = 5)
-}
 \seealso{
 {\link{inferAncestry.sampleDataset}}
 
