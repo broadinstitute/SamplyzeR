@@ -1,8 +1,7 @@
 # samplyzer
-[![Build Status](https://travis-ci.com/xiaoli0/samplyzer.svg?branch=master)](https://travis-ci.org/xiaoli0/samplyzer)
-[![AppVeyor Build  Status](https://ci.appveyor.com/api/projects/status/github/xiaoli0/samplyzer?branch=master&svg=true)](https://ci.appveyor.com/project/xiaoli0/samplyzer)  
-[![Coverage Status](https://coveralls.io/repos/github/xiaolicbs/samplyzer/badge.svg?branch=master)](https://coveralls.io/github/xiaolicbs/samplyzer?branch=master)  
-samplyzer is an R package and Web Application that enables efficient exploration of sample level QC statistics.
+[![R CI](https://github.com/x-lab/samplyzer/actions/workflows/ci.yml/badge.svg)](https://github.com/x-lab/samplyzer/actions/workflows/ci.yml)
+[![AppVeyor Build  Status](https://ci.appveyor.com/api/projects/status/u8scd9ecoe67k9cw?svg=true)](https://ci.appveyor.com/project/1677953017/samplyzer)
+[![codecov](https://codecov.io/gh/x-lab/samplyzer/graph/badge.svg?token=eNYYjuMXIw)](https://codecov.io/gh/x-lab/samplyzer)
 
 ## Requirements
 * R >= 3.3.2

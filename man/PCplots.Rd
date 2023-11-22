@@ -2,10 +2,18 @@
 % Please edit documentation in R/plot.R
 \name{PCplots}
 \alias{PCplots}
-\title{Generate PC plot of an SampleDataset Object}
+\title{Generate PC plot of an SampleDataset sds}
 \usage{
-PCplots(object, showPlot = T)
+PCplots(sds, showPlot = T, cor = F, outliers = NULL)
+}
+\arguments{
+\item{sds}{sample data set}
+
+\item{showPlot}{whether to show plot}
+}
+\value{
+a list of ggplot sdss
 }
 \description{
-Generate PC plot of an SampleDataset Object
+Generate PC plot of an SampleDataset sds
 }

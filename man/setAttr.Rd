@@ -4,15 +4,15 @@
 \alias{setAttr}
 \title{Update a Sample Data Set}
 \usage{
-setAttr(object, ...)
+setAttr(sds, ...)
 }
 \arguments{
-\item{object}{sample dataset object}
+\item{sds}{sample dataset sds}
 
 \item{...}{other arguments}
 }
 \value{
-object
+sds
 }
 \description{
 Update entries of sample data set, such as the df, bamQcMetr, vcfQcMetr

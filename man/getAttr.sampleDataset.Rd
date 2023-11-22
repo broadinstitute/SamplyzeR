@@ -4,10 +4,10 @@
 \alias{getAttr.sampleDataset}
 \title{Get attributes of a SampleDataset}
 \usage{
-\method{getAttr}{sampleDataset}(object, attribute, showID = F)
+\method{getAttr}{sampleDataset}(sds, attribute, showID = F)
 }
 \arguments{
-\item{object}{sample data set}
+\item{sds}{sample data set}
 
 \item{attribute}{name of attribute to return}
 

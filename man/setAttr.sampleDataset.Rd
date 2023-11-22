@@ -4,20 +4,19 @@
 \alias{setAttr.sampleDataset}
 \title{Set attributes of a sample dataset}
 \usage{
-\method{setAttr}{sampleDataset}(object, attributes, data, primaryID,
-  overwrite = F)
+\method{setAttr}{sampleDataset}(sds, attributes, data, primaryID, overwrite = F)
 }
 \arguments{
-\item{object}{sampleDataset}
+\item{sds}{sampleDataset}
 
-\item{entry}{which entry to add to sample Dataset}
+\item{attributes}{which entry to add to sample Dataset}
 
-\item{dataframe}{content to add to the dataframe}
+\item{data}{data.frame, content to add to the dataframe}
 
 \item{by}{primary key of input data frame}
 }
 \value{
-updated sampleDataset object
+updated sampleDataset sds
 }
 \description{
 Set attributes of a sample dataset

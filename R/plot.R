@@ -90,14 +90,25 @@ sampleQcPlot.sampleDataset <- function(
 
 
 #' Produce outlier plot
+#' @param sds sample dataset sds
+#' @param ... other arguments
 #'
+#' @export
+
 outlierPlots <- function(...) UseMethod('outlierPlots')
 
-#' @param tab input table with
+#' Produce outlier plot
+#'
+#' @param tab input table with sample information and metrics
 #' @param qcMetrics which metrics to plot
 #' @param strat by which factor to stratify the dots
-#' @param main title of the
-#' @return
+#' @param main title of the plot
+#' @param outliers vector of sample IDs to highlight as outliers
+#' @param primaryID the primary ID for labeling
+#' @param type type of plot, either 'violin' or 'density'
+#' @return a list of outlier plots
+#'
+#'
 
 outlierPlots.default <- function(tab, qcMetrics, strat, main, outliers,
                          primaryID=NULL, type='violin'){
@@ -192,7 +203,7 @@ PCplots <- function (sds, showPlot=T, cor=F, outliers=NULL) {
 #' generate multi panel plots
 #'
 #' @param plotlist a list of plot
-#' @param file
+#' @param file file
 #' @param ncols number of columns in the plot
 #'
 
