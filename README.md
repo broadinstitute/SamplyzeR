@@ -5,26 +5,23 @@ SAMPLYZER
 <strong>R package and Web App for efficient sample quality control of human genomic data</strong>
 </p>
 
-
 <p align ="center">
   <a title="R Version"> <img src='https://img.shields.io/badge/R-3.3.2-brightgreen'> </a>
 </p>
 
-
 ---
-
-
 
 ## Requirements
 
-* R >= 3.3.2
-* class (>= 7.3-14),
-* ggplot2 (>= 2.2.1),
-* WriteXLS (>= 4.0.0),
-* grid (>= 3.3.2),
-* gridExtra (>= 2.2.1)
+* `R >= 3.3.2`
+* `class (>= 7.3-14)`
+* `ggplot2 (>= 2.2.1)`
+* `WriteXLS (>= 4.0.0)`
+* `grid (>= 3.3.2)`
+* `gridExtra (>= 2.2.1)`
 
 ## Installation
+
 This tool is still under development, and haven't yet released to CRAN. To install from github, you will need to have `devtools` installed.
 
 ```r
@@ -38,7 +35,7 @@ install_github("x-lab/samplyzer")
 
 Running SAMPLYZER from the command line requires specifying some parameters. Here are some common parameters:
 
-**required arguments**
+**Required arguments**
 
 ```sh
 -b, --bamQcMetr: Path to BAM QC metrics file.
@@ -48,7 +45,7 @@ Running SAMPLYZER from the command line requires specifying some parameters. Her
 --stratify: List of attributes for stratification, multiple attributes separated by commas.
 ```
 
-**optional arguments**
+**Optional arguments**
 
 ```sh
 -o, --outliers: Sample ID to be flagged as outliers (default: 'Sample-001').
