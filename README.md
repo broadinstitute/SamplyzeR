@@ -2,7 +2,7 @@
 SAMPLYZER
 </h2>
 <p align ="center">
-<strong>An R package and web application for efficient sample quality control of human whole genome and whole exome sequencing data</strong>
+<strong>R package and Web App for efficient sample quality control of human genomic data</strong>
 </p>
 
 
@@ -29,7 +29,7 @@ This tool is still under development, and haven't yet released to CRAN. To insta
 
 ```r
 library(devtools)
-install_github("xiaolicbs/samplyzer")
+install_github("x-lab/samplyzer")
 ```
 
 ## Usage
@@ -68,20 +68,20 @@ For detailed CMD examples, please refer to the tutorial [here](vignettes/run.sh)
 
 Using SAMPLYZER in R Markdown can be achieved through parameterization. Here are some common parameters:
 
-- `bamQcMetr`: Path to BAM QC metrics file.
-- `vcfQcMetr`: Path to VCF QC metrics file.
-- `annotations`: Path to sample annotations file.
-- `primaryID`: Name of primary IDs in input TSVs to specify each sample.
-- `stratify`: List of attributes for stratification, multiple attributes separated by commas.
-- `outliers`: Sample ID to be flagged as outliers (default: 'Sample-001').
-- `cutoffTsv`: Path to a TSV file containing hard cutoffs for QC metrics (default: NULL).
-- `samplepc`: A TSV file with genotype PCs for each sample (default: NULL).
-- `refpc`: A TSV file with genotype PCs from a reference set of samples (default: NULL).
-- `zscore`: Z-score cutoff used to flag outlier samples (default: 4).
-- `prefix`: Prefix of output files (default: 'examples').
-- `pcX`: PCA analysis QC metrics (default: 'Mean_Coverage').
-- `pcY`: PCA analysis QC metrics (default: 'nHets').
-- `geom`: QC metrics geom (default: 'scatter').
+* `bamQcMetr`: Path to BAM QC metrics file.
+* `vcfQcMetr`: Path to VCF QC metrics file.
+* `annotations`: Path to sample annotations file.
+* `primaryID`: Name of primary IDs in input TSVs to specify each sample.
+* `stratify`: List of attributes for stratification, multiple attributes separated by commas.
+* `outliers`: Sample ID to be flagged as outliers (default: 'Sample-001').
+* `cutoffTsv`: Path to a TSV file containing hard cutoffs for QC metrics (default: NULL).
+* `samplepc`: A TSV file with genotype PCs for each sample (default: NULL).
+* `refpc`: A TSV file with genotype PCs from a reference set of samples (default: NULL).
+* `zscore`: Z-score cutoff used to flag outlier samples (default: 4).
+* `prefix`: Prefix of output files (default: 'examples').
+* `pcX`: PCA analysis QC metrics (default: 'Mean_Coverage').
+* `pcY`: PCA analysis QC metrics (default: 'nHets').
+* `geom`: QC metrics geom (default: 'scatter').
 
 For detailed RMD examples, please refer to the run script [here](vignettes/tutorial.Rmd).
 
