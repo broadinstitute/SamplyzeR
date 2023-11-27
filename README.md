@@ -31,6 +31,8 @@ install_github("x-lab/samplyzer")
 
 ## Usage
 
+You can use Samplyzer as a command line tool, an R package or a web application:
+
 ### 1. Command-Line (CMD)
 
 Running SAMPLYZER from the command line requires specifying some parameters. Here are some common parameters:
@@ -63,7 +65,9 @@ For detailed CMD examples, please refer to the tutorial [here](vignettes/run.sh)
 
 ### 2. R Markdown (RMD)
 
-Using SAMPLYZER in R Markdown can be achieved through parameterization. Here are some common parameters:
+For programmers, you could use Samplyzer's functions in your analysis. You can learn how to use them by following this step by step guidance [here](vignettes/tutorial.Rmd).
+
+Here are some common parameters you would use in the tutorial:
 
 * `bamQcMetr`: Path to BAM QC metrics file.
 * `vcfQcMetr`: Path to VCF QC metrics file.
@@ -80,15 +84,19 @@ Using SAMPLYZER in R Markdown can be achieved through parameterization. Here are
 * `pcY`: PCA analysis QC metrics (default: 'nHets').
 * `geom`: QC metrics geom (default: 'scatter').
 
-For detailed RMD examples, please refer to the run script [here](vignettes/tutorial.Rmd).
-
 ### 3. Web Interface
 
-SAMPLYZER offers a user-friendly web interface for interactive data exploration: [Sample Explorer Website](https://xlab.shinyapps.io/samplyzer/).
+We also provide a user-friendly web interface for interactive data exploration: [Sample Explorer Website](https://xlab.shinyapps.io/samplyzer/).
 
 ![Alt text](https://img1.imgtp.com/2023/11/15/U5l1sV53.png)https://img1.imgtp.com/2023/11/15/U5l1sV53.png)
 
 Test data files are available in the [`vignettes/data`](vignettes/run.sh).
+
+## Author
+
+Idea of this package was conceived by [Dr. Ayellet Segre](https://asegrelab.org) and [Xiao Li](https://github.com/xiaoli0).
+
+Software was developed by [Xiao Li](https://github.com/xiaoli0) and further maintained by [Jinbo Yao](https://github.com/jinboyao) et al from the [X-Lab](https://x-lab.org.cn).
 
 ## License
 
