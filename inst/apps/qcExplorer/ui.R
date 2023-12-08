@@ -16,31 +16,25 @@ ui <- shinyUI(pageWithSidebar(
                selectInput("qcMetr1", 'QC metrics', choices = NULL),
                selectInput('qcMetr2', 'QC metrics 2', choices = NULL),
                selectInput('PCx', 'first PC', paste('PC', 1:10, sep = '')),
-               selectInput('PCy', 'second PC', paste('PC', 1:10, sep = ''))
+               selectInput('PCy', 's-econd PC', paste('PC', 1:10, sep = ''))
       )
     )
   ),
   mainPanel(
-    tabsetPanel(
-      tabPanel("Plots",
-        fluidRow(
-          column(6,
-                 plotOutput("plot1",brush = brushOpts(id = "plot_brush1")),
-                 plotOutput("pca")
-          ),
-          column(6,
-                 plotOutput("plot2"),
-                 plotOutput("qcCorr")
-          )
+      fluidRow(
+        column(6,
+               plotOutput("plot1",brush = brushOpts(id = "plot_brush1")),
+               plotOutput("pca")
+        ),
+        column(6,
+               plotOutput("plot2"),
+               plotOutput("qcCorr")
         )
       ),
-      tabPanel("Table",
-        fluidRow(
-          column(12,
-                 tableOutput("table1")
-          )
+      fluidRow(
+        column(12,
+               tableOutput("table1")
         )
       )
-    )
   )
 ))
