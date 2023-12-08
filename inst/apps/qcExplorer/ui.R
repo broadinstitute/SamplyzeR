@@ -16,7 +16,7 @@ ui <- shinyUI(pageWithSidebar(
                selectInput("qcMetr1", 'QC metrics', choices = NULL),
                selectInput('qcMetr2', 'QC metrics 2', choices = NULL),
                selectInput('PCx', 'first PC', paste('PC', 1:10, sep = '')),
-               selectInput('PCy', 'second PC', paste('PC', 1:10, sep = ''))
+               selectInput('PCy', 's-econd PC', paste('PC', 1:10, sep = ''))
       )
     )
   ),
