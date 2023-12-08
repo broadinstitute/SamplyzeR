@@ -1,10 +1,32 @@
+if (!require("shiny")) install.packages("shiny")
+if (!require("samplyzer")) install.packages("samplyzer")
 library(shiny)
 library(ggplot2)
 library(prettyGraphs)
 library(grDevices)
 library(RColorBrewer)
-library(SamplyzeR)
+library(samplyzer)
 library(gdata)
+
+subsetTable <- function(input, sds, id){
+  # sort data frame
+  qc_tag = input[[paste('qcMetrics', id, sep = '')]]
+  max_sample_id <- max(as.numeric(sub("Sample-", "", sds$df$SampleID)), na.rm = TRUE)
+  max_qc_metric_value <- max(sds$df[, input$qcMetr1], na.rm = TRUE)
+  # filter table to brush area
+  brush = input[[paste('plot_brush', id, sep = '')]]
+  actual_xmin = brush$xmin * max_sample_id
+  actual_xmax = brush$xmax * max_sample_id
+  actual_ymin = brush$ymin * max_qc_metric_value
+  actual_ymax = brush$ymax * max_qc_metric_value
+  tab <- sds$df[
+    sds$df[, input$qcMetr1] > actual_ymin &
+      sds$df[, input$qcMetr1] < actual_ymax &
+      as.numeric(sub("Sample-", "", sds$df$SampleID)) > actual_xmin &
+      as.numeric(sub("Sample-", "", sds$df$SampleID)) < actual_xmax,
+  ]
+  return(tab)
+}
 
 getColor<- function(n) {
   if (n < 7) {
@@ -16,28 +38,6 @@ getColor<- function(n) {
   return(col)
 }
 
-
-subsetTable <- function(input, sds, id){
-  # sort data frame
-  anno_tag = input[[paste('anno', id, sep='')]]
-  qc_tag = input[[paste('qcMetrics', id, sep = '')]]
-  sds$df = sds$df[order(sds$df[anno_tag], na.last = T), ] # sort data frame
-  sds$df$index = 1:dim(sds$df[qc_tag])[1] # create index
-
-  # filter table to brush area
-  brush = input[[paste('plot_brush', id, sep = '')]]
-  tab = sds$df[
-    sds$df[, input$qcMetrics1] > brush$ymin &
-      sds$df[, input$qcMetrics1] < brush$ymax &
-      sds$df$index > brush$xmin &
-      sds$df$index < brush$xmax, ]
-  return(tab)
-}
-
+source("ui.R")
+source("server.R")
 shinyApp(ui, server)
-
-plot(sampleQcPlot(
-  sds, annotation = 'SeqProject',
-  qcMetrics = c('Mean_Coverage', 'Contamination_Estimation'),
-  geom='scatter', legend=F #, outliers = input$outliers
-))
