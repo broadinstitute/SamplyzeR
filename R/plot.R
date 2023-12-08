@@ -38,7 +38,7 @@ sampleQcPlot.default <- function(
       # scatter plot stratified by sample
       plt = scatter(data = data, x = 'index', y = qcMetric, strat=annot,
                      xlab = 'samples', legend = legend, main = main,
-                     outliers = outliers, primaryID = sds$primaryID)
+                     outliers = outliers, primaryID = primaryID)
     }
     if (geom == 'violin') {
       data[[annot]] = factor(.toSameLength(data[[annot]]))

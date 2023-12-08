@@ -18,7 +18,7 @@ This library required R version >= 3.3.2.
 ```{r}
 #install.packages('devtools')
 library(devtools)
-install_github('xiaolicbs/samplyzer',ref = "fix", force = TRUE)
+install_github('xiaolicbs/samplyzer', force = TRUE)
 library(samplyzer)
 ```
 
