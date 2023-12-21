@@ -8,9 +8,7 @@ ui <- shinyUI(pageWithSidebar(
                fileInput("annotationsFile", "Upload sample annotations", accept = c('text/csv', 'text/comma-separated-values,text/plain')),
                fileInput("samplePCsFile", "Upload samplePCs", accept = c('text/csv', 'text/comma-separated-values,text/plain')),
                fileInput("refPCsFile", "Upload refPCs", accept = c('text/csv', 'text/comma-separated-values,text/plain')),
-               fileInput("vcfQcMetrFile", "Upload others", accept = c('text/csv', 'text/comma-separated-values,text/plain')),
-               actionButton("loadSampleData", "Load Sample Data"),
-               uiOutput("loadedFileList")
+               fileInput("vcfQcMetrFile", "Upload others", accept = c('text/csv', 'text/comma-separated-values,text/plain'))
       ),
       tabPanel("Parameters",
                selectInput("anno1", 'Subject Attributes', choices = NULL),

@@ -23,18 +23,6 @@ server <- shinyServer(function(input, output, session) {
 
   observeEvent(c(input$loadSampleData, input$bamQcMetrFile, input$annotationsFile, input$vcfQcMetrFile), {
     if ((!is.null(input$bamQcMetrFile) && !is.null(input$annotationsFile) && !is.null(input$vcfQcMetrFile))||(input$loadSampleData>0))  {
-      if (input$loadSampleData>0){
-        sampleDataPath <- "../../../vignettes/data"
-        file_data$bamQcMetr <- read.csv(file.path(sampleDataPath, "bamQcMetr.tsv"), sep = '\t')
-        file_data$annotations <- read.csv(file.path(sampleDataPath, "sampleAnnotations.tsv"), sep = '\t')
-        file_data$vcfQcMetr <- read.csv(file.path(sampleDataPath, "vcfQcMetr.tsv"), sep = '\t')
-        file_data$samplePc <- read.csv(file.path(sampleDataPath, "samplePCs.tsv"), sep = '\t')
-        file_data$refPC <- read.csv(file.path(sampleDataPath, "refPCs.tsv"), sep = '\t')
-        file_data$loadedFiles <- c("bamQcMetr.tsv", "sampleAnnotations.tsv", "vcfQcMetr.tsv", "samplePCs.tsv", "refPCs.tsv")
-        output$loadedBamQcMetrFile <- renderText("bamQcMetr.tsv")
-        output$loadedAnnotationsFile <- renderText("sampleAnnotations.tsv")
-      }
-      else{
         if (!is.null(input$samplePCsFile)) {
           file_data$samplePc <- read.csv(input$samplePCsFile$datapath, sep = '\t')
         }
@@ -44,7 +32,6 @@ server <- shinyServer(function(input, output, session) {
         file_data$bamQcMetr <- read.csv(input$bamQcMetrFile$datapath, sep = '\t', row.names = NULL)
         file_data$annotations <- read.csv(input$annotationsFile$datapath, sep = '\t', row.names = NULL)
         file_data$vcfQcMetr <- read.csv(input$vcfQcMetrFile$datapath, sep = '\t', row.names = NULL)
-      }
       file_data$sds <- sampleDataset(
         bamQcInput = file_data$bamQcMetr,
         vcfQcInput = file_data$vcfQcMetr,
@@ -92,13 +79,6 @@ server <- shinyServer(function(input, output, session) {
 
         output$table1 <- renderTable(sds_subset)
       })
-    }
-  })
-  output$loadedFileList <- renderUI({
-    if (!is.null(file_data$loadedFiles)) {
-      do.call(tagList, lapply(file_data$loadedFiles, function(name) {
-        tags$p(name)
-      }))
     }
   })
 })
