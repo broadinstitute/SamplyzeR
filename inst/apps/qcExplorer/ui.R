@@ -8,33 +8,35 @@ ui <- shinyUI(pageWithSidebar(
                fileInput("annotationsFile", "Upload sample annotations", accept = c('text/csv', 'text/comma-separated-values,text/plain')),
                fileInput("samplePCsFile", "Upload samplePCs", accept = c('text/csv', 'text/comma-separated-values,text/plain')),
                fileInput("refPCsFile", "Upload refPCs", accept = c('text/csv', 'text/comma-separated-values,text/plain')),
-               fileInput("vcfQcMetrFile", "Upload vcfQcMetc", accept = c('text/csv', 'text/comma-separated-values,text/plain'))
+               fileInput("vcfQcMetrFile", "Upload others", accept = c('text/csv', 'text/comma-separated-values,text/plain')),
+               actionButton("loadSampleData", "Load Sample Data"),
+               uiOutput("loadedFileList")
       ),
       tabPanel("Parameters",
                selectInput("anno1", 'Subject Attributes', choices = NULL),
                textInput("outliers", "sample IDs", "Sample-001"),
-               selectInput("qcMetr1", 'QC metrics', choices = NULL),
-               selectInput('qcMetr2', 'QC metrics 2', choices = NULL),
-               selectInput('PCx', 'first PC', paste('PC', 1:10, sep = '')),
-               selectInput('PCy', 's-econd PC', paste('PC', 1:10, sep = ''))
+               selectInput("qcMetr1", 'QC scatter plot - metricX', choices = NULL),
+               selectInput('qcMetr2', 'QC scatter plot - metricY', choices = NULL),
+               selectInput('PCx', 'PC scatter plot - X', paste('PC', 1:10, sep = '')),
+               selectInput('PCy', 'PC scatter plot - Y', paste('PC', 1:10, sep = ''))
       )
     )
   ),
   mainPanel(
-      fluidRow(
-        column(6,
-               plotOutput("plot1",brush = brushOpts(id = "plot_brush1")),
-               plotOutput("pca")
-        ),
-        column(6,
-               plotOutput("plot2"),
-               plotOutput("qcCorr")
-        )
+    fluidRow(
+      column(6,
+             plotOutput("plot1",brush = brushOpts(id = "plot_brush1")),
+             plotOutput("pca")
       ),
-      fluidRow(
-        column(12,
-               tableOutput("table1")
-        )
+      column(6,
+             plotOutput("plot2"),
+             plotOutput("qcCorr")
       )
+    ),
+    fluidRow(
+      column(12,
+             tableOutput("table1")
+      )
+    )
   )
 ))
