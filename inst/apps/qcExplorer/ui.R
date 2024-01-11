@@ -63,7 +63,7 @@ ui <- shinyUI(fluidPage(
     mainPanel(
         fluidRow(
             column(2, selectInput("anno1", 'Subject Attributes', choices = NULL)),
-            #column(2, textInput("outliers", "Sample IDs", "Sample-001")),
+            column(2, textInput("outliers", "Sample IDs", "Sample-001")),
             column(2, selectInput("qcMetr1", 'QC Scatter Plot - MetricX', choices = NULL)),
             column(2, selectInput('qcMetr2', 'QC Scatter Plot - MetricY', choices = NULL)),
             column(2, selectInput('PCx', 'PC Scatter Plot - X', choices = NULL)),
