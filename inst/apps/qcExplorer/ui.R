@@ -3,7 +3,7 @@ library(shiny)
 ui <- shinyUI(fluidPage(
   theme = shinytheme("cerulean"),#cerulean, cosmo, cyborg, darkly, flatly, journal, lumen, paper, readable, simplex, slate, spacelab, superhero, united, yeti.
   tags$head(
-      tags$style(HTML('
+    tags$style(HTML('
           .header-container {
               background-color: #2176ae; /* 背景颜色为蓝色 */
               padding: 20px 40px; /* 内边距 */
@@ -26,55 +26,54 @@ ui <- shinyUI(fluidPage(
           }
       '))
   ),
-
   # Header layout
   div(class = 'header-container',
-        h1(class = 'header-title', 'gnomAD Browser'),
-        h2(class = 'header-subtitle', 'Genome Aggregation Database')
+      h1(class = 'header-title', 'gnomAD Browser'),
+      h2(class = 'header-subtitle', 'Genome Aggregation Database')
   ),
   br(),
-    sidebarPanel(
-      h3("Upload Files"),
-      fluidRow(
-        column(8, fileInput("annotationsFile", "Upload Sample Annotations", accept = c('text/csv', 'text/comma-separated-values,text/plain')), class = "full-height"),
-        column(4, div(class = "v-center", downloadLink("downloadLink1", "Download Sample Annotations")))
-      ),
-      fluidRow(
-        column(8, fileInput("bamQcMetrFile", "Upload Sample QC Table*", accept = c('text/csv', 'text/comma-separated-values,text/plain'))),
-        column(4, downloadLink("downloadLink2", "Download Sample QC"))
-      ),
-      fluidRow(
-        column(8, fileInput("samplePCsFile", "Upload Sample PCs ", accept = c('text/csv', 'text/comma-separated-values,text/plain'))),
-        column(4, downloadLink("downloadLink3", "Download Sample PCs File"))
-      ),
-      fluidRow(
-        column(8, fileInput("refPCsFile", "Upload Ref PCs ", accept = c('text/csv', 'text/comma-separated-values,text/plain'))),
-        column(4, downloadLink("downloadLink4", "Download Ref PCs File"))
-      ),
-      fluidRow(
-        column(8, fileInput("vcfQcMetrFile", "Upload Other QC Table ", accept = c('text/csv', 'text/comma-separated-values,text/plain'))),
-        br(),
-        br(),
-        column(4, downloadLink("downloadLink5", "Download Other QC File"))
-      ),
-      actionButton("runUploadedFiles", "Run Analysis"),
-      actionButton("loadSampleData", "Load Example Data")
+  sidebarPanel(
+    h3("Upload Files"),
+    fluidRow(
+      column(8, fileInput("annotationsFile", "Upload Sample Annotations", accept = c('text/csv', 'text/comma-separated-values,text/plain')), class = "full-height"),
+      column(4, div(class = "v-center", downloadLink("downloadLink1", "Download Sample Annotations")))
     ),
-    mainPanel(
-        fluidRow(
-            column(2, selectInput("anno1", 'Subject Attributes', choices = NULL)),
-            column(2, textInput("outliers", "Sample IDs", "Sample-001")),
-            column(2, selectInput("qcMetr1", 'QC Scatter Plot - MetricX', choices = NULL)),
-            column(2, selectInput('qcMetr2', 'QC Scatter Plot - MetricY', choices = NULL)),
-            column(2, selectInput('PCx', 'PC Scatter Plot - X', choices = NULL)),
-            column(2, selectInput('PCy', 'PC Scatter Plot - Y', choices = NULL))
-        ),
-        fluidRow(
-            column(6, plotOutput("plot1", brush = brushOpts(id = "plot_brush1")), plotOutput("pca")),
-            column(6, plotOutput("plot2"), plotOutput("qcCorr"))
-        ),
-        fluidRow(
-            column(12, tableOutput("table1"))
-        )
+    fluidRow(
+      column(8, fileInput("bamQcMetrFile", "Upload Sample QC Table*", accept = c('text/csv', 'text/comma-separated-values,text/plain'))),
+      column(4, downloadLink("downloadLink2", "Download Sample QC"))
+    ),
+    fluidRow(
+      column(8, fileInput("samplePCsFile", "Upload Sample PCs ", accept = c('text/csv', 'text/comma-separated-values,text/plain'))),
+      column(4, downloadLink("downloadLink3", "Download Sample PCs File"))
+    ),
+    fluidRow(
+      column(8, fileInput("refPCsFile", "Upload Ref PCs ", accept = c('text/csv', 'text/comma-separated-values,text/plain'))),
+      column(4, downloadLink("downloadLink4", "Download Ref PCs File"))
+    ),
+    fluidRow(
+      column(8, fileInput("vcfQcMetrFile", "Upload Other QC Table ", accept = c('text/csv', 'text/comma-separated-values,text/plain'))),
+      br(),
+      br(),
+      column(4, downloadLink("downloadLink5", "Download Other QC File"))
+    ),
+    actionButton("runUploadedFiles", "Run Analysis"),
+    actionButton("loadSampleData", "Load Example Data")
+  ),
+  mainPanel(
+    fluidRow(
+      column(2, selectInput("anno1", 'Subject Attributes', choices = NULL)),
+      column(2, textInput("outliers", "Sample IDs", "Sample-001")),
+      column(2, selectInput("qcMetr1", 'QC Scatter Plot - MetricX', choices = NULL)),
+      column(2, selectInput('qcMetr2', 'QC Scatter Plot - MetricY', choices = NULL)),
+      column(2, selectInput('PCx', 'PC Scatter Plot - X', choices = NULL)),
+      column(2, selectInput('PCy', 'PC Scatter Plot - Y', choices = NULL))
+    ),
+    fluidRow(
+      column(6, plotOutput("plot1", brush = brushOpts(id = "plot_brush1")), plotOutput("pca")),
+      column(6, plotOutput("plot2"), plotOutput("qcCorr"))
+    ),
+    fluidRow(
+      column(12, tableOutput("table1"))
     )
+  )
 ))
