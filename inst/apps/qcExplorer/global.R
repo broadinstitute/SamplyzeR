@@ -1,5 +1,6 @@
 if (!require("shiny")) install.packages("shiny")
 if (!require("samplyzer")) install.packages("samplyzer")
+if (!require("shinythemes")) install.packages("shinythemes")
 library(shiny)
 library(ggplot2)
 library(prettyGraphs)
@@ -7,6 +8,7 @@ library(grDevices)
 library(RColorBrewer)
 library(samplyzer)
 library(gdata)
+library(shinythemes)
 
 subsetTable <- function(input, sds, id){
   # sort data frame
