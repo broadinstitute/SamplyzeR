@@ -2,19 +2,27 @@
 % Please edit documentation in R/inferAncestry.R
 \name{inferAncestry.default}
 \alias{inferAncestry.default}
-\title{Infer anestry with KNN}
+\title{Infer ancestry with KNN}
 \usage{
 \method{inferAncestry}{default}(testSet, trainSet, ancestry, k = 5)
 }
 \arguments{
-\item{testSet}{matrix used for test}
+\item{testSet}{Matrix used for test.}
 
-\item{trainSet}{matrix for training PCs}
+\item{trainSet}{Matrix for training PCs.}
 
-\item{ancestry}{ancestries correspond to the training PCs}
+\item{ancestry}{Ancestries corresponding to the training PCs.}
 
-\item{k}{Number of nearest neighbour to use in this classfication}
+\item{k}{Number of nearest neighbors to use in this classification.}
+}
+\value{
+A vector of inferred ancestries.
 }
 \description{
-Infer anestry with KNN
+Infer ancestry with KNN
+}
+\seealso{
+{\link{inferAncestry.sampleDataset}}
+
+{\link{inferAncestry}}
 }

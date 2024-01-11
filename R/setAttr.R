@@ -1,21 +1,27 @@
-#' Update a Sample Data Set
+#' Update a Sample Dataset
 #'
-#' Update entries of sample data set, such as the df, bamQcMetr, vcfQcMetr
+#' @description
+#' Update entries of a sample dataset, such as the df, bamQcMetr, vcfQcMetr.
 #'
-#' @param sds sample dataset sds
-#' @param ... other arguments
+#' @param sds A sample dataset object
+#' @param attributes character vector specifying the attributes to add or update in the sample Dataset
+#' @param data data.frame, content to add to the dataframe
+#' @param primaryID primary key of input data frame
+#' @param overwrite logical, indicating whether to overwrite existing attributes if they already exist
 #'
-#' @return sds
+#' @return An updated sample dataset
+#' @seealso{\link{setAttr.sampleDataset}}
 #' @export
-#'
+
 setAttr <- function (sds, ...) UseMethod('setAttr', sds)
 
 #' Set attributes of a sample dataset
 #'
 #' @param sds sampleDataset
-#' @param attributes which entry to add to sample Dataset
+#' @param attributes character vector specifying the attributes to add or update in the sample Dataset
 #' @param data data.frame, content to add to the dataframe
-#' @param by primary key of input data frame
+#' @param primaryID primary key of input data frame
+#' @param overwrite logical, indicating whether to overwrite existing attributes if they already exist
 #'
 #' @return updated sampleDataset sds
 #' @export

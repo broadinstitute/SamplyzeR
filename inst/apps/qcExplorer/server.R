@@ -1,39 +1,173 @@
-server <- function(input, output) {
-  values <- reactiveValues(df_data = NULL, outliers = NULL)
-  observeEvent(input$plot_brush1, {
-    values$df_data = subsetTable(input, sds, 1)
-    values$outliers = values$df_data$sampleId
+# Server
+server <- shinyServer(function(input, output, session) {
+  file_data <- reactiveValues(
+    bamQcMetr = NULL,
+    annotations = NULL,
+    vcfQcMetr = NULL,
+    samplePc = NULL,
+    refpc = NULL,
+    sds = NULL,
+    loadedFiles = NULL
+  )
+  reactive_sds <- reactive({
+    file_data$sds()
   })
 
-  # QC scatterplot
-  output$plot1 <- renderPlot({
-    plot(sampleQcPlot(
-      sds, annotation = input$anno1, qcMetrics = input$qcMetrics1,
-      geom='scatter' #, outliers = input$outliers
-    ))
+  selectedAnno <- reactive({
+    input$anno1
   })
 
-  # QC violin plot
-  output$violin <- renderPlot({
-    plot(sampleQcPlot(sds, qcMetrics = input$qcMetrics1, geom = 'violin',
-                      annotation = input$anno1)) # outliers = input$outliers
+  selectedQcMetrics <- reactive({
+    input$qcMetr1
   })
 
-  # QC metrics correlation
-  output$qcCorr <- renderPlot({
-    samplyzer::scatter(
-      data = subsetTable(input, sds, 1), x = input$qcMetr1, y = input$qcMetr2,
-      strat = input$attr, primaryID = sds$primaryID)
+  observeEvent(c(input$loadSampleData, input$runUploadedFiles), {
+    if ((!is.null(input$annotationsFile) && (input$runUploadedFiles>0))||(input$loadSampleData>=0)) {
+      if(input$loadSampleData==0 && input$runUploadedFiles==0){
+        sampleDataPath <- "./data"
+        file_data$bamQcMetr <- read.csv(file.path(sampleDataPath, "bamQcMetr.tsv"), sep = '\t')
+        file_data$annotations <- read.csv(file.path(sampleDataPath, "sampleAnnotations.tsv"), sep = '\t')
+        file_data$vcfQcMetr <- read.csv(file.path(sampleDataPath, "vcfQcMetr.tsv"), sep = '\t')
+        file_data$samplePc <- read.csv(file.path(sampleDataPath, "samplePCs.tsv"), sep = '\t')
+        file_data$refPC <- read.csv(file.path(sampleDataPath, "refPCs.tsv"), sep = '\t')
+        file_data$loadedFiles <- c("bamQcMetr.tsv", "sampleAnnotations.tsv", "vcfQcMetr.tsv", "samplePCs.tsv", "refPCs.tsv")
+      }
+      else if (input$loadSampleData>0){
+        sampleDataPath <- "./data"
+        file_data$bamQcMetr <- read.csv(file.path(sampleDataPath, "bamQcMetr.tsv"), sep = '\t')
+        file_data$annotations <- read.csv(file.path(sampleDataPath, "sampleAnnotations.tsv"), sep = '\t')
+        file_data$vcfQcMetr <- read.csv(file.path(sampleDataPath, "vcfQcMetr.tsv"), sep = '\t')
+        file_data$samplePc <- read.csv(file.path(sampleDataPath, "samplePCs.tsv"), sep = '\t')
+        file_data$refPC <- read.csv(file.path(sampleDataPath, "refPCs.tsv"), sep = '\t')
+        file_data$loadedFiles <- c("bamQcMetr.tsv", "sampleAnnotations.tsv", "vcfQcMetr.tsv", "samplePCs.tsv", "refPCs.tsv")
+      }
+      else{
+        if (!is.null(input$samplePCsFile)) {
+          file_data$samplePc <- read.csv(input$samplePCsFile$datapath, sep = '\t')
+        }
+        if (!is.null(input$refPCsFile)) {
+          file_data$refPC <- read.csv(input$refPCsFile$datapath, sep = '\t')
+        }
+        if (!is.null(input$vcfQcMetrFile)) {
+          file_data$vcfQcMetr <- read.csv(input$vcfQcMetrFile$datapath, sep = '\t')
+        }
+        if (!is.null(input$bamQcMetrFile)) {
+          file_data$bamQcMetr <- read.csv(input$bamQcMetrFile$datapath, sep = '\t')
+        }
+        file_data$annotations <- read.csv(input$annotationsFile$datapath, sep = '\t', row.names = NULL)
+      }
+
+      file_data$sds <- sampleDataset(
+        annotInput = file_data$annotations,
+        bamQcInput = file_data$bamQcMetr,
+        vcfQcInput = file_data$vcfQcMetr,
+        primaryID = 'SampleID'
+      )
+      updateSelectInput(session, "qcMetr1", choices = unique(file_data$sds$qcMetrics))
+      updateSelectInput(session, "qcMetr2", choices = unique(file_data$sds$qcMetrics))
+      updateSelectInput(session, "anno1", choices = unique(file_data$sds$annot))
+
+      # QC scatterplot
+      output$plot1 <- renderPlot({
+        sampleQcPlot(
+          file_data$sds, annot= selectedAnno(), qcMetrics = selectedQcMetrics(),
+          geom= "scatter", outliers = input$outliers, show = T)
+      })
+
+      # QC violin plot
+      output$plot2 <- renderPlot({
+        sampleQcPlot(
+          file_data$sds, annot= selectedAnno(), qcMetrics = selectedQcMetrics(),
+          geom= "violin", outliers = input$outliers, show = T)
+      })
+
+      observeEvent(input$plot_brush1, {
+        sds_subset = subsetTable(input, file_data$sds, 1)
+        # QC metrics correlation
+        output$qcCorr <- renderPlot({
+          samplyzer:::scatter(
+            data = sds_subset, x = input$qcMetr1, y = input$qcMetr2, strat = input$anno1,
+            outliers = input$outliers, primaryID = file_data$sds$primaryID
+          )})
+
+        output$table1 <- renderTable(sds_subset)
+      })
+
+      if(!is.null(file_data$samplePc)){
+        file_data$sds = setAttr(file_data$sds, attributes = 'PC', data = file_data$samplePc, primaryID = 'SampleID')
+        if(!is.null(file_data$refPC)){
+          file_data$sds <- inferAncestry(
+            file_data$sds,
+            trainSet = file_data$refPC[, grep("^PC", names(file_data$refPC))],
+            knownAncestry =  file_data$refPC$group,
+          )
+        }
+        updateSelectInput(session, "PCx", choices = unique(file_data$sds$PC))
+        updateSelectInput(session, "PCy", choices = unique(file_data$sds$PC))
+
+        # pca correlation
+        output$pca <- renderPlot({
+          samplyzer:::scatter(
+            data = file_data$sds$df, x = input$PCx, y = input$PCy, strat = input$anno1,
+            outliers = input$outliers, primaryID = file_data$sds$primaryID)
+        })
+
+      }else{
+        #qca correlation
+        output$pca <- renderPlot({
+          samplyzer:::scatter(
+            data =  file_data$sds$df, x = input$qcMetr1, y = input$qcMetr2, strat = 'SeqTech',
+            outliers = input$outliers, primaryID = file_data$sds$primaryID)
+        })
+      }
+    }
   })
-
-  # pca correlation
-  output$pca <- renderPlot({
-    samplyzer::scatter(
-      data = sds$df, x = input$PCx, y = input$PCy, strat = input$attr2,
-      outliers = input$outliers, primaryID = sds$primaryID)
+  output$loadedFileList <- renderUI({
+    if (!is.null(file_data$loadedFiles)) {
+      do.call(tagList, lapply(file_data$loadedFiles, function(name) {
+        tags$p(name)
+      }))
+    }
   })
-
-  # render outlier info
-  output$table1 <- renderTable(values$df_data)
-}
-
+  ## example
+  output$downloadLink1 <- downloadHandler(
+    filename = function() {
+      "sampleAnnotations.tsv"  # Replace with your actual file name
+    },
+    content = function(file) {
+      file.copy("./data/sampleAnnotations.tsv", file)
+    }
+  )
+  output$downloadLink2 <- downloadHandler(
+    filename = function() {
+      "bamQcMetr.tsv"  # Replace with your actual file name
+    },
+    content = function(file) {
+      file.copy("./data/bamQcMetr.tsv", file)
+    }
+  )
+  output$downloadLink3 <- downloadHandler(
+    filename = function() {
+      "samplePCs.tsv"  # Replace with your actual file name
+    },
+    content = function(file) {
+      file.copy("./data/samplePCs.tsv", file)
+    }
+  )
+  output$downloadLink4 <- downloadHandler(
+    filename = function() {
+      "refPCs.tsv"  # Replace with your actual file name
+    },
+    content = function(file) {
+      file.copy("./data/refPCs.tsv", file)
+    }
+  )
+  output$downloadLink5 <- downloadHandler(
+    filename = function() {
+      "vcfQcMetr.tsv"  # Replace with your actual file name
+    },
+    content = function(file) {
+      file.copy("./data/vcfQcMetr.tsv", file)
+    }
+  )
+})

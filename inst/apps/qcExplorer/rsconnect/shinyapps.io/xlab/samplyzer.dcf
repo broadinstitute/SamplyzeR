@@ -1,0 +1,10 @@
+name: samplyzer
+title:
+username: xlab
+account: xlab
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 10555200
+bundleId: 8089690
+url: https://xlab.shinyapps.io/samplyzer/
+version: 1

@@ -9,7 +9,8 @@
 \arguments{
 \item{x}{a vector of values or a sample dataset object}
 
-\item{mad}{binary, whether use Median Absolute Deviation to calculate the standard deviation}
+\item{mad}{binary, whether use Median Absolute Deviation to calculate the
+standard deviation.Default is TRUE.}
 }
 \value{
 a vector of z-scores
