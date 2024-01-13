@@ -9,7 +9,7 @@ server <- shinyServer(function(input, output, session) {
     sds = NULL,
     loadedFiles = NULL
   )
-  reactive_sds <- reactive({
+  reactive_sds <- reactive({1
     file_data$sds()
   })
 
@@ -55,13 +55,36 @@ server <- shinyServer(function(input, output, session) {
           file_data$bamQcMetr <- read.csv(input$bamQcMetrFile$datapath, sep = '\t')
         }
         file_data$annotations <- read.csv(input$annotationsFile$datapath, sep = '\t', row.names = NULL)
-      }
+        # file_data_list <- list()
+        # if (!is.null(input$samplePCsFile)) {
+        #   file_data_list$samplePc <- read.csv(input$samplePCsFile$datapath, sep = '\t')
+        #   file_data_list$samplePCsColNames <- names(file_data_list$samplePc)
+        # }
 
+        # if (!is.null(input$refPCsFile)) {
+        #   file_data_list$refPC <- read.csv(input$refPCsFile$datapath, sep = '\t')
+        # }
+
+        # if (!is.null(input$vcfQcMetrFile)) {
+        #   file_data_list$vcfQcMetr <- read.csv(input$vcfQcMetrFile$datapath, sep = '\t')
+        #   file_data_list$vcfQcColNames <- names(file_data_list$vcfQcMetr)
+        # }
+
+        # if (!is.null(input$bamQcMetrFile)) {
+        #   file_data_list$bamQcMetr <- read.csv(input$bamQcMetrFile$datapath, sep = '\t')
+        #   file_data_list$bamQcColNames <- names(file_data_list$bamQcMetr)
+        # }
+
+        # file_data_list$annotations <- read.csv(input$annotationsFile$datapath, sep = '\t', row.names = NULL)
+        # file_data_list$annotColNames <- names(file_data_list$annotations)
+        # colNameLists <- list(file_data_list$annotColNames, file_data_list$bamQcColNames, file_data_list$vcfQcColNames)
+        # primaryID <- Reduce(intersect, colNameLists)
+      }
       file_data$sds <- sampleDataset(
         annotInput = file_data$annotations,
         bamQcInput = file_data$bamQcMetr,
         vcfQcInput = file_data$vcfQcMetr,
-        primaryID = 'SampleID'
+        primaryID = input$primaryID
       )
       updateSelectInput(session, "qcMetr1", choices = unique(file_data$sds$qcMetrics))
       updateSelectInput(session, "qcMetr2", choices = unique(file_data$sds$qcMetrics))
@@ -94,7 +117,7 @@ server <- shinyServer(function(input, output, session) {
       })
 
       if(!is.null(file_data$samplePc)){
-        file_data$sds = setAttr(file_data$sds, attributes = 'PC', data = file_data$samplePc, primaryID = 'SampleID')
+        file_data$sds = setAttr(file_data$sds, attributes = 'PC', data = file_data$samplePc, primaryID = input$primaryID)
         if(!is.null(file_data$refPC)){
           file_data$sds <- inferAncestry(
             file_data$sds,
@@ -116,10 +139,44 @@ server <- shinyServer(function(input, output, session) {
         #qca correlation
         output$pca <- renderPlot({
           samplyzer:::scatter(
-            data =  file_data$sds$df, x = input$qcMetr1, y = input$qcMetr2, strat = 'SeqTech',
+            data =  file_data$sds$df, x = input$qcMetr1, y = input$qcMetr2, strat = input$anno1,
             outliers = input$outliers, primaryID = file_data$sds$primaryID)
         })
       }
+
+
+      # # 动态生成和显示 plotList 中的图形
+      # plotList <- lapply(file_data$sds$annot, function(annot) {
+      #   tryCatch({
+      #     # 尝试生成图表
+      #     plot = sampleQcPlot(sds = file_data$sds, qcMetrics = file_data$sds$bamQcMetr, annot = annot, geom = 'scatter', ncols = 2)
+      #     return(plot)
+      #   }, error = function(e) {
+      #     message("Error in generating plot for annotation ", annot, ": ", e$message)
+      #     return(NULL)
+      #   })
+      # })
+      # plotList <- Filter(Negate(is.null), plotList)
+      # output$dynamic_plots <- renderUI({
+      #   plot_output_list <- lapply(1:length(plotList), function(i) {
+      #     plotname <- paste("plot", i, sep="")
+      #     print(plotname)
+      #     plotOutput(plotname, height = "300px")
+      #   })
+      #   do.call(tagList, plot_output_list)
+      # })
+
+      # # 为每个图形创建一个 renderPlot 输出
+      # for (i in 1:length(plotList)) {
+      #   local({
+      #     my_i <- i
+      #     plotname <- paste("plot", my_i, sep="")
+      #     output[[plotname]] <- renderPlot({
+      #       grid.draw(plotList[[my_i]])
+      #     })
+      #   })
+      # }
+
     }
   })
   output$loadedFileList <- renderUI({

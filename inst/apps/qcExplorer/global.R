@@ -9,6 +9,7 @@ library(RColorBrewer)
 library(samplyzer)
 library(gdata)
 library(shinythemes)
+library(grid)
 
 subsetTable <- function(input, sds, id){
   # sort data frame
