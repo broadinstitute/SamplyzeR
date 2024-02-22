@@ -1,9 +1,0 @@
-name: qcexplorer
-title:
-username: xlab
-account: xlab
-server: shinyapps.io
-hostUrl: https://api.shinyapps.io/v1
-appId: 10425031
-bundleId: 7938357
-url: https://xlab.shinyapps.io/qcexplorer/

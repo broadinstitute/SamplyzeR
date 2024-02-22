@@ -6,8 +6,6 @@ branches:
   only:
     - main
     - master
-    - develop
-    - test
 
 before_install:
   - sudo apt-get update

@@ -2,37 +2,10 @@
 % Please edit documentation in R/plot.R
 \name{PCplots}
 \alias{PCplots}
-\title{Generate PC plot of a SampleDataset}
+\title{Generate PC plot of an SampleDataset Object}
 \usage{
-PCplots(sds, showPlot = T, cor = F, outliers = NULL)
-}
-\arguments{
-\item{sds}{SampleDataset object containing PC and inferredAncestry attributes.}
-
-\item{showPlot}{Logical, whether to display the plots (default is TRUE).}
-
-\item{cor}{Logical, whether to calculate correlation between PCs (default is FALSE).}
-
-\item{outliers}{Samples to highlight as outliers (optional).}
-}
-\value{
-A list of ggplot objects representing PC plots.
+PCplots(object, showPlot = T)
 }
 \description{
-This function generates principal component (PC) plots based on the specified SampleDataset.
-}
-\seealso{
-{\link{outlierPlots}}
-
-{\link{outlierPlots.default}}
-
-{\link{outlierPlots.sampleDataset}}
-
-{\link{multiplot}}
-
-{\link{scatter}}
-
-{\link{multiplotWithSharedLegend}}
-
-{\link{geom_split_violin}}
+Generate PC plot of an SampleDataset Object
 }

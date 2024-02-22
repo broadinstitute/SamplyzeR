@@ -2,33 +2,16 @@
 % Please edit documentation in R/flagSamples.R
 \name{flagSamples.default}
 \alias{flagSamples.default}
-\title{Flag rows of a data.frame based on values of a column}
+\title{Flag a sample from a data frame}
 \usage{
-\method{flagSamples}{default}(df, column, cutoff, greater)
+\method{flagSamples}{default}(df, stat, cutoff, greater = TRUE, abs = F)
 }
 \arguments{
 \item{df}{a data frame contained summary statistics}
-
-\item{column}{character, column of a data frame}
-
-\item{cutoff}{numberic,}
-
-\item{greater}{logical, whether to flag rows that are greater or equal to
-the cutoff}
-
-\item{abs}{}
 }
 \value{
 Return a data frame
 }
 \description{
-Compare values in a column of data.frame, and add a
-flaggedReason column in the data
-
-Caveat: this function is not able to define greater or equal
-}
-\seealso{
-{\link{flagSamples}}
-
-{\link{flagSamples.sampleDataset}}
+Flag a sample from a data frame
 }

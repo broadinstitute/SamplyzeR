@@ -2,24 +2,13 @@
 % Please edit documentation in R/S3Method.R
 \name{save}
 \alias{save}
-\title{Save an sds to a specific format}
+\title{Save an object to a specific format}
 \usage{
-save(sds, ...)
+save(object, ...)
 }
 \arguments{
-\item{sds}{sample dataset}
-
-\item{...}{Additional arguments to be passed.}
+\item{object}{}
 }
 \description{
-Save an sds to tsv, RDS or excel format
-}
-\seealso{
-{\link{sort.sampleDataset}}
-
-{\link{save.sampleDataset}}
-
-{\link{dim.sampleDataset}}
-
-{\link{print.sampleDataset}}
+Save an object to tsv, RDS or excel format
 }

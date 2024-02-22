@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-if (!require("samplyzer"))devtools::install_github("xiaolicbs/samplyzer", ref = "fix", force = TRUE)
+if (!require("samplyzer"))devtools::install_github("xiaolicbs/samplyzer", force = TRUE)
 library(argparse)
 library(samplyzer)
 

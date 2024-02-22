@@ -4,18 +4,13 @@
 \alias{sampleQcPlot}
 \title{Generate scatter plot of QC metrics according to samples}
 \usage{
-sampleQcPlot(sds, ...)
+sampleQcPlot(object, ...)
 }
 \arguments{
-\item{sds}{sample dataset `sds`}
+\item{object}{sample dataset object}
 
 \item{...}{other arguments}
 }
 \description{
 Generate scatter plot of QC metrics according to samples
-}
-\seealso{
-{\link{sampleQcPlot.default}}
-
-{\link{sampleQcPlot.sampleDataset}}
 }

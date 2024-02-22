@@ -16,7 +16,7 @@ When you save the notebook, an HTML file containing the code and output will be 
 ### Install required libraries
 This library required R version >= 3.3.2.
 ```{r}
-#install.packages('devtools')
+install.packages('devtools')
 library(devtools)
 install_github('xiaolicbs/samplyzer', force = TRUE)
 library(samplyzer)
@@ -108,6 +108,7 @@ plots = PCplots(sds)
 
 ### Generate multipanel plots for
 ```{r}
+class(sds)
 grobList = sampleQcPlot(sds, qcMetrics = sds$bamQcMetr, annot = 'LCSETMax', geom = 'scatter', ncols = 3, outliers = 'Sample-001')
 ggplot2::ggsave('QcPlot.pdf', grobList, width = 12, height = 6)
 ```

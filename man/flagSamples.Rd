@@ -9,8 +9,3 @@ flagSamples(...)
 \description{
 Flag a sample from a data frame or a sampleDataset
 }
-\seealso{
-{\link{flagSamples.default}}
-
-{\link{flagSamples.sampleDataset}}
-}

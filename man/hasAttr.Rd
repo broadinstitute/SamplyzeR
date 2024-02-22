@@ -4,10 +4,10 @@
 \alias{hasAttr}
 \title{Check whether the sampleDataset has attributes provided}
 \usage{
-hasAttr(sds, attr)
+hasAttr(object, attr)
 }
 \arguments{
-\item{sds}{a sampleDataset sds}
+\item{object}{a sampleDataset object}
 
 \item{attr}{attributes}
 }

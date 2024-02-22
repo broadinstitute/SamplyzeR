@@ -4,15 +4,15 @@
 \alias{sort.sampleDataset}
 \title{Update index of sample dataset by different annotation categories}
 \usage{
-\method{sort}{sampleDataset}(sds, by)
+\method{sort}{sampleDataset}(object, by)
 }
 \arguments{
-\item{sds}{sample dataset}
+\item{object}{sample dataset}
 
 \item{by}{sort by which category}
 }
 \value{
-A sample dataset `sds` with updated index.
+an sample dataset object with updated index
 }
 \description{
 Update index of sample dataset by different annotation categories

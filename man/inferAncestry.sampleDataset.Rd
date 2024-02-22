@@ -4,25 +4,18 @@
 \alias{inferAncestry.sampleDataset}
 \title{Infer sample ancestry}
 \usage{
-\method{inferAncestry}{sampleDataset}(sds, trainSet, knownAncestry, nPC = 3, k = 5)
+\method{inferAncestry}{sampleDataset}(object, trainSet, knownAncestry,
+  nPC = 3, k = 5)
 }
 \arguments{
-\item{sds}{Sample Dataset sds for ancestry prediction.}
+\item{object}{Sample Dataset object for Ancestry predition}
 
-\item{trainSet}{Data frame with genotype PCs for each sample with known ancestry.}
+\item{trainSet}{data frame with genotype PCs for each sample with known ancestry}
 
-\item{knownAncestry}{A vector with known ancestry for each sample in the same order as trainSet.}
+\item{knownAncestry}{a vector with known ancestry for each sample in same order of trainSet}
 
-\item{nPC}{Use the first n PCs to predict ancestry.}
-}
-\value{
-Updated sample Dataset sds with inferredAncestry tag.
+\item{nPC}{Use first n PCs to predict ancestry}
 }
 \description{
 Infer sample ancestry
-}
-\seealso{
-{\link{inferAncestry}}
-
-{\link{inferAncestry.default}}
 }

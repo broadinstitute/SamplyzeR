@@ -1,28 +1,18 @@
 #' Predict sample ancestry from genotype Principle Components
 #'
 #' Principle Components of genotypes with k nearest neighbours.
-#'
-#' @param ... Additional parameters for future expansion.
-#' @return Updated sample Dataset sds with inferredAncestry tag.
+#' @return Updated sample Dataset sds with inferredAncestry tag
 #' @export
-#'
-#' @seealso{\link{inferAncestry.sampleDataset}}
-#' @seealso{\link{inferAncestry.default}}
 
 inferAncestry <- function(...) UseMethod('inferAncestry')
 
-#' Infer ancestry with KNN
+#' Infer anestry with KNN
 #'
-#' @param testSet Matrix used for test.
-#' @param trainSet Matrix for training PCs.
-#' @param ancestry Ancestries corresponding to the training PCs.
-#' @param k Number of nearest neighbors to use in this classification.
-#'
-#' @return A vector of inferred ancestries.
+#' @param testSet matrix used for test
+#' @param trainSet matrix for training PCs
+#' @param ancestry ancestries correspond to the training PCs
+#' @param k Number of nearest neighbour to use in this classfication
 #' @export
-#'
-#' @seealso{\link{inferAncestry.sampleDataset}}
-#' @seealso{\link{inferAncestry}}
 
 inferAncestry.default <- function(testSet, trainSet, ancestry, k = 5) {
   inferredAncestry = class::knn(train = trainSet, test = testSet, cl = ancestry, k = k)
@@ -31,16 +21,12 @@ inferAncestry.default <- function(testSet, trainSet, ancestry, k = 5) {
 
 #' Infer sample ancestry
 #'
-#' @param sds Sample Dataset sds for ancestry prediction.
-#' @param trainSet Data frame with genotype PCs for each sample with known ancestry.
-#' @param knownAncestry A vector with known ancestry for each sample in the same order as trainSet.
-#' @param nPC Use the first n PCs to predict ancestry.
+#' @param sds Sample Dataset sds for Ancestry predition
+#' @param trainSet data frame with genotype PCs for each sample with known ancestry
+#' @param knownAncestry a vector with known ancestry for each sample in same order of trainSet
+#' @param nPC Use first n PCs to predict ancestry
 #'
-#' @return Updated sample Dataset sds with inferredAncestry tag.
 #' @export
-#'
-#' @seealso{\link{inferAncestry}}
-#' @seealso{\link{inferAncestry.default}}
 
 inferAncestry.sampleDataset <- function(
   sds, trainSet, knownAncestry, nPC = 3, k = 5

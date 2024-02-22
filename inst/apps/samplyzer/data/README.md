@@ -2,22 +2,11 @@
   SAMPLYZER
 </h2>
 
+
 <p align="center">
   <strong>An R package and web application for efficient sample quality control of human whole genome and whole exome sequencing data</strong>
 </p>
 
-<p align="center">
-  <a title="R Version"> <img src='https://img.shields.io/badge/R-3.3.2-brightgreen'> </a>
-  <a href="https://github.com/x-lab/samplyzer/actions/workflows/ci.yml">
-    <img alt="R CI" src="https://github.com/x-lab/samplyzer/actions/workflows/ci.yml/badge.svg">
-  </a>
-  <a href="https://ci.appveyor.com/project/1677953017/samplyzer">
-    <img alt="AppVeyor Build Status" src="https://ci.appveyor.com/api/projects/status/u8scd9ecoe67k9cw?svg=true">
-  </a>
-  <a href="https://codecov.io/gh/x-lab/samplyzer">
-    <img alt="codecov" src="https://codecov.io/gh/x-lab/samplyzer/graph/badge.svg?token=eNYYjuMXIw">
-  </a>
-</p>
 ---
 
 
@@ -32,6 +21,7 @@
 * gridExtra (>= 2.2.1)
 
 ## Installation
+
 This tool is still under development, and haven't yet released to CRAN. To install from github, you will need to have `devtools` installed.
 
 ```r

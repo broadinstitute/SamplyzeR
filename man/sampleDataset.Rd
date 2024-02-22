@@ -4,43 +4,24 @@
 \alias{sampleDataset}
 \title{Sample dataset object}
 \usage{
-sampleDataset(
-  annotInput,
-  primaryID,
-  bamQcInput = NULL,
-  vcfQcInput = NULL,
-  stratify = NULL,
-  df = NULL
-)
+sampleDataset(bamQcMetr = NULL, vcfQcMetr = NULL, annotations,
+  primaryID = NULL, df = NULL)
 }
 \arguments{
-\item{annotInput}{a tsv file or data.frame that contains sample annot,
-when df was defined, this item could be a vector containing
-names of anntations.}
+\item{bamQcMetr}{a data frame that contains BAM level QC metrics}
 
-\item{primaryID}{ID used for each sample}
+\item{vcfQcMetr}{a data frame that contains VCF level QC metrics}
 
-\item{bamQcInput}{a tsv file data frame that contains BAM QC metrics.}
+\item{annotations}{a data frame that contains annotations of the samples.}
 
-\item{vcfQcInput}{a tsv file or a data frame that contains VCF QC metrics}
-
-\item{stratify}{a scalar or vector containing annot to stratify against}
-
-\item{df}{optional, an R dataframe that contains all sample level data,
-including QC metrics and sample annot. When df is provided,
-bamQcMetr, vcfQcMetr and annot should be vectors with names
-of corresponding fields.}
+\item{df}{optional, an R dataframe that contains all sample level data, including QC metrics and
+sample annotations. When df is provided, bamQcMetr, vcfQcMetr and annotations should
+be vectors with names of corresponding fields.}
 }
 \value{
 an sampleDataset object.
 }
 \description{
-Construct an Sample Dataset object
-A Sample Data Set object contains several attributes, including a data frame,
-which contains all the data for samples and several other attributes that
-contains metadata, such as qcMetrics, bamQcMetr, vcfQcMetr and PrimaryID.
-To check attributes of your current SDS
-Create a sample dataset object that contains all information needed to
-perform a sample quality control. The Dataset object is a list with one
-dataframe.
+Create a sample dataset object that contains all information needed to perform a sample
+quality control. The Dataset object is a list with one dataframe and
 }

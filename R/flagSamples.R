@@ -2,8 +2,6 @@
 #'
 #' Flag a sample from a data frame or a sampleDataset
 #' @export
-#' @seealso{\link{flagSamples.default}}
-#' @seealso{\link{flagSamples.sampleDataset}}
 
 flagSamples <- function(...) UseMethod('flagSamples')
 
@@ -23,8 +21,6 @@ flagSamples <- function(...) UseMethod('flagSamples')
 #'
 #' @return Return a data frame
 #' @export
-#' @seealso{\link{flagSamples}}
-#' @seealso{\link{flagSamples.sampleDataset}}
 
 flagSamples.default <- function (df, column, cutoff, greater) {
   column = as.character(column)
@@ -59,8 +55,6 @@ flagSamples.default <- function (df, column, cutoff, greater) {
 #'               based on z-score if not specified. Default value is NULL.
 #' @return an updated sample dataset sds with flags added.
 #' @export
-#' @seealso{\link{flagSamples.default}}
-#' @seealso{\link{flagSamples}}
 
 flagSamples.sampleDataset <- function(sds, cutoffs, zscore = NULL){
   # conditions

@@ -10,4 +10,3 @@
 ../exec/sampleQcTool.R --bamQcMetr './data/bamQcMetr.tsv' --vcfQcMetr './data/vcfQcMetr.tsv' \
    --annotations './data/sampleAnnotations.tsv' --primaryID SampleID --stratify 'SeqTech,LibTech' \
    --prefix bamQc  -o 'Sample-001'
-

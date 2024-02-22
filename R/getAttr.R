@@ -1,13 +1,7 @@
 #' Get attributes of an sds
 #'
-#' @param sds sample dataset
-#' @param attribute name of attribute to return
-#' @param showID whether to display sample IDs or not in the output data frame
-#'
-#' @return a data frame that contains values of specific attribute
+#' @param sds sample dataset sds
 #' @export
-#'
-#' @seealso{\link{getAttr.sampleDataset}}
 
 getAttr <- function (sds, ...) UseMethod('getAttr', sds)
 
@@ -15,9 +9,10 @@ getAttr <- function (sds, ...) UseMethod('getAttr', sds)
 #'
 #' @param sds sample data set
 #' @param attribute name of attribute to return
-#' @param showID whether to display sample IDs or not in the output data frame
+#' @param showID whether to display sample IDs or not in the output data fram
+#' @param return a data frame that contains values of specific attribute
 #'
-#' @return a data frame that contains values of specific attribute
+#' @return data frame
 #' @export
 
 getAttr.sampleDataset <- function(sds, attribute, showID = F) {

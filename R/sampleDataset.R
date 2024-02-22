@@ -30,9 +30,10 @@
 #' @param annotInput a tsv file or data.frame that contains sample annot,
 #'                   when df was defined, this item could be a vector containing
 #'                   names of anntations.
-#' @param primaryID ID used for each sample
 #' @param bamQcInput a tsv file data frame that contains BAM QC metrics.
+#'
 #' @param vcfQcInput a tsv file or a data frame that contains VCF QC metrics
+#' @param primaryID ID used for each sample
 #' @param stratify a scalar or vector containing annot to stratify against
 #' @param df optional, an R dataframe that contains all sample level data,
 #'           including QC metrics and sample annot. When df is provided,

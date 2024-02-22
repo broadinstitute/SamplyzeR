@@ -4,31 +4,16 @@
 \alias{sampleQcPlot.sampleDataset}
 \title{Generate a panel of sample QC plots across a list of qcMetrics}
 \usage{
-\method{sampleQcPlot}{sampleDataset}(
-  sds,
-  annot,
-  qcMetrics = sds$qcMetrics,
-  geom = c("scatter", "violin", "hist"),
-  outliers = NULL,
-  legend = T,
-  main = "QC",
-  position = c("right", "bottom"),
-  ncols = 5,
-  show = FALSE,
-  sort = TRUE
-)
+\method{sampleQcPlot}{sampleDataset}(object, qcMetrics, annotation = NULL,
+  geom = c("scatter", "violin", "hist"), outliers = NULL, legend = T,
+  main = "QC", position = c("right", "bottom"), ncols = 5, show = TRUE)
 }
 \arguments{
-\item{sds}{SampleDataset `sds`}
+\item{object}{SampleDataset object}
 
-\item{annot}{optional, a character string of sample annot to stratify by}
+\item{qcMetrics}{a character string or a vector includes QC metrics to explore; if unspecified, all QC metrics in the SDS will be used.}
 
-\item{qcMetrics}{a character string or a vector includes QC metrics to
-explore; if unspecified, all QC metrics in the SDS will
-be used.}
-
-\item{geom}{a character string indicating which visualization pattern to be
-used. One of strings 'scatter', 'violin' or 'hist' can be used.}
+\item{geom}{a character string indicating which visualization pattern to be used. One of strings 'scatter', 'violin' or 'hist' can be used.}
 
 \item{outliers}{a vector of IDs of outliers to show on the figure}
 
@@ -36,16 +21,11 @@ used. One of strings 'scatter', 'violin' or 'hist' can be used.}
 
 \item{position}{position of the legend}
 
-\item{sort}{whether to sort by annot when ploting}
+\item{annotations}{a character string of sample annotation to stratify by}
 }
 \value{
-a list of grob sds
+a list of grob objects
 }
 \description{
 Generate a panel of sample QC plots across a list of qcMetrics
-}
-\seealso{
-{\link{sampleQcPlot}}
-
-{\link{sampleQcPlot.sampleDataset}}
 }

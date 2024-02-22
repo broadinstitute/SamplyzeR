@@ -4,20 +4,20 @@
 \alias{calZscore.sampleDataset}
 \title{Calculate z-scores of QC metrics of a SampleDataset}
 \usage{
-\method{calZscore}{sampleDataset}(object, strat = NULL, qcMetrics = NULL, mad = T, maxVcfZ = F)
+\method{calZscore}{sampleDataset}(object, strat = NULL, qcMetrics = NULL,
+  mad = T)
 }
 \arguments{
-\item{object}{a sampleDataset object.}
+\item{object}{a sample data set}
 
-\item{strat}{optional, logical, variable, or vector of attributes the sample
-will be stratified by.}
+\item{strat}{variable or vector of attributes the sample will be stratified by}
 
-\item{qcMetrics}{optional, a vector of names of QC metrics to compute z-score.}
+\item{qcMetrics}{optional, which QC metrics should be stratified on.}
 
-\item{mad}{optional, binary, whether to use Median Absolute Deviation to
-calculate z-score or not, default is TRUE.}
-
-\item{maxVcfZ}{optional, logical, calculate to report maximum Vcf Z-score.}
+\item{mad}{defaultwhether use Median Absolute Deviation to calculate z-score.}
+}
+\value{
+sampleDataset object
 }
 \description{
 Calculate z-scores of QC metrics of a SampleDataset

@@ -2,28 +2,20 @@
 % Please edit documentation in R/flagSamples.R
 \name{flagSamples.sampleDataset}
 \alias{flagSamples.sampleDataset}
-\title{Flag a sample from a sampleDataset}
+\title{Flag a sample from a sample data set}
 \usage{
-\method{flagSamples}{sampleDataset}(sds, cutoffs, zscore = NULL)
+\method{flagSamples}{sampleDataset}(object, cutoffs, zscore = NULL)
 }
 \arguments{
-\item{sds}{a sampleDataset sds}
+\item{object}{sample data set}
 
-\item{cutoffs}{a data.frame that specifies cutoff values for qcMetrics.
-Contains three columns, including "qcMetrics", "value"
-and "greater"}
+\item{cutoffs}{a data frame that contains three columns, including "qcMetrics", "value" and "greater"}
 
-\item{zscore}{a scalar value that zscore cutoff used, will not flag samples
-based on z-score if not specified. Default value is NULL.}
+\item{zscore}{zscore cutoff used}
 }
 \value{
-an updated sample dataset sds with flags added.
+an updated sample dataset object with flags added.
 }
 \description{
-Flag a sample from a sampleDataset
-}
-\seealso{
-{\link{flagSamples.default}}
-
-{\link{flagSamples}}
+Flag a sample from a sample data set
 }

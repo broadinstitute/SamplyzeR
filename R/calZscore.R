@@ -1,18 +1,11 @@
 #' Calculate z-score of a vector or QC metrics of a SampleDataset
 #'
-#' @description
-#' Calculate z-score of a vector or QC metrics of a SampleDataset.
-#'
-#' @param ... Additional arguments to be passed.
-#'
-#' @return
-#' The form of the value returned by predict depends on the class of
-#' its argument. See the documentation of the particular methods for
-#' details of what is produced by that method.
-#'
+#' @description Calculate z-score of a vector or QC metrics of a SampleDataset,
+#'              see details in calZscore.default and calZscore.sampleDataset
+#' @return The form of the value returned by predict depends on the class of
+#'         its argument. See the documentation of the particular methods for
+#'         details of what is produced by that method.
 #' @export
-#' @seealso{\link{calZscore.default}}
-#' @seealso{\link{calZscore.sampleDataset}}
 
 calZscore <- function(...) UseMethod("calZscore")
 
@@ -21,7 +14,7 @@ calZscore <- function(...) UseMethod("calZscore")
 #' @description Calculate z-scores of a vector
 #' @param x   a vector of values or a sample dataset object
 #' @param mad binary, whether use Median Absolute Deviation to calculate the
-#'            standard deviation.Default is TRUE.
+#'            standard deviation
 #' @return    a vector of z-scores
 #' @export
 
@@ -37,13 +30,15 @@ calZscore.default <- function(x, mad = T) {
 
 #' Calculate z-scores of QC metrics of a SampleDataset
 #'
-#' @param object a sampleDataset object.
-#' @param strat optional, logical, variable, or vector of attributes the sample
-#' will be stratified by.
-#' @param qcMetrics optional, a vector of names of QC metrics to compute z-score.
-#' @param mad optional, binary, whether to use Median Absolute Deviation to
-#' calculate z-score or not, default is TRUE.
-#' @param maxVcfZ optional, logical, calculate to report maximum Vcf Z-score.
+#' @param object a sampleDataset object
+#' @param strat optional, logical, variable or vector of attributes the sample
+#'              will be stratified by
+#' @param mad optional, binary, whether use Median Absolute Deviation to
+#'            calculate z-score or not, default is True
+#' @param qcMetrics optional, a vector of names of qc metrics to compute zscore
+#' @param maxVcfZ optional, logical, calculate to report maximun Vcf Zscore
+#' @return sampleDataset object, with additional attributes: zscoreBy, zscore
+#'         and maximumVcfZscore
 #' @export
 
 calZscore.sampleDataset <- function (

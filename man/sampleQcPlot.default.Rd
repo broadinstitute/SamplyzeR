@@ -4,42 +4,17 @@
 \alias{sampleQcPlot.default}
 \title{Generate scatter plot of QC metrics}
 \usage{
-\method{sampleQcPlot}{default}(
-  data,
-  primaryID,
-  qcMetric,
-  annot = NULL,
-  outliers = NULL,
-  legend = T,
-  main = "QC",
-  geom = c("scatter", "violin", "hist")
-)
+\method{sampleQcPlot}{default}(data, primaryID, qcMetric, annotation = NULL,
+  geom = c("scatter", "violin", "hist"), outliers = NULL, legend = T,
+  main = "QC")
 }
 \arguments{
-\item{data}{Sample dataset `data`.}
+\item{annotation}{which annotation to visualize}
 
-\item{primaryID}{Primary ID used for each sample.}
+\item{object}{sample dataset object}
 
-\item{qcMetric}{QC metric to visualize.}
-
-\item{annot}{Annotation variable to stratify by (optional).}
-
-\item{outliers}{Samples to highlight as outliers (optional).}
-
-\item{legend}{Logical, whether to show the legend (default is TRUE).}
-
-\item{main}{Title of the plot (default is 'QC').}
-
-\item{geom}{Type of plot: 'scatter', 'violin', or 'hist' (default is 'scatter').}
-}
-\value{
-A scatter plot of QC metrics.
+\item{pca}{whether perform pca plot}
 }
 \description{
-This function generates a scatter plot of QC metrics based on the specified parameters.
-}
-\seealso{
-{\link{sampleQcPlot}}
-
-{\link{sampleQcPlot.default}}
+Generate scatter plot of QC metrics
 }

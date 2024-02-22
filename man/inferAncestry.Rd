@@ -6,17 +6,9 @@
 \usage{
 inferAncestry(...)
 }
-\arguments{
-\item{...}{Additional parameters for future expansion.}
-}
 \value{
-Updated sample Dataset sds with inferredAncestry tag.
+Updated sample Dataset object with inferredAncestry tag
 }
 \description{
 Principle Components of genotypes with k nearest neighbours.
-}
-\seealso{
-{\link{inferAncestry.sampleDataset}}
-
-{\link{inferAncestry.default}}
 }
