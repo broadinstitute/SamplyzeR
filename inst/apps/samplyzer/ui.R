@@ -4,11 +4,16 @@ library("shinythemes")
 
 ui <-shinyUI(
   navbarPage(
-    title = list(icon("line-chart"),"Samplyzer Browser"),
+    title = "🧬Samplyzer Browser",
+    #title = div(
+    #  img(src = "https://img2.imgtp.com/2024/02/26/OqaBOXUf.png",
+    #      style = "width:90%;margin:-5px -5px 20px 8px; padding: 0;"),
+    #  br(), HTML("&emsp;")
+    #),
     id = "mainnavbar",
-    theme = shinytheme("flatly"),
     inverse = FALSE,
-    windowTitle = "Samplyzer Browser",
+    theme = shinytheme("flatly"),
+    windowTitle = "🧬Samplyzer Browser",
     tabPanel(
       title = "Home",
       fluidRow(
@@ -16,16 +21,34 @@ ui <-shinyUI(
           width = 10, offset = 1,
           div(
             class = "jumbotron",
-            h1("Samplyzer Browser"),
+            h1(HTML(paste('<img src="https://img2.imgtp.com/2024/02/26/IP94RMVp.png" alt="Image" style="width:70px; margin: -15px -5px 0px -5px;">',"Samplyzer Browser"))),
+            #h1("🧬Samplyzer Browser"),
             #h3("Samplyzer is an R package and Web Application that enables efficient exploration of sample level QC statistics."),
-            p(a(tagList(icon("github"), "Samplyzer-Github"), href = "https://github.com/x-lab/samplyzer", target = "_blank")),
             br(),
-            actionButton("learnmore", "Learn More", icon("search"), class = "btn-primary btn-lg")
+            actionButton(
+              "learnmore", "Learn More", icon("search"),
+              class = "btn-primary btn-lg"
+            )
           ),
           tags$blockquote(
-            "Samplyzer is an R package and Web Application that enables efficient exploration of sample level QC statistics."
+            p(
+              "Samplyzer is an R package and Web Application that enables efficient exploration of sample level QC statistics.",
+              HTML("&emsp;"),
+              a(
+                tagList(icon("github"), "Samplyzer-Github"),
+                href = "https://github.com/x-lab/samplyzer",
+                target = "_blank"
+              )
+            )
           )
         )
+        #，column(
+        # width = 3, # Adjust the width for the image column
+        #  img(
+        #    src = "https://img2.imgtp.com/2024/02/26/J3vYzmos.png",
+        #    style = "width:100%;"  # Adjust the image width as needed
+        #  )
+        #)
       ),
       fluidRow(
         column(
@@ -54,14 +77,19 @@ ui <-shinyUI(
               #p("Please read our ", a("data privacy policy", href = "https://github.com/road2stat/hdnom-doc/blob/master/privacy.md", target = "_blank"), "before uploading any data."),
               #p("Read a detailed explanation about the ", a("upload data format", href = "https://github.com/road2stat/hdnom-doc/blob/master/upload.md", target = "_blank"), ". An example dataset is provided below."),
               h3("Required Files"),
-              fileInput("annotationsFile", "Upload Sample Annotations*", accept = c('text/csv', 'text/comma-separated-values,text/plain')),
-              fileInput("bamQcMetrFile", "Upload Sample QC Table*", accept = c('text/csv', 'text/comma-separated-values,text/plain')),
+              fileInput("annotationsFile", "Upload Sample Annotations*",
+                        accept = c('text/csv', 'text/comma-separated-values,text/plain')),
+              fileInput("bamQcMetrFile", "Upload Sample QC Table*",
+                        accept = c('text/csv', 'text/comma-separated-values,text/plain')),
               textInput("primaryID", "primaryID*", "SampleID"),
               helpText("(primaryID is unique and consistent across all files)"),
               h3("Optional Files"),
-              fileInput("samplePCsFile", "Upload Sample PCs", accept = c('text/csv', 'text/comma-separated-values,text/plain')),
-              fileInput("refPCsFile", "Upload Ref PCs", accept = c('text/csv', 'text/comma-separated-values,text/plain')),
-              fileInput("vcfQcMetrFile", "Upload Other QC Table", accept = c('text/csv', 'text/comma-separated-values,text/plain')),
+              fileInput("samplePCsFile", "Upload Sample PCs",
+                        accept = c('text/csv', 'text/comma-separated-values,text/plain')),
+              fileInput("refPCsFile", "Upload Ref PCs",
+                        accept = c('text/csv', 'text/comma-separated-values,text/plain')),
+              fileInput("vcfQcMetrFile", "Upload Other QC Table",
+                        accept = c('text/csv', 'text/comma-separated-values,text/plain')),
               br(),
               actionButton("runUploadedFiles", "Run Uploaded File"),
             )
@@ -135,7 +163,7 @@ ui <-shinyUI(
             )
           )
         )
-          )
+      )
     ),
     tabPanel(
       title ="Panel",
