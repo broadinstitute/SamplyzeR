@@ -4,59 +4,54 @@ library("shinythemes")
 
 ui <-shinyUI(
   navbarPage(
-    title = "🧬Samplyzer Browser",
-    #title = div(
-    #  img(src = "https://img2.imgtp.com/2024/02/26/OqaBOXUf.png",
-    #      style = "width:90%;margin:-5px -5px 20px 8px; padding: 0;"),
-    #  br(), HTML("&emsp;")
-    #),
+    title = p(HTML(paste('<img src="https://img2.imgtp.com/2024/02/26/IP94RMVp.png" alt="Image" style="width:30px; margin: -5px -5px 0px -5px;">',"Samplyzer Browser"))),
     id = "mainnavbar",
     inverse = FALSE,
     theme = shinytheme("flatly"),
     windowTitle = "🧬Samplyzer Browser",
-    tabPanel(
-      title = "Home",
-      fluidRow(
-        column(
-          width = 10, offset = 1,
-          div(
-            class = "jumbotron",
-            h1(HTML(paste('<img src="https://img2.imgtp.com/2024/02/26/IP94RMVp.png" alt="Image" style="width:70px; margin: -15px -5px 0px -5px;">',"Samplyzer Browser"))),
-            #h1("🧬Samplyzer Browser"),
-            #h3("Samplyzer is an R package and Web Application that enables efficient exploration of sample level QC statistics."),
-            br(),
-            actionButton(
-              "learnmore", "Learn More", icon("search"),
-              class = "btn-primary btn-lg"
-            )
-          ),
-          tags$blockquote(
-            p(
-              "Samplyzer is an R package and Web Application that enables efficient exploration of sample level QC statistics.",
-              HTML("&emsp;"),
-              a(
-                tagList(icon("github"), "Samplyzer-Github"),
-                href = "https://github.com/x-lab/samplyzer",
-                target = "_blank"
-              )
-            )
-          )
-        )
-        #，column(
-        # width = 3, # Adjust the width for the image column
-        #  img(
-        #    src = "https://img2.imgtp.com/2024/02/26/J3vYzmos.png",
-        #    style = "width:100%;"  # Adjust the image width as needed
-        #  )
-        #)
-      ),
-      fluidRow(
-        column(
-          width = 10, offset = 1,
-          includeMarkdown("data/footer.md")
-        )
-      )
-    ),
+    # tabPanel(
+    #   title = "Home",
+    #   fluidRow(
+    #     column(
+    #       width = 10, offset = 1,
+    #       div(
+    #         class = "jumbotron",
+    #         h1(HTML(paste('<img src="https://img2.imgtp.com/2024/02/26/IP94RMVp.png" alt="Image" style="width:70px; margin: -15px -5px 0px -5px;">',"Samplyzer Browser"))),
+    #         #h1("🧬Samplyzer Browser"),
+    #         #h3("Samplyzer is an R package and Web Application that enables efficient exploration of sample level QC statistics."),
+    #         br(),
+    #         actionButton(
+    #           "learnmore", "Learn More", icon("search"),
+    #           class = "btn-primary btn-lg"
+    #         )
+    #       ),
+    #       tags$blockquote(
+    #         p(
+    #           "Samplyzer is an R package and Web Application that enables efficient exploration of sample level QC statistics.",
+    #           HTML("&emsp;"),
+    #           a(
+    #             tagList(icon("github"), "Samplyzer-Github"),
+    #             href = "https://github.com/x-lab/samplyzer",
+    #             target = "_blank"
+    #           )
+    #         )
+    #       )
+    #     )
+    #     #，column(
+    #     # width = 3, # Adjust the width for the image column
+    #     #  img(
+    #     #    src = "https://img2.imgtp.com/2024/02/26/J3vYzmos.png",
+    #     #    style = "width:100%;"  # Adjust the image width as needed
+    #     #  )
+    #     #)
+    #   ),
+    #   fluidRow(
+    #     column(
+    #       width = 10, offset = 1,
+    #       includeMarkdown("data/footer.md")
+    #     )
+    #   )
+    # ),
     tabPanel(
       title = "Data",
       fluidRow(
@@ -179,7 +174,7 @@ ui <-shinyUI(
       )
     ),
     tabPanel(
-      title = "Help",
+      title = "Tutorial",
       fluidRow(
         column(
           width = 10, offset = 2,
