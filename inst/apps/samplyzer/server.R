@@ -1,9 +1,6 @@
 # Server
 server <- shinyServer(function(input, output, session) {
   values <- reactiveValues(dataLoaded = FALSE, sampleDataClicked = FALSE, uploadedFilesClicked = FALSE)
-  observeEvent(input$learnmore, {
-    updateNavbarPage(session, "mainnavbar", selected = "Help")
-  })
   observeEvent(input$loadSampleData, {
     values$sampleDataClicked <- TRUE
     processData(

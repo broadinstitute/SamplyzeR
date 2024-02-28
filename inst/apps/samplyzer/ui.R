@@ -1,6 +1,7 @@
 library("shiny")
 library("markdown")
 library("shinythemes")
+library(shinyjs)
 
 ui <-shinyUI(
   navbarPage(
@@ -8,52 +9,104 @@ ui <-shinyUI(
     id = "mainnavbar",
     inverse = FALSE,
     theme = shinytheme("flatly"),
-    windowTitle = "🧬Samplyzer Browser",
-    # tabPanel(
-    #   title = "Home",
-    #   fluidRow(
-    #     column(
-    #       width = 10, offset = 1,
-    #       div(
-    #         class = "jumbotron",
-    #         h1(HTML(paste('<img src="https://img2.imgtp.com/2024/02/26/IP94RMVp.png" alt="Image" style="width:70px; margin: -15px -5px 0px -5px;">',"Samplyzer Browser"))),
-    #         #h1("🧬Samplyzer Browser"),
-    #         #h3("Samplyzer is an R package and Web Application that enables efficient exploration of sample level QC statistics."),
-    #         br(),
-    #         actionButton(
-    #           "learnmore", "Learn More", icon("search"),
-    #           class = "btn-primary btn-lg"
-    #         )
-    #       ),
-    #       tags$blockquote(
-    #         p(
-    #           "Samplyzer is an R package and Web Application that enables efficient exploration of sample level QC statistics.",
-    #           HTML("&emsp;"),
-    #           a(
-    #             tagList(icon("github"), "Samplyzer-Github"),
-    #             href = "https://github.com/x-lab/samplyzer",
-    #             target = "_blank"
-    #           )
-    #         )
-    #       )
-    #     )
-    #     #，column(
-    #     # width = 3, # Adjust the width for the image column
-    #     #  img(
-    #     #    src = "https://img2.imgtp.com/2024/02/26/J3vYzmos.png",
-    #     #    style = "width:100%;"  # Adjust the image width as needed
-    #     #  )
-    #     #)
-    #   ),
-    #   fluidRow(
-    #     column(
-    #       width = 10, offset = 1,
-    #       includeMarkdown("data/footer.md")
-    #     )
-    #   )
-    # ),
+    windowTitle = "Samplyzer Browser",
     tabPanel(
-      title = "Data",
+      title = list((icon("home")),"Home"),
+      fluidRow(
+        img(
+          src = "https://img2.imgtp.com/2024/02/28/bHBTKVdf.png",
+          style = "width:10%; display:block; margin:auto;"
+        ),
+        hr(),
+        column(
+          width = 10, offset = 1,
+          h1("About Samplyzer Browser"),
+          tags$blockquote(
+            p(
+              "Samplyzer is committed to advancing the field of bioinformatics by providing a robust platform for the exploration and analysis of Next Generation Sequencing (NGS) data. Our mission is to develop, support, and share free open-source software that empowers researchers to conduct rigorous and reproducible analysis of sample-level QC statistics derived from the GATK pipeline and related bioinformatics workflows.",
+              a(
+                tagList(icon("github"), "Samplyzer-Github"),
+                href = "https://github.com/x-lab/samplyzer",
+                target = "_blank"
+              )
+            )
+          ),
+          img(
+            src = "https://img2.imgtp.com/2024/02/21/bQh2N0Va.png",
+            style = "width:100%;display:block; margin:auto;"
+          ),
+          h1("Start Using Samplyzer Browser"),
+          tags$blockquote(
+            p("Welcome, User! Let's explore Samplyzer step by step:"),
+            p("1. Navigate to the",
+              span(
+                class = "emphasis-text",
+                icon("database"),
+                strong("Data"),
+                style = "color: #337ab7;"  
+              )
+            ),
+            p("2. Next, ensure the necessary files are uploaded for a comprehensive analysis."),
+            p("3. Complete the primaryID field for accurate identification."),
+            p("4. Head over to the",
+              span(
+                class = "emphasis-text",
+                icon("chart-bar"),
+                strong("Sample Explorer"),
+                style = "color: #337ab7;"  
+              )
+            ),
+            p("5. Within the",
+              span(
+                class = "emphasis-text",
+                strong("Sample Explorer"),
+                style = "color: #337ab7;"  
+              ),
+              "tab, proceed to the",
+              span(
+                class = "emphasis-text",
+                strong("Scatter Plot"),
+                style = "color: #337ab7;"  
+              ),
+              "to select the plot range for your analysis."
+            ),
+            p("6. To ensure precision, validate and calibrate your data using the interactive table provided in the same tab."),
+            p("7. Finally, explore all available plots conveniently in the",
+              span(
+                class = "emphasis-text",
+                icon("chart-area"),
+                strong("Panel tab"),
+                style = "color: #337ab7;"  
+              ),
+              "."
+            )
+          )
+        )
+      ),
+      # fluidRow(
+      #   column(
+      #     width = 10, offset = 1,
+      #     div(
+      #       class = "jumbotron",
+      #       style = "background-color: #F5F5F5;",
+      #       h1(HTML(paste('<img src="https://img2.imgtp.com/2024/02/26/IP94RMVp.png" alt="Image" style="width:70px; margin: -15px -5px 0px -5px;">',"Learn more about using Samplyzer"))),
+      #       br(),
+      #       actionButton(
+      #         "getstarted", "Get Started", icon("search"),
+      #         class = "btn-primary btn-lg"
+      #       )
+      #     )
+      #   )
+      # ),
+      fluidRow(
+        column(
+          width = 10, offset = 1,
+          includeMarkdown("data/footer.md")
+        )
+      )
+    ),
+    tabPanel(
+      title = list((icon("database")),"Data"),
       fluidRow(
         column(
           width = 10, offset = 1,
@@ -121,16 +174,20 @@ ui <-shinyUI(
       )
     ),
     tabPanel(
-      title = "Sample Explorer",
-      fluidRow(
-        column(
-          width = 10, offset = 1,
-          column(2, selectInput("anno1", 'Subject Attributes', choices = NULL)),
-          column(2, selectInput("qcMetr1", 'QC Scatter Plot - MetricX', choices = NULL)),
-          column(2, selectInput('qcMetr2', 'QC Scatter Plot - MetricY', choices = NULL)),
-          column(2, selectInput('PCx', 'PC Scatter Plot - X', choices = NULL)),
-          column(2, selectInput('PCy', 'PC Scatter Plot - Y', choices = NULL)),
-          column(2, selectInput("outliers", "Sample IDs", choices = NULL))
+      title = list((icon("chart-bar")),"Sample Explorer"),
+      div(
+        class = "jumbotron",
+        style = "background-color: #F5F5F5;",
+        fluidRow(
+          column(
+            width = 12, #offset = 1,
+            column(2, selectInput("anno1", 'Subject Attributes', choices = NULL)),
+            column(2, selectInput("qcMetr1", 'QC Scatter Plot - MetricX', choices = NULL)),
+            column(2, selectInput('qcMetr2', 'QC Scatter Plot - MetricY', choices = NULL)),
+            column(2, selectInput('PCx', 'PC Scatter Plot - X', choices = NULL)),
+            column(2, selectInput('PCy', 'PC Scatter Plot - Y', choices = NULL)),
+            column(2, selectInput("outliers", "Sample IDs", choices = NULL))
+          )
         )
       ),
       fluidRow(
@@ -161,7 +218,7 @@ ui <-shinyUI(
       )
     ),
     tabPanel(
-      title ="Panel",
+      title = list((icon("chart-area")),"Panel"),
       fluidRow(
         column(
           width = 10, offset = 1,
@@ -174,7 +231,7 @@ ui <-shinyUI(
       )
     ),
     tabPanel(
-      title = "Tutorial",
+      title = list((icon("circle-question")),"Tutorial"),
       fluidRow(
         column(
           width = 10, offset = 2,
@@ -183,9 +240,8 @@ ui <-shinyUI(
         )
       )
     ),
-
     tabPanel(
-      title = "README",
+      title = list((icon("circle-info")),"About"),
       fluidRow(
         column(
           width = 10, offset = 1,
