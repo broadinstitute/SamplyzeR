@@ -1,7 +1,6 @@
 library("shiny")
 library("markdown")
 library("shinythemes")
-library(shinyjs)
 
 ui <-shinyUI(
   navbarPage(
@@ -43,7 +42,7 @@ ui <-shinyUI(
                 class = "emphasis-text",
                 icon("database"),
                 strong("Data"),
-                style = "color: #337ab7;"  
+                style = "color: #337ab7;"
               )
             ),
             p("2. Next, ensure the necessary files are uploaded for a comprehensive analysis."),
@@ -53,20 +52,20 @@ ui <-shinyUI(
                 class = "emphasis-text",
                 icon("chart-bar"),
                 strong("Sample Explorer"),
-                style = "color: #337ab7;"  
+                style = "color: #337ab7;"
               )
             ),
             p("5. Within the",
               span(
                 class = "emphasis-text",
                 strong("Sample Explorer"),
-                style = "color: #337ab7;"  
+                style = "color: #337ab7;"
               ),
               "tab, proceed to the",
               span(
                 class = "emphasis-text",
                 strong("Scatter Plot"),
-                style = "color: #337ab7;"  
+                style = "color: #337ab7;"
               ),
               "to select the plot range for your analysis."
             ),
@@ -76,7 +75,7 @@ ui <-shinyUI(
                 class = "emphasis-text",
                 icon("chart-area"),
                 strong("Panel tab"),
-                style = "color: #337ab7;"  
+                style = "color: #337ab7;"
               ),
               "."
             )
