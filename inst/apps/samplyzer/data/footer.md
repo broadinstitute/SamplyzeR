@@ -1,5 +1,7 @@
 <hr>
-<p>
-© <a href="https://github.com/x-lab/samplyzer" target="_blank">Samplyzer-Github</a>
-</p>
-The software is implemented in R and runs on R shiny. It is freely available at https://github.com/x-lab/samplyzer with the MIT license. 
+
+Copyright © 2023 - 2034 Samplyzer. Developed and maintained by [Xiao Li](https://github.com/xiaoli0) and [Jinbo Yao](https://github.com/JinboYao).
+
+Project Samplyzer is hosted on GitHub: https://github.com/x-lab/samplyzer
+
+For more information about Samplyzer and related projects, please visit X-Lab: https://x-lab.org.cn/

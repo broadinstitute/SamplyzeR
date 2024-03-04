@@ -233,8 +233,8 @@ ui <-shinyUI(
       title = list((icon("circle-question")),"Tutorial"),
       fluidRow(
         column(
-          width = 10, offset = 2,
-          includeMarkdown("data/help.md"),
+          width = 10, offset = 1,
+          includeMarkdown("data/README.md"),
           br()
         )
       )
@@ -244,7 +244,13 @@ ui <-shinyUI(
       fluidRow(
         column(
           width = 10, offset = 1,
-          includeMarkdown("data/README.md")
+          includeMarkdown("data/About.md")
+        )
+      ),
+      fluidRow(
+        column(
+          width = 10, offset = 1,
+          includeMarkdown("data/footer.md")
         )
       )
     )
