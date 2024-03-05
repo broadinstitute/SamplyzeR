@@ -94,7 +94,9 @@ For detailed RMD examples, please refer to the run script [here](vignettes/tutor
 
 ### 3. Web Interface
 
-SAMPLYZER offers a user-friendly web interface for interactive data exploration: [Sample Explorer Website](http://121.40.162.92:3838/samplyzer/).
+SAMPLYZER offers a user-friendly web interface for interactive data exploration: [Sample Explorer Website](http://121.40.162.92/).
+
+![samplyzer.png](https://img2.imgtp.com/2024/03/05/BUthyjsp.png)
 
 Test data files are available in the [`vignettes/data`](vignettes/run.sh).
 

@@ -31,7 +31,7 @@ ui <-shinyUI(
             )
           ),
           img(
-            src = "https://img2.imgtp.com/2024/02/21/bQh2N0Va.png",
+            src = "https://img2.imgtp.com/2024/03/05/BUthyjsp.png",
             style = "width:100%;display:block; margin:auto;"
           ),
           h1("Start Using Samplyzer Browser"),

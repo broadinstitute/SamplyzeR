@@ -30,6 +30,33 @@ sudo gdebi shiny-server-1.5.16.958-amd64.deb
 sudo ln -s /home/jinbo/samplyzer/inst/apps/samplyzer /srv/shiny-server/samplyzer
 ```
 
+#### Ngnix config
+
+```
+# Install
+sudo apt-get update
+sudo apt-get install nginx
+
+# /etc/nginx/sites-available/shiny
+sudo vim /etc/nginx/sites-available/default  
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name 121.40.162.92;
+
+    location / {
+        proxy_pass http://121.40.162.92:3838/samplyzer/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        rewrite ^/$ /samplyzer/ permanent;
+    }
+}
+
+sudo systemctl restart nginx
+```
+
 
 
 ### Run
